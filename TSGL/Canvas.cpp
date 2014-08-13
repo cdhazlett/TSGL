@@ -82,6 +82,7 @@ void Canvas::clear() {
 int Canvas::close() {
     if (!started) return -1;  // If we haven't even started yet, return error code -1
     renderThread.join();      // Blocks until ready to join, which will be when the window is closed
+    glfwDestroyWindow(window);
     return 0;
 }
 
@@ -162,9 +163,9 @@ void Canvas::draw() {
         glDrawBuffer(GL_BACK_LEFT);
         glfwSwapBuffers(window);                     // Swap out GL's back buffer and actually draw to the window
 
-        glfwPollEvents();                            // Handle any I/O
+        glfwMakeContextCurrent(NULL);
+//        glfwPollEvents();                            // Handle any I/O
         glfwGetCursorPos(window, &mouseX, &mouseY);
-        glfwMakeContextCurrent(NULL);                // We're drawing to window as soon as it's created
 
         if (toClose) glfwSetWindowShouldClose(window, GL_TRUE);
     }
@@ -358,7 +359,7 @@ void Canvas::glDestroy() {
     glDeleteTextures(1, &tex);
 }
 
-void Canvas::glInit() {
+void Canvas::glfwInit() {
     glfwSetErrorCallback(errorCallback);
 
     // Create a Window and the Context
@@ -387,6 +388,12 @@ void Canvas::glInit() {
     glfwShowWindow(window);                 // Show the window
     glfwSetWindowUserPointer(window, this);
 
+    glfwMakeContextCurrent(NULL);   // Reset the context
+}
+
+void Canvas::glInit() {
+    glfwMakeContextCurrent(window);
+
     // Enable and disable necessary stuff
     glDisable(GL_DEPTH_TEST);                           // Disable depth testing because we're not drawing in 3d
     glDisable(GL_DITHER);                               // Disable dithering because pixels do not (generally) overlap
@@ -394,8 +401,9 @@ void Canvas::glInit() {
     glEnable(GL_BLEND);                                 // Enable blending
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // Set blending mode to standard alpha blending
 
-    printf("%s\n", glGetString(GL_VERSION));
-    printf("%s\n", glfwGetVersionString());
+    printf("Vendor:         %s %s\n", glGetString(GL_VENDOR), glGetString(GL_RENDERER));
+    printf("OpenGL version: %s\n", glGetString(GL_VERSION));
+    printf("GLFW version:   %s\n", glfwGetVersionString());
 
     // Needed?
 //    glEnable(GL_TEXTURE_2D);
@@ -614,15 +622,17 @@ void Canvas::SetupCamera() {
 int Canvas::start() {
     if (started) return -1;
     started = true;
+    glfwInit();
     renderThread = std::thread(Canvas::startDrawing, this);  // Spawn the rendering thread
     return 0;
 }
 
 void Canvas::startDrawing(Canvas *c) {
     c->glInit();
-    c->draw();
+    c->draw();  // Start render loop
     c->isFinished = true;
-    glfwDestroyWindow(c->window);
+    glfwMakeContextCurrent(NULL);
+//    glfwDestroyWindow(c->window);
     c->glDestroy();
 }
 
