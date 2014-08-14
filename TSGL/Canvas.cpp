@@ -94,6 +94,7 @@ void Canvas::draw() {
     for (framecounter = 0; !glfwWindowShouldClose(window); framecounter++) {
         timer->sleep();
 
+//        mutexLock windowLock(windowMutex);
         glfwMakeContextCurrent(window);  // We're drawing to window as soon as it's created
         if (toClear) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_ACCUM_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
@@ -164,6 +165,7 @@ void Canvas::draw() {
         glfwSwapBuffers(window);                     // Swap out GL's back buffer and actually draw to the window
 
         glfwMakeContextCurrent(NULL);
+//        windowLock.unlock();
 //        glfwPollEvents();                            // Handle any I/O
         glfwGetCursorPos(window, &mouseX, &mouseY);
 
@@ -365,8 +367,8 @@ void Canvas::glfwInit() {
     // Create a Window and the Context
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);                  // Set target GL major version to 3
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);                  // Set target GL minor version to 3.2
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // We're using the standard GL Profile
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // Don't use methods that are deprecated in the target version
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // We're using the standard GL Profile
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);                       // Do not let the user resize the window
     glfwWindowHint(GLFW_STEREO, GL_FALSE);                          // Disable the right buffer
     glfwWindowHint(GLFW_VISIBLE, GL_FALSE);                         // Don't show the window at first
@@ -384,7 +386,7 @@ void Canvas::glfwInit() {
     }
     glfwSetWindowPos(window, (monInfo->width - winWidth) / 2, (monInfo->height - winHeight) / 2);
 
-    glfwMakeContextCurrent(window);         // We're drawing to window as soon as it's created
+//    glfwMakeContextCurrent(window);         // We're drawing to window as soon as it's created
     glfwShowWindow(window);                 // Show the window
     glfwSetWindowUserPointer(window, this);
 
@@ -499,6 +501,8 @@ void Canvas::glInit() {
     bindToButton(TSGL_KEY_ESCAPE, TSGL_PRESS, [this]() {
         glfwSetWindowShouldClose(window, GL_TRUE);
     });
+
+    glfwSwapInterval(1);
 
     glfwMakeContextCurrent(NULL);   // Reset the context
 }
@@ -623,12 +627,13 @@ int Canvas::start() {
     if (started) return -1;
     started = true;
     glfwInit();
+    glInit();
     renderThread = std::thread(Canvas::startDrawing, this);  // Spawn the rendering thread
     return 0;
 }
 
 void Canvas::startDrawing(Canvas *c) {
-    c->glInit();
+//    c->glInit();
     c->draw();  // Start render loop
     c->isFinished = true;
     glfwMakeContextCurrent(NULL);

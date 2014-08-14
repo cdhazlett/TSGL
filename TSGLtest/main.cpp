@@ -56,6 +56,7 @@ void graydientFunction(Canvas& can) {
                 color = i * MAX_COLOR / 2 / can.getWindowWidth() + j * MAX_COLOR / 2 / can.getWindowHeight();
                 can.drawPoint(i, j, ColorInt(color, color, color));
             }
+            can.CheckIO();
         }
     }
 }
@@ -561,6 +562,7 @@ void alphaRectangleFunction(Canvas& can) {
         b = rand() % WINDOW_H;
         can.drawRectangle(a, b, rand() % (WINDOW_W - a), rand() % (WINDOW_H - b),
                           ColorInt(rand() % MAX_COLOR, rand() % MAX_COLOR, rand() % MAX_COLOR, 16));
+        can.CheckIO();
     }
 }
 void alphaLangtonFunction(Canvas& can) {
@@ -611,6 +613,7 @@ void alphaLangtonFunction(Canvas& can) {
     });
 
     while (can.getIsOpen()) {
+        can.CheckIO();
         t.sleep();
         for (int i = 0; i < IPF; i++) {
             for (int j = 0; j < 4; j++) {
@@ -1325,7 +1328,7 @@ void mouseFunction(Canvas& can) {
             index++;
         }
         t.sleep();
-        glfwPollEvents();
+        can.CheckIO();
     }
 }
 
@@ -1421,7 +1424,7 @@ void runOtherHalfoftheFunctions() {
 //    test(c30,screenshotLangtonFunction,false,BLACK);
 //    Canvas c31(0, 0, 800, 600, 500000);
 //    test(c31,greyScaleFunction);
-    Canvas c32(0, 0, 800, 600, 5000);
+    Canvas c32(0, 0, 800*2, 600*2, 5000);
     test(c32,mouseFunction);
 }
 
