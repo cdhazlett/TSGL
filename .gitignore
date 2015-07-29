@@ -1,0 +1,43 @@
+# Ignore eclipse .project files
+.cproject
+.project
+
+# Ignore builds
+bin/
+build/
+lib/
+
+# Ignore recorded pictures
+frames/
+
+# Ignore system specific libraries
+libraries/
+
+# Ignore generated doxygen (for now)
+docs/html/
+tutorial/docs/html
+
+# Ignore valgrind info
+valgrind*
+
+# Ignore settings
+.settings/
+
+# Ignore notes
+tsgl-note
+
+# Backups
+_*
+*~
+
+#Don't ignore our main page!
+!_mainpage.dox
+
+# Bitmaps
+Image*.bmp
+
+# OS X Stuff
+*.DS_Store*
+
+# Eclipse stuff
+.metadata
