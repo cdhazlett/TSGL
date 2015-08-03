@@ -180,6 +180,33 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --><p>Recompile and run the code. Now the circle appears to be moving on its own!</p>
 <p>The clear() method tells the Canvas to clear the screen so that its blank again.</p>
 <p>By placing that method call at the end of the draw loop, the Canvas will draw a circle, change the x-coordinate, clear itself, and then redraw the circle with the new x-coordinate in the next frame.</p>
+<p>The circle just moves off screen though...is there anyway to make it so that once it goes off screen it gets redrawn back onto the screen?</p>
+<p>Certainly:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;tsgl.h&gt;</span></div>
+<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacetsgl.html">tsgl</a>;</div>
+<div class="line"></div>
+<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line">  <a class="code" href="classtsgl_1_1_canvas.html">Canvas</a> c(0, 0, 500, 600, <span class="stringliteral">&quot;Animation Loop Example&quot;</span>);</div>
+<div class="line">  c.start();</div>
+<div class="line">  <span class="comment">//Store the x and y-coordinate values in variables outside of the loop</span></div>
+<div class="line">  <span class="keywordtype">int</span> x = 250, y = 300;</div>
+<div class="line">  <span class="comment">//Drawing loop</span></div>
+<div class="line">  <span class="keywordflow">while</span>(c.isOpen()) {</div>
+<div class="line">    c.sleep();</div>
+<div class="line">    <span class="comment">//Check to see if we are off screen</span></div>
+<div class="line">    <span class="keywordflow">if</span> (x &gt;= c.getWindowWidth()) {</div>
+<div class="line">       x = 250; <span class="comment">//If so, reset the x-coordinate</span></div>
+<div class="line">    }</div>
+<div class="line">    <span class="comment">//Let&#39;s draw a circle!</span></div>
+<div class="line">    <span class="comment">//Pass the x and y coordinates</span></div>
+<div class="line">    c.drawCircle(x, y, 50, 32);</div>
+<div class="line">    <span class="comment">//And change the x-coordinate once the circle has been drawn</span></div>
+<div class="line">    x += 5;</div>
+<div class="line">    c.clear(); <span class="comment">//New statement</span></div>
+<div class="line">  }</div>
+<div class="line">  c.wait();</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>c.getWindowWidth() is the accessor for the width of the current Canvas. If the x-coordinate value is greater than or equal to that value, then it gets reset back to 250 and so appears to be animated!</p>
 <p>In sum, in order to have an animation, follow these steps:</p>
 <p>1). Create and initialize a Canvas object.</p>
 <p>2). Call the start() and wait() methods.</p>
@@ -195,7 +222,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 3 2015 10:59:31 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 3 2015 11:18:23 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

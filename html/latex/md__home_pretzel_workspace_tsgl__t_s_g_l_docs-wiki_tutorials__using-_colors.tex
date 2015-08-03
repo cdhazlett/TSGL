@@ -103,7 +103,7 @@ It takes in floating-\/point values for the parameters. The range of values for 
 
 Now, given these three structs, the question remains\+: \char`\"{}\+How can I use these in drawing?\char`\"{}
 
-Well, as seen in the previous tutorial with shapes, you can pass a color parameter that will draw a shape or line a different color. You can create a Color\+Int/\+Color\+Float/\+Color\+H\+S\+V struct that creates the color that you want and then pass that as the color parameter in the draw method. Example\+:
+Well, as seen in the previous tutorial with shapes, you can draw a shape or line in a non-\/default color by passing a color parameter. You can create a Color\+Int/\+Color\+Float/\+Color\+H\+S\+V struct that creates the color that you want and then pass that as the color parameter in the draw method. Example\+:
 
 
 \begin{DoxyCode}
@@ -146,7 +146,7 @@ Well, right out of the box, T\+S\+G\+L also comes with a predefined set of color
 \item {\ttfamily B\+R\+O\+W\+N}
 \end{DoxyItemize}
 
-You can pass either a constructed Color\+Int/\+Color\+Float/\+Color\+H\+S\+V struct, or a predefined color constant for the color parameter. Whichever is easier for you.
+You can pass a predefined color constant for the color parameter, or if you need a different color, you can construct a Color\+Int/\+Color\+Float/\+Color\+H\+S\+F struct for that color and pass that. Whichever is easier for you.
 
 Now, there are also methods and operators defined in the structs that manipulate and convert between the three structs (which in turn convert between the different color scales and types of structs).
 

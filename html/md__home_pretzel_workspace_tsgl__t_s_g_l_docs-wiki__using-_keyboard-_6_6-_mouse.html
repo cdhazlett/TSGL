@@ -147,7 +147,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --><p>Recompile and run. A rectangle should appear in red on the screen. Click the screen with the left mouse button. The color of the rectangle should change to green.</p>
 <p>The bindToButton() method takes in three parameters:</p><ul>
 <li>A key or button to bind to (e.g. TSGL_A for the 'A' key).</li>
-<li>An event associated with that key (TSGL_PRESS for when it's pressed, TSGL_RELEASE when it is released). * An unnamed (Lambda) function that will be passed to bindToButton() when that method is invoked.</li>
+<li>An event associated with that key (TSGL_PRESS for when it's pressed, TSGL_RELEASE when it is released).</li>
+<li>An unnamed (Lambda) function that will be passed to bindToButton() when that method is invoked.</li>
 </ul>
 <p>Allow us to explain Lambda functions a little more in-depth.</p>
 <p>The variables in the brackets are actual variables outside of the function that are in scope and that can be passed into the function. The amperstand makes the variable a reference parameter. In a nutshell, that means that whatever you do to that parameter in the function will affect the variable being passed as the parameter. So, if we passed a boolean <code>switch</code> as the parameter and it has a value of <code>false</code> before passing it as a parameter; If we change the value of the parameter in the function to <code>true</code>, then the variable <code>switch</code> will no longer have <code>false</code> as its value and will now have <code>true</code> as its value.</p>
@@ -260,7 +261,42 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>Recompile and run. Now, draw a bunch of circles on the screen then press the spacebar. The screen should be cleared and the red rectangle should be the only thing on it.</p>
-<p>You can also bind the mouse scroll wheel using the bindToScroll() method. All it takes is a Lambda function. You can check out an excellent example of using bindToScroll() method in <a href="https://github.com/Calvin-CS/TSGL/blob/master/src/tests/testMandelbrot.cpp">testMandelbrot.cpp</a> located in the "tests" folder.</p>
+<p>How about an example using the bindToScroll() method?</p>
+<p>Let's take a look:</p>
+<div class="fragment"><div class="line"><span class="preprocessor">#include &lt;tsgl.h&gt;</span></div>
+<div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacetsgl.html">tsgl</a>;</div>
+<div class="line"></div>
+<div class="line"><span class="keywordtype">int</span> main() {</div>
+<div class="line">  <a class="code" href="classtsgl_1_1_canvas.html">Canvas</a> c(0, 0, 500, 500, <span class="stringliteral">&quot;I/O Example&quot;</span>);</div>
+<div class="line">  c.start();</div>
+<div class="line">  <span class="comment">//These variables are in the scope of the Lambda function.</span></div>
+<div class="line">  <span class="comment">//They can be passed in.</span></div>
+<div class="line">  <span class="keywordtype">int</span> circleX = 250, circleY = 250;</div>
+<div class="line"></div>
+<div class="line">  c.bindToScroll([&amp;circleY](<span class="keywordtype">double</span> dx, <span class="keywordtype">double</span> dy) {</div>
+<div class="line">    <span class="keywordflow">if</span>(dy == 1.0) { <span class="comment">//If you move the scroll wheel down...</span></div>
+<div class="line">      circleY -= 50;  <span class="comment">//Decrement the circle&#39;s y-coordinate.</span></div>
+<div class="line">    } <span class="keywordflow">else</span> { <span class="comment">//Else...</span></div>
+<div class="line">      circleY += 50;  <span class="comment">//Increment the coordinate.</span></div>
+<div class="line">    }</div>
+<div class="line">  });</div>
+<div class="line"></div>
+<div class="line">  <span class="comment">//Drawing loop</span></div>
+<div class="line">  <span class="keywordflow">while</span>(c.isOpen()) {</div>
+<div class="line">    c.sleep();</div>
+<div class="line">    c.drawCircle(circleX, circleY, 50, 32);</div>
+<div class="line">    c.clear();</div>
+<div class="line">  }</div>
+<div class="line">  c.wait();</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>Recompile and run. A black circle should appear on the screen. Scroll up to make the circle go up, scroll down to make the circle go down.</p>
+<p>Allow us to explain this example.</p>
+<p>The bindToScroll() method takes in a Lambda function, which in turn, takes in two parameters:</p><ul>
+<li>dx, which is an x parameter to be called when the mouse is scrolled.</li>
+<li>dy, which is a y parameter to be called when the mouse is scrolled.</li>
+</ul>
+<p>Think of dy as the state of the mouse: 1.0 means that we are scrolling down, anything else is scrolling up (as seen in the if-else block above).</p>
+<p>The bindToScroll() method <em>MUST</em> take in those two parameters, regardless of not using the x parameter.</p>
 <p>In sum, in order to do animations with I/O capabilities, you need to use bindToButton() for keyboard and mouse button events and bindToScroll() for mouse scroll wheel events.</p>
 <p>See <a href="http://calvin-cs.github.io/TSGL/html/_keynums_8h_source.html">Keynums.h</a> for constants that are mapped to specific keys on the keyboard as well as are mapped to the mouse buttons and scroll wheel.</p>
 <p>The CartesianCanvas handles I/O in exactly the same way as the standard Canvas does (since it is a subclass of the Canvas class).</p>
@@ -269,7 +305,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 3 2015 10:59:31 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 3 2015 11:18:23 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

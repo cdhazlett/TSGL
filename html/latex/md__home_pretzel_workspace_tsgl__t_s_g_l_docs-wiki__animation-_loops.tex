@@ -147,6 +147,41 @@ The clear() method tells the Canvas to clear the screen so that its blank again.
 
 By placing that method call at the end of the draw loop, the Canvas will draw a circle, change the x-\/coordinate, clear itself, and then redraw the circle with the new x-\/coordinate in the next frame.
 
+The circle just moves off screen though...is there anyway to make it so that once it goes off screen it gets redrawn back onto the screen?
+
+Certainly\+:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 500, 600, \textcolor{stringliteral}{"Animation Loop Example"});
+  c.start();
+  \textcolor{comment}{//Store the x and y-coordinate values in variables outside of the loop}
+  \textcolor{keywordtype}{int} x = 250, y = 300;
+  \textcolor{comment}{//Drawing loop}
+  \textcolor{keywordflow}{while}(c.isOpen()) \{
+    c.sleep();
+    \textcolor{comment}{//Check to see if we are off screen}
+    \textcolor{keywordflow}{if} (x >= c.getWindowWidth()) \{
+       x = 250; \textcolor{comment}{//If so, reset the x-coordinate}
+    \}
+    \textcolor{comment}{//Let's draw a circle!}
+    \textcolor{comment}{//Pass the x and y coordinates}
+    c.drawCircle(x, y, 50, 32);
+    \textcolor{comment}{//And change the x-coordinate once the circle has been drawn}
+    x += 5;
+    c.clear(); \textcolor{comment}{//New statement}
+  \}
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+c.\+get\+Window\+Width() is the accessor for the width of the current Canvas. If the x-\/coordinate value is greater than or equal to that value, then it gets reset back to 250 and so appears to be animated!
+
 In sum, in order to have an animation, follow these steps\+:
 
 1). Create and initialize a Canvas object.

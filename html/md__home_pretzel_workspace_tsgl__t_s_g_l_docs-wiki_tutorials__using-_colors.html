@@ -149,7 +149,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 <p>It takes in floating-point values for the parameters. The range of values for the Hue parameter is: 0.0 to 6.0. For the Saturation, Value, and Alpha components: 0.0 to 1.0.</p>
 <p>Now, given these three structs, the question remains: "How can I use these in drawing?"</p>
-<p>Well, as seen in the previous tutorial with shapes, you can pass a color parameter that will draw a shape or line a different color. You can create a ColorInt/ColorFloat/ColorHSV struct that creates the color that you want and then pass that as the color parameter in the draw method. Example:</p>
+<p>Well, as seen in the previous tutorial with shapes, you can draw a shape or line in a non-default color by passing a color parameter. You can create a ColorInt/ColorFloat/ColorHSV struct that creates the color that you want and then pass that as the color parameter in the draw method. Example:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;tsgl.h&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacetsgl.html">tsgl</a>;</div>
 <div class="line"></div>
@@ -180,7 +180,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li><code>CYAN</code></li>
 <li><code>BROWN</code></li>
 </ul>
-<p>You can pass either a constructed ColorInt/ColorFloat/ColorHSV struct, or a predefined color constant for the color parameter. Whichever is easier for you.</p>
+<p>You can pass a predefined color constant for the color parameter, or if you need a different color, you can construct a ColorInt/ColorFloat/ColorHSF struct for that color and pass that. Whichever is easier for you.</p>
 <p>Now, there are also methods and operators defined in the structs that manipulate and convert between the three structs (which in turn convert between the different color scales and types of structs).</p>
 <p>There are also methods in a class, Colors, that can blend the colors of two ColorInt/ColorFloat/ColorHSV structs as well as other useful utility methods.</p>
 <p>See the [[TSGL API]] page on <a href="http://calvin-cs.github.io/TSGL/html/classtsgl_1_1_colors.html">Colors.h</a> for more information on the predefined color constants as well as for the useful utility methods.</p>
@@ -200,7 +200,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 3 2015 10:59:31 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 3 2015 11:18:23 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

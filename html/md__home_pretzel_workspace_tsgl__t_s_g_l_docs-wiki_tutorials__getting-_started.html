@@ -89,34 +89,50 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>Moving forward, let's add some code that will create and initialize a Canvas. A Canvas is essentially a screen that draws and displays whatever it is that you want to draw and display. There's a special kind of Canvas, the CartesianCanvas, that we will look at later on.</p>
 <p>For now, let's focus on the normal Canvas:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">int</span> main() {</div>
-<div class="line">  Canvas c(0, 0, 200, 300, <span class="stringliteral">&quot;Hello World!&quot;</span>);</div>
+<div class="line">  Canvas c(0, 0, 600, 350, <span class="stringliteral">&quot;Hello World!&quot;</span>);</div>
 <div class="line">  c.start();</div>
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>This is essentially the skeleton code for any TSGL program. Let's break it down. In the main method, a Canvas object is created centered at (0, 0) (on your monitor) with a width of 200 and a height of 300. It has a title, "Hello World!".</p>
+</div><!-- fragment --><p>This is essentially the skeleton code for any TSGL program. Let's break it down. In the main method, a Canvas object is created centered at (0, 0) (on your monitor) with a width of 600 and a height of 350. It has a title, "Hello World!".</p>
 <p>The c.start() and c.wait() statements tell the Canvas to start drawing and then wait to close once it has completed drawing.</p>
-<p>In between the c.start() and c.wait() statements is where the magic happens. We will place a new statement which will draw text to the Canvas:</p>
+<p>In between the c.start() and c.wait() statements is where the magic happens. We will place a new statement which will draw a line to the Canvas:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;tsgl.h&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span><a class="code" href="namespacetsgl.html">tsgl</a>;</div>
 <div class="line"></div>
 <div class="line"><span class="keywordtype">int</span> main() {</div>
-<div class="line">  <a class="code" href="classtsgl_1_1_canvas.html">Canvas</a> c(0, 0, 200, 300, <span class="stringliteral">&quot;Hello World!&quot;</span>);</div>
+<div class="line">  <a class="code" href="classtsgl_1_1_canvas.html">Canvas</a> c(0, 0, 600, 350, <span class="stringliteral">&quot;Hello World!&quot;</span>);</div>
 <div class="line">  c.start();</div>
-<div class="line">  c.setFont(<span class="stringliteral">&quot;assets/freefont/FreeMono.ttf&quot;</span>);</div>
-<div class="line">  c.drawText(<span class="stringliteral">&quot;Hello World!&quot;</span>, 50, 150, 20, BLACK);</div>
+<div class="line">  <span class="comment">//&#39;H&#39;</span></div>
+<div class="line">  c.drawLine(100, 50, 100, 300);</div>
+<div class="line">  c.drawLine(100, 150, 165, 150);</div>
+<div class="line">  c.drawLine(165, 50, 165, 300);</div>
+<div class="line"></div>
+<div class="line">  <span class="comment">//&#39;E&#39;</span></div>
+<div class="line">  c.drawLine(200, 50, 280, 50);</div>
+<div class="line">  c.drawLine(200, 50, 200, 300);</div>
+<div class="line">  c.drawLine(200, 150, 280, 150);</div>
+<div class="line">  c.drawLine(200, 300, 280, 300);</div>
+<div class="line"></div>
+<div class="line">  <span class="comment">//The two &#39;L&#39;s</span></div>
+<div class="line">  c.drawLine(300, 50, 300, 300);</div>
+<div class="line">  c.drawLine(300, 300, 320, 300);</div>
+<div class="line">  c.drawLine(350, 50, 350, 300);</div>
+<div class="line">  c.drawLine(350, 300, 370, 300);</div>
+<div class="line"></div>
+<div class="line">  <span class="comment">//&#39;O&#39;</span></div>
+<div class="line">  c.drawCircle(480, 180, 100, 64, BLACK, <span class="keyword">false</span>);</div>
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>c.setFont() sets the font of the text to draw. (<em>NOTE:</em> If you ever want to draw text, make sure you set the font first! See the freetype folder located in the assets folder of the TSGL source code for available fonts.).</p>
-<p>c.drawText() draws text to the Canvas with the top left part of the text starting at (50, 150) and then it is drawn 20 pixels wide in black (BLACK is a TSGL color constant. There are multiple color constants available such as RED, BLUE, ORANGE, and so on. We will take a look at these later.).</p>
-<p>Our code is now complete! Compile the code, and then once it has compiled correctly, run it. A window should pop up with "Hello World!" located in the center. To close the window, press the ESC key or click the 'x' in one of the corners.</p>
+</div><!-- fragment --><p>We will examine the drawLine() and drawCircle() methods in the [[Using Shapes]] tutorial. For now, just know that drawLine() draws a line to the Canvas and drawCircle() draws a circle to the Canvas.</p>
+<p>Our code is now complete! Compile the code, and then once it has compiled correctly, run it. A window should pop up with "Hello" written on it. To close the window, press the ESC key or click the 'x' in one of the corners.</p>
 <p>Please note that the c.start() and c.wait() methods <em>MUST</em> be used at least once when working with the Canvas class. Bad things will happen if you do not have these methods and decide to draw something on a Canvas.</p>
-<p>Also, the special Canvas, CartesianCanvas, handles text in much the same way as the standard Canvas does (but on a Cartesian coordinate system instead).</p>
+<p>Also, the special Canvas, CartesianCanvas, handles lines and circles in much the same way as the standard Canvas does (but on a Cartesian coordinate system instead).</p>
 <p>You've just made your first TSGL project, congratulations!</p>
 <p>Next up, in [[Using Shapes]], we take a look at how to draw shapes onto a Canvas. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 3 2015 10:59:31 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 3 2015 11:18:23 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

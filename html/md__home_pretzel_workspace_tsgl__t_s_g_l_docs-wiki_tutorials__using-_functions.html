@@ -111,7 +111,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- fragment --><p>That should position the CartesianCanvas someplace else on your monitor.</p>
 <p>Notice how the Canvas has integer coordinates whereas the CartesianCanvas has Decimal coordinates.</p>
 <p>Notice also how you can set the upper left corner of the CartesianCanvas with the first two arguments. These arguments can be used to position the canvas arbitrarily. You can set it pretty much anywhere you want (within reason of course. It has to be within the range of the size of the screen.).</p>
-<p>You can use the 4th, 5th, 6th, and 7th arguments to set the bounds of the coordinate system within the Canvas.</p>
+<p>You can use the 4th, 5th, 6th, and 7th arguments to set the bounds of the coordinate system within the CartesianCanvas.</p>
 <p>As mentioned before, the CartesianCanvas handles colors, shapes, and drawing loops in much the same way as a standard Canvas does.</p>
 <p>Now, how can we graph mathematical functions?</p>
 <p>Well, let's first tell the CartesianCanvas to draw axes:</p>
@@ -194,6 +194,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">  CotangentFunction cot;  <span class="comment">//Create an instance of the CotangentFunction class</span></div>
 <div class="line">  <span class="comment">//Drawing loop</span></div>
 <div class="line">  <span class="keywordflow">while</span>(c.isOpen()) {</div>
+<div class="line">    c.sleep();</div>
 <div class="line">    c.drawFunction(cot); <span class="comment">//Draw it onto the CartesianCanvas</span></div>
 <div class="line">  }</div>
 <div class="line">  c.wait();</div>
@@ -218,7 +219,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 3 2015 10:59:31 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 3 2015 11:18:23 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

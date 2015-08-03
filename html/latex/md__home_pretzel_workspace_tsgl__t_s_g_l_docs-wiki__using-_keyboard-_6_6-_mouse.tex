@@ -95,7 +95,8 @@ Recompile and run. A rectangle should appear in red on the screen. Click the scr
 The bind\+To\+Button() method takes in three parameters\+:
 \begin{DoxyItemize}
 \item A key or button to bind to (e.\+g. T\+S\+G\+L\+\_\+\+A for the \textquotesingle{}A\textquotesingle{} key).
-\item An event associated with that key (T\+S\+G\+L\+\_\+\+P\+R\+E\+S\+S for when it\textquotesingle{}s pressed, T\+S\+G\+L\+\_\+\+R\+E\+L\+E\+A\+S\+E when it is released). $\ast$ An unnamed (Lambda) function that will be passed to bind\+To\+Button() when that method is invoked.
+\item An event associated with that key (T\+S\+G\+L\+\_\+\+P\+R\+E\+S\+S for when it\textquotesingle{}s pressed, T\+S\+G\+L\+\_\+\+R\+E\+L\+E\+A\+S\+E when it is released).
+\item An unnamed (Lambda) function that will be passed to bind\+To\+Button() when that method is invoked.
 \end{DoxyItemize}
 
 Allow us to explain Lambda functions a little more in-\/depth.
@@ -237,7 +238,54 @@ To do so, we can bind the spacebar on-\/press event to a Lambda function that wi
 
 Recompile and run. Now, draw a bunch of circles on the screen then press the spacebar. The screen should be cleared and the red rectangle should be the only thing on it.
 
-You can also bind the mouse scroll wheel using the bind\+To\+Scroll() method. All it takes is a Lambda function. You can check out an excellent example of using bind\+To\+Scroll() method in \href{https://github.com/Calvin-CS/TSGL/blob/master/src/tests/testMandelbrot.cpp}{\tt test\+Mandelbrot.\+cpp} located in the \char`\"{}tests\char`\"{} folder.
+How about an example using the bind\+To\+Scroll() method?
+
+Let\textquotesingle{}s take a look\+:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 500, 500, \textcolor{stringliteral}{"I/O Example"});
+  c.start();
+  \textcolor{comment}{//These variables are in the scope of the Lambda function.}
+  \textcolor{comment}{//They can be passed in.}
+  \textcolor{keywordtype}{int} circleX = 250, circleY = 250;
+
+  c.bindToScroll([&circleY](\textcolor{keywordtype}{double} dx, \textcolor{keywordtype}{double} dy) \{
+    \textcolor{keywordflow}{if}(dy == 1.0) \{ \textcolor{comment}{//If you move the scroll wheel down...}
+      circleY -= 50;  \textcolor{comment}{//Decrement the circle's y-coordinate.}
+    \} \textcolor{keywordflow}{else} \{ \textcolor{comment}{//Else...}
+      circleY += 50;  \textcolor{comment}{//Increment the coordinate.}
+    \}
+  \});
+
+  \textcolor{comment}{//Drawing loop}
+  \textcolor{keywordflow}{while}(c.isOpen()) \{
+    c.sleep();
+    c.drawCircle(circleX, circleY, 50, 32);
+    c.clear();
+  \}
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Recompile and run. A black circle should appear on the screen. Scroll up to make the circle go up, scroll down to make the circle go down.
+
+Allow us to explain this example.
+
+The bind\+To\+Scroll() method takes in a Lambda function, which in turn, takes in two parameters\+:
+\begin{DoxyItemize}
+\item dx, which is an x parameter to be called when the mouse is scrolled.
+\item dy, which is a y parameter to be called when the mouse is scrolled.
+\end{DoxyItemize}
+
+Think of dy as the state of the mouse\+: 1.\+0 means that we are scrolling down, anything else is scrolling up (as seen in the if-\/else block above).
+
+The bind\+To\+Scroll() method {\itshape M\+U\+S\+T} take in those two parameters, regardless of not using the x parameter.
 
 In sum, in order to do animations with I/\+O capabilities, you need to use bind\+To\+Button() for keyboard and mouse button events and bind\+To\+Scroll() for mouse scroll wheel events.
 

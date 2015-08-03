@@ -20,18 +20,18 @@ For now, let\textquotesingle{}s focus on the normal Canvas\+:
 
 \begin{DoxyCode}
 \textcolor{keywordtype}{int} main() \{
-  Canvas c(0, 0, 200, 300, \textcolor{stringliteral}{"Hello World!"});
+  Canvas c(0, 0, 600, 350, \textcolor{stringliteral}{"Hello World!"});
   c.start();
   c.wait();
 \}
 \end{DoxyCode}
 
 
-This is essentially the skeleton code for any T\+S\+G\+L program. Let\textquotesingle{}s break it down. In the main method, a Canvas object is created centered at (0, 0) (on your monitor) with a width of 200 and a height of 300. It has a title, \char`\"{}\+Hello World!\char`\"{}.
+This is essentially the skeleton code for any T\+S\+G\+L program. Let\textquotesingle{}s break it down. In the main method, a Canvas object is created centered at (0, 0) (on your monitor) with a width of 600 and a height of 350. It has a title, \char`\"{}\+Hello World!\char`\"{}.
 
 The c.\+start() and c.\+wait() statements tell the Canvas to start drawing and then wait to close once it has completed drawing.
 
-In between the c.\+start() and c.\+wait() statements is where the magic happens. We will place a new statement which will draw text to the Canvas\+:
+In between the c.\+start() and c.\+wait() statements is where the magic happens. We will place a new statement which will draw a line to the Canvas\+:
 
 
 \begin{DoxyCode}
@@ -39,24 +39,39 @@ In between the c.\+start() and c.\+wait() statements is where the magic happens.
 \textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
 
 \textcolor{keywordtype}{int} main() \{
-  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 200, 300, \textcolor{stringliteral}{"Hello World!"});
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 600, 350, \textcolor{stringliteral}{"Hello World!"});
   c.start();
-  c.setFont(\textcolor{stringliteral}{"assets/freefont/FreeMono.ttf"});
-  c.drawText(\textcolor{stringliteral}{"Hello World!"}, 50, 150, 20, BLACK);
+  \textcolor{comment}{//'H'}
+  c.drawLine(100, 50, 100, 300);
+  c.drawLine(100, 150, 165, 150);
+  c.drawLine(165, 50, 165, 300);
+
+  \textcolor{comment}{//'E'}
+  c.drawLine(200, 50, 280, 50);
+  c.drawLine(200, 50, 200, 300);
+  c.drawLine(200, 150, 280, 150);
+  c.drawLine(200, 300, 280, 300);
+
+  \textcolor{comment}{//The two 'L's}
+  c.drawLine(300, 50, 300, 300);
+  c.drawLine(300, 300, 320, 300);
+  c.drawLine(350, 50, 350, 300);
+  c.drawLine(350, 300, 370, 300);
+
+  \textcolor{comment}{//'O'}
+  c.drawCircle(480, 180, 100, 64, BLACK, \textcolor{keyword}{false});
   c.wait();
 \}
 \end{DoxyCode}
 
 
-c.\+set\+Font() sets the font of the text to draw. ({\itshape N\+O\+T\+E\+:} If you ever want to draw text, make sure you set the font first! See the freetype folder located in the assets folder of the T\+S\+G\+L source code for available fonts.).
+We will examine the draw\+Line() and draw\+Circle() methods in the \mbox{[}\mbox{[}Using Shapes\mbox{]}\mbox{]} tutorial. For now, just know that draw\+Line() draws a line to the Canvas and draw\+Circle() draws a circle to the Canvas.
 
-c.\+draw\+Text() draws text to the Canvas with the top left part of the text starting at (50, 150) and then it is drawn 20 pixels wide in black (B\+L\+A\+C\+K is a T\+S\+G\+L color constant. There are multiple color constants available such as R\+E\+D, B\+L\+U\+E, O\+R\+A\+N\+G\+E, and so on. We will take a look at these later.).
-
-Our code is now complete! Compile the code, and then once it has compiled correctly, run it. A window should pop up with \char`\"{}\+Hello World!\char`\"{} located in the center. To close the window, press the E\+S\+C key or click the \textquotesingle{}x\textquotesingle{} in one of the corners.
+Our code is now complete! Compile the code, and then once it has compiled correctly, run it. A window should pop up with \char`\"{}\+Hello\char`\"{} written on it. To close the window, press the E\+S\+C key or click the \textquotesingle{}x\textquotesingle{} in one of the corners.
 
 Please note that the c.\+start() and c.\+wait() methods {\itshape M\+U\+S\+T} be used at least once when working with the Canvas class. Bad things will happen if you do not have these methods and decide to draw something on a Canvas.
 
-Also, the special Canvas, Cartesian\+Canvas, handles text in much the same way as the standard Canvas does (but on a Cartesian coordinate system instead).
+Also, the special Canvas, Cartesian\+Canvas, handles lines and circles in much the same way as the standard Canvas does (but on a Cartesian coordinate system instead).
 
 You\textquotesingle{}ve just made your first T\+S\+G\+L project, congratulations!
 

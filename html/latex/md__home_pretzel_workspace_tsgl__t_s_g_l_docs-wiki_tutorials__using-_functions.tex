@@ -54,7 +54,7 @@ Notice how the Canvas has integer coordinates whereas the Cartesian\+Canvas has 
 
 Notice also how you can set the upper left corner of the Cartesian\+Canvas with the first two arguments. These arguments can be used to position the canvas arbitrarily. You can set it pretty much anywhere you want (within reason of course. It has to be within the range of the size of the screen.).
 
-You can use the 4th, 5th, 6th, and 7th arguments to set the bounds of the coordinate system within the Canvas.
+You can use the 4th, 5th, 6th, and 7th arguments to set the bounds of the coordinate system within the Cartesian\+Canvas.
 
 As mentioned before, the Cartesian\+Canvas handles colors, shapes, and drawing loops in much the same way as a standard Canvas does.
 
@@ -186,6 +186,7 @@ To do so, simply create an instance of the Cotangent\+Function class and then pa
   CotangentFunction cot;  \textcolor{comment}{//Create an instance of the CotangentFunction class}
   \textcolor{comment}{//Drawing loop}
   \textcolor{keywordflow}{while}(c.isOpen()) \{
+    c.sleep();
     c.drawFunction(cot); \textcolor{comment}{//Draw it onto the CartesianCanvas}
   \}
   c.wait();
