@@ -186,9 +186,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1c8ac321138948650a3006f325dfb886"><td class="memItemLeft" align="right" valign="top">float&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtsgl_1_1_canvas.html#a1c8ac321138948650a3006f325dfb886">getFPS</a> ()</td></tr>
 <tr class="memdesc:a1c8ac321138948650a3006f325dfb886"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor for the current FPS.  <a href="#a1c8ac321138948650a3006f325dfb886">More...</a><br /></td></tr>
 <tr class="separator:a1c8ac321138948650a3006f325dfb886"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa933363de2d19ec516603a2ed3b4f817"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtsgl_1_1_canvas.html#aa933363de2d19ec516603a2ed3b4f817">getIsOpen</a> ()</td></tr>
-<tr class="memdesc:aa933363de2d19ec516603a2ed3b4f817"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor for window's closed status.  <a href="#aa933363de2d19ec516603a2ed3b4f817">More...</a><br /></td></tr>
-<tr class="separator:aa933363de2d19ec516603a2ed3b4f817"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ada31408e9a96ecb1639f552d8f0de475"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtsgl_1_1_canvas.html#ada31408e9a96ecb1639f552d8f0de475">isOpen</a> ()</td></tr>
+<tr class="memdesc:ada31408e9a96ecb1639f552d8f0de475"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor for window's closed status.  <a href="#ada31408e9a96ecb1639f552d8f0de475">More...</a><br /></td></tr>
+<tr class="separator:ada31408e9a96ecb1639f552d8f0de475"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4af9bed83746f998474039185d2a765a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classtsgl_1_1_canvas.html#a4af9bed83746f998474039185d2a765a">getMouseX</a> ()</td></tr>
 <tr class="memdesc:a4af9bed83746f998474039185d2a765a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Accessor for the mouse's x-position.  <a href="#a4af9bed83746f998474039185d2a765a">More...</a><br /></td></tr>
 <tr class="separator:a4af9bed83746f998474039185d2a765a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -1512,26 +1512,6 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>atiCard</b></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="aa933363de2d19ec516603a2ed3b4f817"></a>
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool tsgl::Canvas::getIsOpen </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Accessor for window's closed status. </p>
-<dl class="section return"><dt>Returns</dt><dd>Whether the window is still open (that is, the user has not closed it). </dd></dl>
-
-<p>Referenced by <a class="el" href="classtsgl_1_1_visual_task_queue.html#a7340d211424a9f947152fed22cce4d79">tsgl::VisualTaskQueue::close()</a>, <a class="el" href="classtsgl_1_1_cartesian_canvas.html#aa8c215b817d95e3e05ff26f835470c41">tsgl::CartesianCanvas::drawFunction()</a>, <a class="el" href="classtsgl_1_1_cartesian_canvas.html#a8b0d9607230111dd6bef5bf270394b03">tsgl::CartesianCanvas::drawPartialFunction()</a>, <a class="el" href="classtsgl_1_1_integral_viewer.html#a213d814ac293686ecd06c45344fa242f">tsgl::IntegralViewer::rectangleEvaluate()</a>, <a class="el" href="classtsgl_1_1_integral_viewer.html#a485bd58c87267460baf013cdf786eae7">tsgl::IntegralViewer::trapezoidEvaluate()</a>, and <a class="el" href="classtsgl_1_1_integral_viewer.html#a50961f189bd1988fb9b96b66b701fdf2">tsgl::IntegralViewer::~IntegralViewer()</a>.</p>
-
-</div>
-</div>
 <a class="anchor" id="a4af9bed83746f998474039185d2a765a"></a>
 <div class="memitem">
 <div class="memproto">
@@ -1826,6 +1806,26 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>atiCard</b></td></tr>
 <b>OS X:</b> This function exists for OS X compatibility purposes. This function does nothing on Linux or Windows. </dd></dl>
 
 <p>Referenced by <a class="el" href="classtsgl_1_1_canvas.html#a2604fa056d4541f918ccf447eda1f3cf">sleep()</a>, and <a class="el" href="classtsgl_1_1_canvas.html#a6674cc86b9a54b6a564021fddce47e36">sleepFor()</a>.</p>
+
+</div>
+</div>
+<a class="anchor" id="ada31408e9a96ecb1639f552d8f0de475"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool tsgl::Canvas::isOpen </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Accessor for window's closed status. </p>
+<dl class="section return"><dt>Returns</dt><dd>Whether the window is still open (that is, the user has not closed it). </dd></dl>
+
+<p>Referenced by <a class="el" href="classtsgl_1_1_visual_task_queue.html#a7340d211424a9f947152fed22cce4d79">tsgl::VisualTaskQueue::close()</a>, <a class="el" href="classtsgl_1_1_cartesian_canvas.html#aa8c215b817d95e3e05ff26f835470c41">tsgl::CartesianCanvas::drawFunction()</a>, <a class="el" href="classtsgl_1_1_cartesian_canvas.html#a8b0d9607230111dd6bef5bf270394b03">tsgl::CartesianCanvas::drawPartialFunction()</a>, <a class="el" href="classtsgl_1_1_integral_viewer.html#a213d814ac293686ecd06c45344fa242f">tsgl::IntegralViewer::rectangleEvaluate()</a>, <a class="el" href="classtsgl_1_1_integral_viewer.html#a485bd58c87267460baf013cdf786eae7">tsgl::IntegralViewer::trapezoidEvaluate()</a>, and <a class="el" href="classtsgl_1_1_integral_viewer.html#a50961f189bd1988fb9b96b66b701fdf2">tsgl::IntegralViewer::~IntegralViewer()</a>.</p>
 
 </div>
 </div>
@@ -2509,7 +2509,7 @@ bool&#160;</td><td class="memItemRight" valign="bottom"><b>atiCard</b></td></tr>
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 24 2015 14:38:00 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 3 2015 10:59:32 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.9.1
 </small></address>

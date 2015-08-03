@@ -1,7 +1,11 @@
 var searchData=
 [
-  ['line',['Line',['../classtsgl_1_1_line.html',1,'tsgl']]],
-  ['line',['Line',['../classtsgl_1_1_line.html#af16488259ac5978679e13d58cf7e91ef',1,'tsgl::Line']]],
-  ['loadfont',['loadFont',['../classtsgl_1_1_texture_handler.html#a8f93300474b0a3a509ffbbbc753f3623',1,'tsgl::TextureHandler']]],
-  ['loadpicture',['loadPicture',['../classtsgl_1_1_texture_handler.html#a0f760cedd2b6c1f72fe272efc5fbd047',1,'tsgl::TextureHandler']]]
+  ['image',['Image',['../classtsgl_1_1_image.html',1,'tsgl']]],
+  ['image',['Image',['../classtsgl_1_1_image.html#a497894a4dbfa46d1e3aefd7dbe086cc3',1,'tsgl::Image']]],
+  ['integralviewer',['IntegralViewer',['../classtsgl_1_1_integral_viewer.html',1,'tsgl']]],
+  ['integralviewer',['IntegralViewer',['../classtsgl_1_1_integral_viewer.html#a1fe15a118865fcaf3067dc73cf3f912c',1,'tsgl::IntegralViewer']]],
+  ['intersects',['intersects',['../classtsgl_1_1_concave_polygon.html#a0fdc4936df5e1bff64031041fa84fee5',1,'tsgl::ConcavePolygon']]],
+  ['isempty',['isEmpty',['../classtsgl_1_1_array.html#a2676cc880c5638849db5777f33680c9c',1,'tsgl::Array']]],
+  ['isopen',['isOpen',['../classtsgl_1_1_canvas.html#ada31408e9a96ecb1639f552d8f0de475',1,'tsgl::Canvas']]],
+  ['issues_2dand_2dreviews',['Issues-and-Reviews',['../md__home_pretzel_workspace_tsgl__t_s_g_l_docs-wiki__issues-and-_reviews.html',1,'']]]
 ];

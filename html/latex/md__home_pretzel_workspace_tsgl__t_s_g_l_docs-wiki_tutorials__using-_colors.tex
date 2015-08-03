@@ -1,0 +1,178 @@
+You don\textquotesingle{}t have to color inside of the lines with this library.
+
+To begin, there are different scales that contain different representations of a color. In the T\+S\+G\+L library these scales are used\+: R\+G\+B\+A and H\+S\+V\+A.
+
+On both scales, a color has four components. However, the components represent entirely different things on the two scales.
+
+On the R\+G\+B\+A scale, the four components represent a color\textquotesingle{}s Red, Green, Blue, and Alpha values. The Red, Green, and Blue values combine to form the color that you want. The Alpha value determines whether or not a color should be transparent and is completely optional.
+
+On the H\+S\+V\+A scale, the four components represent a color\textquotesingle{}s Hue, Saturation, Value, and Alpha values. The Hue refers to the tint of the color, Saturation refers to the color\textquotesingle{}s brightness, and the Value refers to the intensity of the color. These three components combine to form a color on the H\+S\+V\+A color scale. The Alpha value is an optional component that determines whether the color is transparent or not.
+
+Given these two scales, you\textquotesingle{}re probably wondering\+: \char`\"{}\+How in the heck are these two scales represented in the library?\char`\"{}
+
+Well, given that we are coding in C++, there are structures in the language that are known affectionately as \char`\"{}structs\char`\"{}. Structs can contain data and are perfect for representing these two scales.
+
+In the T\+S\+G\+L library, there are two structs used to represent a color on the R\+G\+B\+A scale\+: {\ttfamily Color\+Int} \&\& {\ttfamily Color\+Float}. They are constructed in this way\+:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
+
+\textcolor{keywordtype}{int} main() \{
+  \textcolor{comment}{//ColorInts}
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} red(255, 0, 0); 
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} blue(0, 0, 255);
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} green(0, 255, 0); 
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} yellow(255, 255, 0);
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} magenta(255, 0, 255);
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} cyan(0, 255, 255);
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} black(0, 0, 0);
+  \textcolor{comment}{//The above colors will not be transparent}
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} white(255, 255, 255, 0);  \textcolor{comment}{//This color will be transparent}
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} color(67, 28, 200, 50); \textcolor{comment}{//This color will be semi-transparent  }
+
+
+  \textcolor{comment}{//ColorFloats}
+  \hyperlink{structtsgl_1_1_color_float}{ColorFloat} red2(1.0f, 0.0f, 0.0f); 
+  \hyperlink{structtsgl_1_1_color_float}{ColorFloat} blue2(0.0f, 0.0f, 1.0f);
+  \hyperlink{structtsgl_1_1_color_float}{ColorFloat} green2(0.0f, 1.0f, 0.0f); 
+  \hyperlink{structtsgl_1_1_color_float}{ColorFloat} yellow2(1.0f, 1.0f, 0.0f);
+  \hyperlink{structtsgl_1_1_color_float}{ColorFloat} magenta2(1.0f, 0.0f, 1.0f);
+  \hyperlink{structtsgl_1_1_color_float}{ColorFloat} cyan2(0.0f, 1.0f, 1.0f);
+  \hyperlink{structtsgl_1_1_color_float}{ColorFloat} black2(0.0f, 0.0f, 0.0f);
+  \textcolor{comment}{//The above colors will not be transparent}
+  \hyperlink{structtsgl_1_1_color_float}{ColorFloat} white2(1.0f, 1.0f, 1.0f, 0.0f); \textcolor{comment}{//This color will be transparent}
+  \hyperlink{structtsgl_1_1_color_float}{ColorFloat} color2(67.0f, 28.0f, 200.0f, 50.0f); \textcolor{comment}{//This color will be semi-transparent }
+\}
+\end{DoxyCode}
+
+
+The Color\+Int constructor takes in these parameters\+:
+
+
+\begin{DoxyItemize}
+\item Red component of the color.
+\item Green component of the color.
+\item Blue component of the color.
+\item Alpha component of the color (optional parameter; set to 255 by default).
+\end{DoxyItemize}
+
+Each one can be in the range from 0 to 255.
+
+The Alpha component can be omitted and will be set to 255 as default if it is omitted (the color will not be transparent if the Alpha component is omitted. An Alpha value of 0 will cause the color to be completely transparent. In between those extremes will cause the color to fade.).
+
+White has 255 as its Red, Green, and Blue values, black has 0. In between those two extremes will be the other colors (red, orange, yellow, green, blue, indigo, violet, etc.).
+
+Similarly for a Color\+Float, the constructor takes in these parameters\+:
+
+
+\begin{DoxyItemize}
+\item Red component of the color.
+\item Green component of the color.
+\item Blue component of the color.
+\item Alpha component of the color (optional parameter; set to 1.\+0f by default).
+\end{DoxyItemize}
+
+The range of values for each one is from 0.\+0 to 1.\+0.
+
+It represents a color on the R\+G\+B\+A scale in the same way as a Color\+Int struct does, except it takes in floating-\/point numbers as parameters. Also, White has 1.\+0 as its Red, Green, and Blue values and black has 0.\+0.
+
+The Alpha component can also be omitted when creating a Color\+Float struct and it will be set to 1.\+0f as default (the color will not be transparent at that point. An Alpha value of 0.\+0 will cause the color to be completely transparent and the color will fade if its Alpha value is in between those two extremes.).
+
+For the H\+S\+V\+A color scale, we have the Color\+H\+S\+V struct\+:
+
+
+\begin{DoxyCode}
+ColorHSV minColor(0.0, 0.0, 0.0);
+ColorHSV maxColor(6.0, 1.0, 1.0);
+\end{DoxyCode}
+
+
+The Color\+H\+S\+V constructor takes in these parameters\+:
+
+
+\begin{DoxyItemize}
+\item Hue component of the color.
+\item Saturation component of the color.
+\item Value component of the color.
+\item Alpha component of the color (optional parameter; set to 1.\+0f by default).
+\end{DoxyItemize}
+
+It takes in floating-\/point values for the parameters. The range of values for the Hue parameter is\+: 0.\+0 to 6.\+0. For the Saturation, Value, and Alpha components\+: 0.\+0 to 1.\+0.
+
+Now, given these three structs, the question remains\+: \char`\"{}\+How can I use these in drawing?\char`\"{}
+
+Well, as seen in the previous tutorial with shapes, you can pass a color parameter that will draw a shape or line a different color. You can create a Color\+Int/\+Color\+Float/\+Color\+H\+S\+V struct that creates the color that you want and then pass that as the color parameter in the draw method. Example\+:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{structtsgl_1_1_color_int}{ColorInt} color(30, 50, 200);
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 300, 300, \textcolor{stringliteral}{"Color Example"});
+  c.start();
+  c.drawLine(30, 50, 100, 200, color);
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+The code will create a Color\+Int struct and then create and initialize a Canvas object. Then, it will draw a line on the Canvas passing the constructed Color\+Int struct as the color parameter.
+
+You can construct and pass Color\+Float and Color\+H\+S\+V structs in the same manner.
+
+But wait...in the previous tutorial, a constant was used instead of a constructed Color\+Float/\+Color\+Int/\+Color\+H\+S\+V struct. You\textquotesingle{}re probably thinking, \char`\"{}what\textquotesingle{}s the big idea here? Which one should I use?\char`\"{}
+
+Well, right out of the box, T\+S\+G\+L also comes with a predefined set of color constants. These constants are R\+G\+B\+A Color\+Float structs that already have values that are defined for certain colors. They are\+:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily B\+L\+A\+C\+K}
+\item {\ttfamily D\+A\+R\+K\+G\+R\+A\+Y}
+\item {\ttfamily G\+R\+A\+Y}
+\item {\ttfamily W\+H\+I\+T\+E}
+\item {\ttfamily R\+E\+D}
+\item {\ttfamily O\+R\+A\+N\+G\+E}
+\item {\ttfamily Y\+E\+L\+L\+O\+W}
+\item {\ttfamily G\+R\+E\+E\+N}
+\item {\ttfamily B\+L\+U\+E}
+\item {\ttfamily P\+U\+R\+P\+L\+E}
+\item {\ttfamily M\+A\+G\+E\+N\+T\+A}
+\item {\ttfamily L\+I\+M\+E}
+\item {\ttfamily C\+Y\+A\+N}
+\item {\ttfamily B\+R\+O\+W\+N}
+\end{DoxyItemize}
+
+You can pass either a constructed Color\+Int/\+Color\+Float/\+Color\+H\+S\+V struct, or a predefined color constant for the color parameter. Whichever is easier for you.
+
+Now, there are also methods and operators defined in the structs that manipulate and convert between the three structs (which in turn convert between the different color scales and types of structs).
+
+There are also methods in a class, Colors, that can blend the colors of two Color\+Int/\+Color\+Float/\+Color\+H\+S\+V structs as well as other useful utility methods.
+
+See the \mbox{[}\mbox{[}T\+S\+G\+L A\+P\+I\mbox{]}\mbox{]} page on \href{http://calvin-cs.github.io/TSGL/html/classtsgl_1_1_colors.html}{\tt Colors.\+h} for more information on the predefined color constants as well as for the useful utility methods.
+
+As we\textquotesingle{}ve mentioned before, there is a special kind of Canvas\+: The Cartesian\+Canvas. How does that handle colors? In the exact same way as the normal Canvas does.
+
+As a final note, you can also change the background color of the Canvas using the set\+Background\+Color() method\+:
+
+
+\begin{DoxyCode}
+\textcolor{comment}{//Set the background to red}
+  c.setBackgroundColor(RED);
+
+\textcolor{comment}{//Construct a ColorInt and pass it as an argument to the method.}
+  ColorFloat color(0.5, 1.0, 0.4);
+  c.setBackgroundColor(color);
+
+\textcolor{comment}{//etc...}
+\end{DoxyCode}
+
+
+set\+Background\+Color() takes in the color to use as an argument for the new background color of the Canvas.
+
+That concludes this tutorial!
+
+In the next tutorial, \mbox{[}\mbox{[}Animation Loops\mbox{]}\mbox{]}, you get to learn about drawing loops and animations! 

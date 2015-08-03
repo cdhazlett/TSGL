@@ -64,7 +64,7 @@ int \hyperlink{classtsgl_1_1_canvas_af4f8f2b1abd27316a4a39ae097407d37}{get\+Fram
 \begin{DoxyCompactList}\small\item\em Accessor for the current frame number. \end{DoxyCompactList}\item 
 float \hyperlink{classtsgl_1_1_canvas_a1c8ac321138948650a3006f325dfb886}{get\+F\+P\+S} ()
 \begin{DoxyCompactList}\small\item\em Accessor for the current F\+P\+S. \end{DoxyCompactList}\item 
-bool \hyperlink{classtsgl_1_1_canvas_aa933363de2d19ec516603a2ed3b4f817}{get\+Is\+Open} ()
+bool \hyperlink{classtsgl_1_1_canvas_ada31408e9a96ecb1639f552d8f0de475}{is\+Open} ()
 \begin{DoxyCompactList}\small\item\em Accessor for window\textquotesingle{}s closed status. \end{DoxyCompactList}\item 
 int \hyperlink{classtsgl_1_1_canvas_a4af9bed83746f998474039185d2a765a}{get\+Mouse\+X} ()
 \begin{DoxyCompactList}\small\item\em Accessor for the mouse\textquotesingle{}s x-\/position. \end{DoxyCompactList}\item 
@@ -833,24 +833,6 @@ The number of actual draw cycles / frames the \hyperlink{classtsgl_1_1_canvas}{C
 \begin{DoxySeeAlso}{See also}
 \hyperlink{classtsgl_1_1_canvas_a8f0819f368b41b147f1a7f560a7af6a4}{get\+Reps()} 
 \end{DoxySeeAlso}
-\hypertarget{classtsgl_1_1_canvas_aa933363de2d19ec516603a2ed3b4f817}{}\index{tsgl\+::\+Canvas@{tsgl\+::\+Canvas}!get\+Is\+Open@{get\+Is\+Open}}
-\index{get\+Is\+Open@{get\+Is\+Open}!tsgl\+::\+Canvas@{tsgl\+::\+Canvas}}
-\subsubsection[{get\+Is\+Open}]{\setlength{\rightskip}{0pt plus 5cm}bool tsgl\+::\+Canvas\+::get\+Is\+Open (
-\begin{DoxyParamCaption}
-{}
-\end{DoxyParamCaption}
-)}\label{classtsgl_1_1_canvas_aa933363de2d19ec516603a2ed3b4f817}
-
-
-Accessor for window\textquotesingle{}s closed status. 
-
-\begin{DoxyReturn}{Returns}
-Whether the window is still open (that is, the user has not closed it). 
-\end{DoxyReturn}
-
-
-Referenced by tsgl\+::\+Visual\+Task\+Queue\+::close(), tsgl\+::\+Cartesian\+Canvas\+::draw\+Function(), tsgl\+::\+Cartesian\+Canvas\+::draw\+Partial\+Function(), tsgl\+::\+Integral\+Viewer\+::rectangle\+Evaluate(), tsgl\+::\+Integral\+Viewer\+::trapezoid\+Evaluate(), and tsgl\+::\+Integral\+Viewer\+::$\sim$\+Integral\+Viewer().
-
 \hypertarget{classtsgl_1_1_canvas_a4af9bed83746f998474039185d2a765a}{}\index{tsgl\+::\+Canvas@{tsgl\+::\+Canvas}!get\+Mouse\+X@{get\+Mouse\+X}}
 \index{get\+Mouse\+X@{get\+Mouse\+X}!tsgl\+::\+Canvas@{tsgl\+::\+Canvas}}
 \subsubsection[{get\+Mouse\+X}]{\setlength{\rightskip}{0pt plus 5cm}int tsgl\+::\+Canvas\+::get\+Mouse\+X (
@@ -1096,6 +1078,24 @@ This function will return immediately if not called from the main thread.
 
 
 Referenced by sleep(), and sleep\+For().
+
+\hypertarget{classtsgl_1_1_canvas_ada31408e9a96ecb1639f552d8f0de475}{}\index{tsgl\+::\+Canvas@{tsgl\+::\+Canvas}!is\+Open@{is\+Open}}
+\index{is\+Open@{is\+Open}!tsgl\+::\+Canvas@{tsgl\+::\+Canvas}}
+\subsubsection[{is\+Open}]{\setlength{\rightskip}{0pt plus 5cm}bool tsgl\+::\+Canvas\+::is\+Open (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\label{classtsgl_1_1_canvas_ada31408e9a96ecb1639f552d8f0de475}
+
+
+Accessor for window\textquotesingle{}s closed status. 
+
+\begin{DoxyReturn}{Returns}
+Whether the window is still open (that is, the user has not closed it). 
+\end{DoxyReturn}
+
+
+Referenced by tsgl\+::\+Visual\+Task\+Queue\+::close(), tsgl\+::\+Cartesian\+Canvas\+::draw\+Function(), tsgl\+::\+Cartesian\+Canvas\+::draw\+Partial\+Function(), tsgl\+::\+Integral\+Viewer\+::rectangle\+Evaluate(), tsgl\+::\+Integral\+Viewer\+::trapezoid\+Evaluate(), and tsgl\+::\+Integral\+Viewer\+::$\sim$\+Integral\+Viewer().
 
 \hypertarget{classtsgl_1_1_canvas_abe021ab5148cc1327523689bced0f35a}{}\index{tsgl\+::\+Canvas@{tsgl\+::\+Canvas}!pause\+Drawing@{pause\+Drawing}}
 \index{pause\+Drawing@{pause\+Drawing}!tsgl\+::\+Canvas@{tsgl\+::\+Canvas}}

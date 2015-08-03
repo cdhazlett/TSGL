@@ -1,9 +1,6 @@
 var searchData=
 [
-  ['image',['Image',['../classtsgl_1_1_image.html',1,'tsgl']]],
-  ['image',['Image',['../classtsgl_1_1_image.html#a497894a4dbfa46d1e3aefd7dbe086cc3',1,'tsgl::Image']]],
-  ['integralviewer',['IntegralViewer',['../classtsgl_1_1_integral_viewer.html',1,'tsgl']]],
-  ['integralviewer',['IntegralViewer',['../classtsgl_1_1_integral_viewer.html#a1fe15a118865fcaf3067dc73cf3f912c',1,'tsgl::IntegralViewer']]],
-  ['intersects',['intersects',['../classtsgl_1_1_concave_polygon.html#a0fdc4936df5e1bff64031041fa84fee5',1,'tsgl::ConcavePolygon']]],
-  ['isempty',['isEmpty',['../classtsgl_1_1_array.html#a2676cc880c5638849db5777f33680c9c',1,'tsgl::Array']]]
+  ['handleio',['handleIO',['../classtsgl_1_1_canvas.html#aa499851e5e4b97bb99ca4fb3d633c17e',1,'tsgl::Canvas']]],
+  ['highcontrastcolor',['highContrastColor',['../classtsgl_1_1_colors.html#a93d3fc815542e586dbc1ecf3e984e0b6',1,'tsgl::Colors']]],
+  ['home',['Home',['../md__home_pretzel_workspace_tsgl__t_s_g_l_docs-wiki__home.html',1,'']]]
 ];

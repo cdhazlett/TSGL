@@ -11,7 +11,6 @@ var searchData=
   ['getfps',['getFPS',['../classtsgl_1_1_canvas.html#a1c8ac321138948650a3006f325dfb886',1,'tsgl::Canvas']]],
   ['getframenumber',['getFrameNumber',['../classtsgl_1_1_canvas.html#af4f8f2b1abd27316a4a39ae097407d37',1,'tsgl::Canvas']]],
   ['getheight',['getHeight',['../classtsgl_1_1_image.html#afa939262dcf32c9a504efe30a8de5c58',1,'tsgl::Image']]],
-  ['getisopen',['getIsOpen',['../classtsgl_1_1_canvas.html#aa933363de2d19ec516603a2ed3b4f817',1,'tsgl::Canvas']]],
   ['getistextured',['getIsTextured',['../classtsgl_1_1_shape.html#aadd0ea81f714328bdf9483851a8b86ad',1,'tsgl::Shape']]],
   ['getmaxx',['getMaxX',['../classtsgl_1_1_cartesian_canvas.html#ae3cbac386f78ecff082b8c4cbd9081ed',1,'tsgl::CartesianCanvas']]],
   ['getmaxy',['getMaxY',['../classtsgl_1_1_cartesian_canvas.html#a68c0616f8180690423d39e9e83045b8c',1,'tsgl::CartesianCanvas']]],
