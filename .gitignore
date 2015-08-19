@@ -33,6 +33,9 @@ _*
 #Don't ignore our main page!
 !_mainpage.dox
 
+#Don't ignore generated file pages!
+!*_source.html
+
 # Bitmaps
 Image*.bmp
 
