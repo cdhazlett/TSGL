@@ -36,19 +36,19 @@ _*
 #Don't ignore generated file pages!
 !*_source.html
 
-!html/search/functions_*
+!docs/html/search/functions_*
 
-!html/search/pages_*
+!docs/html/search/pages_*
 
-!html/search/searchdata.js
+!docs/html/search/searchdata.js
 
-!html/*.png
+!docs/html/*.png
 
-!html/search/classes_*
+!docs/html/search/classes_*
 
-!html/search/all_*
+!docs/html/search/all_*
 
-!html/md_*
+!docs/html/md_*
 
 # Bitmaps
 Image*.bmp
