@@ -1,0 +1,300 @@
+Let\textquotesingle{}s get down to the \char`\"{}key\char`\"{} points here.
+
+You can add I/\+O interaction to any animation that you draw on a Canvas/\+Cartesian\+Canvas. That includes keyboard and mouse events only.
+
+\char`\"{}\+Is that done using magic??\char`\"{} You may be asking us.
+
+Actually, it\textquotesingle{}s done in a rather simple method using code.
+
+$\ast$$\ast$$\ast$\+Linux/\+Mac users\+:$\ast$$\ast$$\ast$ Follow the steps from the previous tutorials. Name the folder \char`\"{}\+Tutorial7\char`\"{} and the file \char`\"{}interaction.\+cpp\char`\"{}. Replace \char`\"{}program\char`\"{} in the \char`\"{}\+T\+A\+R\+G\+E\+T\char`\"{} line of the Makefile with \char`\"{}interaction\char`\"{}.
+
+$\ast$$\ast$$\ast$\+Windows users\+:$\ast$$\ast$$\ast$ Follow the steps from the previous tutorials. Name the Solution folder \char`\"{}\+Tutorial7\char`\"{} and the Visual Studio project \char`\"{}\+Interactive\char`\"{}. After adding the Property sheet, name the .cpp file \char`\"{}interaction.\+cpp\char`\"{}. Let\textquotesingle{}s begin by creating and initializing a Canvas object\+:
+
+$\ast$$\ast$$\ast$\+All three platforms\+:$\ast$$\ast$$\ast$ Follow the steps in the \mbox{[}\mbox{[}Building Programs\mbox{]}\mbox{]} page on how to compile and run the program (Linux/\+Mac users, this is a single-\/file program).
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 500, 500, \textcolor{stringliteral}{"I/O Example"});
+  c.start();
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Compile and run. A blank screen should appear.
+
+Now, if you\textquotesingle{}ve taken a look at the \href{http://calvin-cs.github.io/TSGL/html/index.html}{\tt T\+S\+G\+L A\+P\+I documentation} for Canvas, you may have seen that it has two methods\+: \href{http://calvin-cs.github.io/TSGL/html/classtsgl_1_1_canvas.html#a26f2f1acf2b80eee95e42bc13dbc7600}{\tt bind\+To\+Button()} and \href{http://calvin-cs.github.io/TSGL/html/classtsgl_1_1_canvas.html#aecd3d94790d2e660db380a5e951ae394}{\tt bind\+To\+Scroll()}.
+
+These two methods are where the I/\+O magic happens.
+
+They allow us to bind keys, mouse buttons, and the mouse scroll wheel to a Canvas which will allow us to have I/\+O capabilities in our animations.
+
+But how do these methods work?
+
+Well, before I answer that, allow me to explain a crucial aspect of these methods\+: Lambda functions.
+
+Taken from \href{http://en.cppreference.com/w/cpp/language/lambda,}{\tt http\+://en.\+cppreference.\+com/w/cpp/language/lambda,} a Lambda function\+: \char`\"{}\+Constructs a closure\+: an unnamed function object capable of capturing variables in scope.\char`\"{}
+
+What does that mean?
+
+It is essentially an unnamed function that can access any variables that are in scope, and that can be passed as an argument to another function.
+
+\char`\"{}\+Okay, great\char`\"{} you may be thinking \char`\"{}but how does this relate to the methods?\char`\"{}
+
+In order to handle mouse and/or keyboard I/\+O, the bind\+To\+Button() and bind\+To\+Scroll() methods each take a Lambda function as an argument. In the bind\+To\+Button() method, the Lambda function is associated with a keyboard key or mouse button and an action, which are also passed as arguments. In the bind\+To\+Scroll() method, the Lambda function is the only argument.
+
+Let\textquotesingle{}s look at an example to make it clear\+:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 500, 500, \textcolor{stringliteral}{"I/O Example"});
+  c.start();
+  \textcolor{comment}{//This variable is in the scope of the Lambda function. }
+  \textcolor{comment}{//It can be passed in.}
+  \textcolor{keywordtype}{bool} leftMouseButtonPressed = \textcolor{keyword}{false};
+
+  \textcolor{comment}{//Bind the left mouse button so that when it's pressed }
+  \textcolor{comment}{//the boolean is set to true.}
+  c.bindToButton(TSGL\_MOUSE\_LEFT, TSGL\_PRESS, 
+                    [&leftMouseButtonPressed]() \{
+                          leftMouseButtonPressed = \textcolor{keyword}{true};
+                    \}
+                );
+
+  \textcolor{comment}{//Bind the left mouse button again so that when it's released }
+  \textcolor{comment}{//the boolean is set to false.}
+  c.bindToButton(TSGL\_MOUSE\_LEFT, TSGL\_RELEASE, 
+                    [&leftMouseButtonPressed]() \{
+                          leftMouseButtonPressed = \textcolor{keyword}{false};
+                    \}
+                );
+
+  \textcolor{comment}{//Drawing loop}
+  \textcolor{keywordflow}{while}(c.isOpen()) \{
+    c.sleep();
+    \textcolor{keywordflow}{if}(leftMouseButtonPressed) \{
+      c.drawRectangle(250, 250, 40, 30, GREEN);
+    \} \textcolor{keywordflow}{else} \{
+      c.drawRectangle(250, 250, 40, 30, RED);
+    \}
+    c.clear();
+  \}
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Recompile and run. A rectangle should appear in red on the screen. Click the screen with the left mouse button. The color of the rectangle should change to green.
+
+The bind\+To\+Button() method takes in three parameters\+:
+\begin{DoxyItemize}
+\item A key or button to bind to (e.\+g. T\+S\+G\+L\+\_\+\+A for the \textquotesingle{}A\textquotesingle{} key).
+\item An event associated with that key (T\+S\+G\+L\+\_\+\+P\+R\+E\+S\+S for when it\textquotesingle{}s pressed, T\+S\+G\+L\+\_\+\+R\+E\+L\+E\+A\+S\+E when it is released).
+\item An unnamed (Lambda) function that will be passed to bind\+To\+Button() when that method is invoked.
+\end{DoxyItemize}
+
+Allow us to explain Lambda functions a little more in-\/depth.
+
+The variables in the brackets are actual variables outside of the function that are in scope and that can be passed into the function. The amperstand makes the variable a reference parameter. In a nutshell, that means that whatever you do to that parameter in the function will affect the variable being passed as the parameter. So, if we passed a boolean {\ttfamily switch} as the parameter and it has a value of {\ttfamily false} before passing it as a parameter; If we change the value of the parameter in the function to {\ttfamily true}, then the variable {\ttfamily switch} will no longer have {\ttfamily false} as its value and will now have {\ttfamily true} as its value.
+
+The variables {\itshape M\+U\+S\+T} be passed as reference parameters.
+
+Passing reference variables to the unnamed Lambda function is called \char`\"{}capturing\char`\"{} the parameters.
+
+Now, in the definition of the Lambda function, you can alter the reference parameters so that whenever the Lambda function is invoked the reference parameters are changed to values you want to assign to them.
+
+The mouse click and release event are bound to the Lambda functions that set a boolean variable to true and false (respectively).
+
+\char`\"{}\+Bound\char`\"{} means that the corresponding Lambda function will be invoked once the action occurs\+:
+
+
+\begin{DoxyItemize}
+\item Once the mouse has been clicked, the Lambda function bound to the left mouse button click event will be invoked and the boolean {\ttfamily left\+Mouse\+Button\+Pressed} changes to true.
+\item Once it has been released, the Lambda function bound to the left mouse button click event will be invoked and the boolean {\ttfamily left\+Mouse\+Button\+Pressed} changes to false.
+\end{DoxyItemize}
+
+As you can see, whenever the left mouse button is clicked, the boolean variable \char`\"{}left\+Mouse\+Button\+Pressed\char`\"{} is set to true and when the left mouse button is released it is set to false.
+
+Now, how do we get the Canvas to draw stuff once the mouse button is clicked?
+
+In the conditional for the boolean {\ttfamily left\+Mouse\+Button\+Pressed}, if it has been set to {\ttfamily true} then we can have the Canvas draw a circle that is centered by the mouse\textquotesingle{}s x and y-\/coordinates\+:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 500, 500, \textcolor{stringliteral}{"I/O Example"});
+  c.start();
+  \textcolor{comment}{//This variable is in the scope of the Lambda function }
+  \textcolor{comment}{//It can be passed in.}
+  \textcolor{keywordtype}{bool} leftMouseButtonPressed = \textcolor{keyword}{false};
+
+  \textcolor{comment}{//Bind the left mouse button so that when it's pressed}
+  \textcolor{comment}{//the boolean is set to true.}
+  c.bindToButton(TSGL\_MOUSE\_LEFT, TSGL\_PRESS, 
+                    [&leftMouseButtonPressed]() \{
+                          leftMouseButtonPressed = \textcolor{keyword}{true};
+                    \}
+                );
+
+  \textcolor{comment}{//Bind the left mouse button again so that when it's released }
+  \textcolor{comment}{//the boolean is set to false.}
+  c.bindToButton(TSGL\_MOUSE\_LEFT, TSGL\_RELEASE, 
+                    [&leftMouseButtonPressed]() \{
+                          leftMouseButtonPressed = \textcolor{keyword}{false};
+                    \}
+                );
+
+  \textcolor{comment}{//Drawing loop}
+  \textcolor{keywordflow}{while}(c.isOpen()) \{
+    c.sleep();
+    \textcolor{keywordtype}{int} x = c.getMouseX(), y = c.getMouseY();  \textcolor{comment}{//Store the x and y-coordinates of the mouse}
+    \textcolor{keywordflow}{if}(leftMouseButtonPressed) \{
+      c.drawRectangle(250, 250, 40, 30, GREEN);
+      c.drawCircle(x, y, 20, 32, BLACK, \textcolor{keyword}{true});  \textcolor{comment}{//Draw the circle}
+    \} \textcolor{keywordflow}{else} \{
+      c.drawRectangle(250, 250, 40, 30, RED);
+    \}
+    c.clear();
+  \}
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Recompile and run the code. Now, click on the left mouse button while the mouse is on the screen. A black, filled-\/in circle should appear below your mouse!
+
+You can even hold down the left mouse button and drag the mouse over the screen and the black circle will follow your mouse!
+
+Notice how there\textquotesingle{}s a c.\+clear() statement in the draw loop? There\textquotesingle{}s a way to register that event to a keyboard key!
+
+We can use the spacebar to clear the Canvas.
+
+To do so, we can bind the spacebar on-\/press event to a Lambda function that will call the Canvas clear() method\+:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 500, 500, \textcolor{stringliteral}{"I/O Example"});
+  c.start();
+  \textcolor{comment}{//This variable is in the scope of the Lambda function.}
+  \textcolor{comment}{//It can be passed in.}
+  \textcolor{keywordtype}{bool} leftMouseButtonPressed = \textcolor{keyword}{false};
+
+  \textcolor{comment}{//Bind the left mouse button so that when it's pressed }
+  \textcolor{comment}{//the boolean is set to true.}
+  c.bindToButton(TSGL\_MOUSE\_LEFT, TSGL\_PRESS, 
+                    [&leftMouseButtonPressed]() \{
+                          leftMouseButtonPressed = \textcolor{keyword}{true};
+                    \}
+                );
+
+  \textcolor{comment}{//Bind the left mouse button again so that when it's released }
+  \textcolor{comment}{//the boolean is set to false.}
+  c.bindToButton(TSGL\_MOUSE\_LEFT, TSGL\_RELEASE, 
+                    [&leftMouseButtonPressed]() \{
+                          leftMouseButtonPressed = \textcolor{keyword}{false};
+                    \}
+                );
+
+  \textcolor{comment}{//Bind the spacebar so that when it's pressed }
+  \textcolor{comment}{//the Canvas is cleared.}
+  \textcolor{comment}{//(Yes, you can also pass in the Canvas as }
+  \textcolor{comment}{//a parameter to the Lambda function).}
+  \textcolor{comment}{//ANY variable that is in the scope of the }
+  \textcolor{comment}{//Lambda function can be passed as a parameter.}
+  c.bindToButton(TSGL\_SPACE, TSGL\_PRESS, 
+                    [&c]() \{
+                      c.clear();
+                    \}
+                );
+
+  \textcolor{comment}{//Drawing loop}
+  \textcolor{keywordflow}{while}(c.isOpen()) \{
+    c.sleep();
+    \textcolor{keywordtype}{int} x = c.getMouseX(), y = c.getMouseY();  \textcolor{comment}{//Store the x and y-coordinates of the mouse}
+    \textcolor{keywordflow}{if}(leftMouseButtonPressed) \{
+      c.drawRectangle(250, 250, 40, 30, GREEN);
+      c.drawCircle(x, y, 20, 32, BLACK, \textcolor{keyword}{true});  \textcolor{comment}{//Draw the circle}
+    \} \textcolor{keywordflow}{else} \{
+      c.drawRectangle(250, 250, 40, 30, RED);
+    \}
+  \}
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Recompile and run. Now, draw a bunch of circles on the screen then press the spacebar. The screen should be cleared and the red rectangle should be the only thing on it.
+
+How about an example using the bind\+To\+Scroll() method?
+
+Let\textquotesingle{}s take a look\+:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }\hyperlink{namespacetsgl}{tsgl};
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 500, 500, \textcolor{stringliteral}{"I/O Example"});
+  c.start();
+  \textcolor{comment}{//These variables are in the scope of the Lambda function.}
+  \textcolor{comment}{//They can be passed in.}
+  \textcolor{keywordtype}{int} circleX = 250, circleY = 250;
+
+  c.bindToScroll([&circleY](\textcolor{keywordtype}{double} dx, \textcolor{keywordtype}{double} dy) \{
+    \textcolor{keywordflow}{if}(dy == 1.0) \{ \textcolor{comment}{//If you move the scroll wheel down...}
+      circleY -= 50;  \textcolor{comment}{//Decrement the circle's y-coordinate.}
+    \} \textcolor{keywordflow}{else} \{ \textcolor{comment}{//Else...}
+      circleY += 50;  \textcolor{comment}{//Increment the coordinate.}
+    \}
+  \});
+
+  \textcolor{comment}{//Drawing loop}
+  \textcolor{keywordflow}{while}(c.isOpen()) \{
+    c.sleep();
+    c.drawCircle(circleX, circleY, 50, 32);
+    c.clear();
+  \}
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Recompile and run. A black circle should appear on the screen. Scroll up to make the circle go up, scroll down to make the circle go down.
+
+Allow us to explain this example.
+
+The bind\+To\+Scroll() method takes in a Lambda function, which in turn, takes in two parameters\+:
+\begin{DoxyItemize}
+\item dx, which is an x parameter to be called when the mouse is scrolled.
+\item dy, which is a y parameter to be called when the mouse is scrolled.
+\end{DoxyItemize}
+
+Think of dy as the state of the mouse\+: 1.\+0 means that we are scrolling down, anything else is scrolling up (as seen in the if-\/else block above).
+
+The bind\+To\+Scroll() method {\itshape M\+U\+S\+T} take in those two parameters, regardless of not using the x parameter.
+
+In sum, in order to do animations with I/\+O capabilities, you need to use bind\+To\+Button() for keyboard and mouse button events and bind\+To\+Scroll() for mouse scroll wheel events.
+
+See \href{http://calvin-cs.github.io/TSGL/html/_keynums_8h_source.html}{\tt Keynums.\+h} for constants that are mapped to specific keys on the keyboard as well as are mapped to the mouse buttons and scroll wheel.
+
+The Cartesian\+Canvas handles I/\+O in exactly the same way as the standard Canvas does (since it is a subclass of the Canvas class).
+
+That completes this tutorial!
+
+Next up, in \mbox{[}\mbox{[}Command-\/line arguments\mbox{]}\mbox{]}, we take a look at using command-\/line arguments in our animations. 
