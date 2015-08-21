@@ -36,20 +36,6 @@ _*
 #Don't ignore generated file pages!
 !*_source.html
 
-!docs/html/search/functions_*
-
-!docs/html/search/pages_*
-
-!docs/html/search/searchdata.js
-
-!docs/html/*.png
-
-!docs/html/search/classes_*
-
-!docs/html/search/all_*
-
-!docs/html/md_*
-
 # Bitmaps
 Image*.bmp
 
