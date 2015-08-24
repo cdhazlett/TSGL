@@ -142,7 +142,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>Re-compile and run. The screen should now be red. It took 8.319619 seconds to color all of the pixels on our machine. (Note that we are using the <code>can.sleep()</code> call to slow the computation down, so that you can see the main thread coloring the pixels.)</p>
+<<<<<<< HEAD:html/md__home_kodemonkey__desktop__t_s_g_l_docs-wiki__bringing-_it-_all-_together.html
 <p>The main function passes our created Canvas, <code>c</code>, to the <code>drawTutorial()</code> function. That function colors each pixel of its <code>can</code> parameter red, and since <code>can</code> is a reference parameter for our argument <code>c</code>, this colors each pixel of <code>c</code> red.</p>
+=======
+<p>The main function passes our created Canvas, <code>c</code>, and passes it to the <code>drawTutorial()</code> function. That function colors each pixel of its <code>can</code> parameter red, and since <code>can</code> is a reference parameter for our argument <code>c</code>, this colors each pixel of <code>c</code> red.</p>
+>>>>>>> 99238916743471226a22accfcab17a7f1c3adc63:html/md__home_cpd5_workspace__t_s_g_l_docs-wiki__bringing-_it-_all-_together.html
 <p>So where do threads come in?</p>
 <p>As it stands, we just have the main thread creating and initializing a Canvas object, and then coloring it red in the <code>drawTutorial()</code> function. To spread the work of coloring the Canvas across multiple threads, we can add a parallel block and parallel <code>for</code> loop to our function:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;tsgl.h&gt;</span></div>
@@ -301,14 +305,22 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>We are then passing the third argument, the number of threads to use, into <code>omp_set_num_threads()</code> so that we can use that number in rendering.</p>
 <p>Before continuing, note that we did not use an animation loop because our <code>drawTutorial()</code> function is not animating anything — it is just creating an inanimate drawing on the Canvas. We only need to use animation loops when we are animating something.</p>
 <p>Compile and run the program, passing these command-line arguments: 700, 700, 10. There should now be 10 differently colored sections of the Canvas! (It took 0.830523 seconds to color the 10 different sections on our machine!)</p>
+<<<<<<< HEAD:html/md__home_kodemonkey__desktop__t_s_g_l_docs-wiki__bringing-_it-_all-_together.html
 <p>Since we used 10 threads, the time should be about 1/10 of the original time. Using n threads, it should take about 1/n seconds of the original time (with one thread) to draw, provided (a) we have enough work for the threads to do, (b) the work of each thread is independent of the others, and (c) there are enough cores available for them to run independently.</p>
+=======
+<p>Since we passed 10 threads, the time should be about 1/10 of the original time. Passing n threads, it should take about 1/n seconds of the original time (with one thread) to draw!</p>
+>>>>>>> 99238916743471226a22accfcab17a7f1c3adc63:html/md__home_cpd5_workspace__t_s_g_l_docs-wiki__bringing-_it-_all-_together.html
 <p>In sum, OpenMP makes it easy to add multithreading to speed up a sequential program, and TSGL can be used to visualize what each thread is doing. You can use command-line arguments to control the number of threads; you can also a function that draws a particular drawing (with or without multithreading).</p>
 <p>That concludes this tutorial!</p>
 <p>We hope that these tutorial pages help you get started with TSGL, and that you make some amazing creations with this library! </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
+<<<<<<< HEAD:html/md__home_kodemonkey__desktop__t_s_g_l_docs-wiki__bringing-_it-_all-_together.html
 Generated on Mon Aug 24 2015 16:21:24 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+=======
+Generated on Mon Aug 24 2015 15:27:23 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+>>>>>>> 99238916743471226a22accfcab17a7f1c3adc63:html/md__home_cpd5_workspace__t_s_g_l_docs-wiki__bringing-_it-_all-_together.html
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
