@@ -47,13 +47,17 @@ Now, we've seen drawing loops in the tutorial, \mbox{[}\mbox{[}Animation Loops\m
 \textcolor{keywordtype}{int} main() \{
   \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
   c.start();
+
+  \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
   drawTutorial(c);
+
+  printf(\textcolor{stringliteral}{"\(\backslash\)nTime to color pixels: %f\(\backslash\)n"}, omp\_get\_wtime() - startTime);
   c.wait();
 \}
 \end{DoxyCode}
 
 
-Let us explain what we did differently. We added a function stub ( {\ttfamily draw\-Tutorial()} ) that takes in a reference to a Canvas object.
+Let us explain what we did differently. We added a function stub ( {\ttfamily draw\-Tutorial()} ) that takes in a reference to a Canvas object. We also added timing statements\-: {\ttfamily double start\-Time = omp\-\_\-get\-\_\-wtime();}, {\ttfamily printf(\char`\"{}\textbackslash{}\textbackslash{}n\-Time to color pixels\-: \%f\textbackslash{}\textbackslash{}n\char`\"{}, omp\-\_\-get\-\_\-wtime() -\/ start\-Time);}. These statements will keep track of how long our drawing took when we call our {\ttfamily draw\-Tutorial()} function.
 
 Next, let's define the function so that it actually draws something onto the passed Canvas\-:
 
@@ -74,13 +78,17 @@ Next, let's define the function so that it actually draws something onto the pas
 \textcolor{keywordtype}{int} main() \{
   \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
   c.start();
+
+  \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
   drawTutorial(c);
+
+  printf(\textcolor{stringliteral}{"\(\backslash\)nTime to color pixels: %f\(\backslash\)n"}, omp\_get\_wtime() - startTime);
   c.wait();
 \}
 \end{DoxyCode}
 
 
-Re-\/compile and run. The screen should now be red.
+Re-\/compile and run. The screen should now be red. It took 0.\-007797 seconds to color all of the pixels.
 
 The main function passes our created Canvas, {\ttfamily c}, and passes it to the {\ttfamily draw\-Tutorial()} function. That function colors each pixel of its {\ttfamily can} parameter red, and since {\ttfamily can} is a reference parameter for our argument {\ttfamily c}, this colors each pixel of {\ttfamily c} red.
 
@@ -110,13 +118,17 @@ As it stands, we just have the main thread creating and initializing a Canvas ob
   omp\_set\_num\_threads(4);  \textcolor{comment}{//Set the number of threads to use}
   \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
   c.start();
+
+  \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
   drawTutorial(c);
+
+  printf(\textcolor{stringliteral}{"\(\backslash\)nTime to color pixels: %f\(\backslash\)n"}, omp\_get\_wtime() - startTime);
   c.wait();
 \}
 \end{DoxyCode}
 
 
-Re-\/compile and run. The screen should still be red.
+Re-\/compile and run. The screen should still be red. It took 0.\-027261 seconds to color all of the pixels with four threads (about 1/4 of the original time) on our machine.
 
 Let's take a look at the parallel block\-:
 
@@ -138,6 +150,8 @@ ColorFloat color = RED;
 {\ttfamily color} is set to {\ttfamily R\-E\-D}, and a parallel block is made with {\ttfamily 4} threads (see the {\ttfamily omp\-\_\-set\-\_\-num\-\_\-threads()} function in the main method before we create a Canvas).
 
 Because of the {\ttfamily omp\-\_\-set\-\_\-num\-\_\-threads(4);} statement in the {\ttfamily main()} function, the {\ttfamily \#pragma omp parallel} directive causes the main thread to fork 3 new threads. Each of the four threads will then perform the statements in the block that follows the {\ttfamily pragma}. The {\ttfamily \#pragma omp for} directive then divides up the iterations of the {\ttfamily for} loop that follows it among those four threads. Since the inner loop colors the pixels {\ttfamily R\-E\-D}, all of the threads end up coloring their pixels the same color.
+
+It also speeds up the coloring of the pixels in proportion to the number of threads being used; in this case, four threads were used, so the time to color all of the pixels red was 1/4 of the original time.
 
 This is nice and all....but we can't really visualize the four threads coloring different pixels. We know they are coloring them {\ttfamily R\-E\-D}, but which ones?
 
@@ -172,11 +186,15 @@ Let's add some more code to better visualize this\-:
   omp\_set\_num\_threads(4);  \textcolor{comment}{//Set the number of threads to use}
   \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
   c.start();
+
+  \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
   drawTutorial(c);
+
+  printf(\textcolor{stringliteral}{"\(\backslash\)nTime to color pixels: %f\(\backslash\)n"}, omp\_get\_wtime() - startTime);
   c.wait();
 \}
 \end{DoxyCode}
- Recompile and run. There should now be four differently colored sections!
+ Recompile and run. There should now be four differently colored sections! (It took 0.\-044397 seconds to color the the screen four different colors on our machine!)
 
 Since the changes were made only to {\ttfamily draw\-Tutorial()}, let's take a closer look at that function\-:
 
@@ -249,7 +267,11 @@ Next, let's add support for command-\/line arguments so that we can control the 
   omp\_set\_num\_threads(threads); \textcolor{comment}{//Use the number of threads passed via command-line}
   \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, width, height, \textcolor{stringliteral}{"Threading"});
   c.start();
+
+  \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
   drawTutorial(c);
+
+  printf(\textcolor{stringliteral}{"\(\backslash\)nTime to color pixels: %f\(\backslash\)n"}, omp\_get\_wtime() - startTime);
   c.wait();
 \}
 \end{DoxyCode}
@@ -261,7 +283,9 @@ We are then passing the third argument, the number of threads to use, into {\ttf
 
 Before continuing, note that we did not use an animation loop because our {\ttfamily draw\-Tutorial()} function is not animating anything — it is just creating an inanimate drawing on the Canvas. We only need to use animation loops when we are animating something.
 
-Compile and run the program, passing these command-\/line arguments\-: 700, 700, 10. There should now be 10 differently colored sections of the Canvas!
+Compile and run the program, passing these command-\/line arguments\-: 700, 700, 10. There should now be 10 differently colored sections of the Canvas! (It took 0.\-116421 seconds to color the 10 different sections on our machine!)
+
+Since we passed 10 threads, the time should be 1/10 of the original time. Passing n threads, it should take about 1/n seconds of the original time (with one thread) to draw!
 
 In sum, Open\-M\-P makes it easy to add multithreading to speed up a sequential program, and T\-S\-G\-L can be used to visualize what each thread is doing. You can use command-\/line arguments to control the number of threads; you can also a function that draws a particular drawing (with or without multithreading).
 

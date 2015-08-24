@@ -109,10 +109,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <a class="code" href="classtsgl_1_1_canvas.html">Canvas</a> c(100, 100, 500, 500, <span class="stringliteral">&quot;Threading&quot;</span>);</div>
 <div class="line">  c.start();</div>
+<div class="line"></div>
+<div class="line">  <span class="keywordtype">double</span> startTime = omp_get_wtime();</div>
 <div class="line">  drawTutorial(c);</div>
+<div class="line"></div>
+<div class="line">  printf(<span class="stringliteral">&quot;\nTime to color pixels: %f\n&quot;</span>, omp_get_wtime() - startTime);</div>
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Let us explain what we did differently. We added a function stub ( <code>drawTutorial()</code> ) that takes in a reference to a Canvas object.</p>
+</div><!-- fragment --><p>Let us explain what we did differently. We added a function stub ( <code>drawTutorial()</code> ) that takes in a reference to a Canvas object. We also added timing statements: <code>double startTime = omp_get_wtime();</code>, <code>printf("\\nTime to color pixels: %f\\n", omp_get_wtime() - startTime);</code>. These statements will keep track of how long our drawing took when we call our <code>drawTutorial()</code> function.</p>
 <p>Next, let's define the function so that it actually draws something onto the passed Canvas:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;tsgl.h&gt;</span></div>
 <div class="line"><span class="keyword">using namespace </span>tsgl;</div>
@@ -129,10 +133,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line"><span class="keywordtype">int</span> main() {</div>
 <div class="line">  <a class="code" href="classtsgl_1_1_canvas.html">Canvas</a> c(100, 100, 500, 500, <span class="stringliteral">&quot;Threading&quot;</span>);</div>
 <div class="line">  c.start();</div>
+<div class="line"></div>
+<div class="line">  <span class="keywordtype">double</span> startTime = omp_get_wtime();</div>
 <div class="line">  drawTutorial(c);</div>
+<div class="line"></div>
+<div class="line">  printf(<span class="stringliteral">&quot;\nTime to color pixels: %f\n&quot;</span>, omp_get_wtime() - startTime);</div>
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Re-compile and run. The screen should now be red.</p>
+</div><!-- fragment --><p>Re-compile and run. The screen should now be red. It took 0.007797 seconds to color all of the pixels.</p>
 <p>The main function passes our created Canvas, <code>c</code>, and passes it to the <code>drawTutorial()</code> function. That function colors each pixel of its <code>can</code> parameter red, and since <code>can</code> is a reference parameter for our argument <code>c</code>, this colors each pixel of <code>c</code> red.</p>
 <p>So where do threads come in?</p>
 <p>As it stands, we just have the main thread creating and initializing a Canvas object, and then coloring it red in the <code>drawTutorial()</code> function. To spread the work of coloring the Canvas across multiple threads, we can add a parallel block and parallel <code>for</code> loop to our function:</p>
@@ -156,10 +164,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">  omp_set_num_threads(4);  <span class="comment">//Set the number of threads to use</span></div>
 <div class="line">  <a class="code" href="classtsgl_1_1_canvas.html">Canvas</a> c(100, 100, 500, 500, <span class="stringliteral">&quot;Threading&quot;</span>);</div>
 <div class="line">  c.start();</div>
+<div class="line"></div>
+<div class="line">  <span class="keywordtype">double</span> startTime = omp_get_wtime();</div>
 <div class="line">  drawTutorial(c);</div>
+<div class="line"></div>
+<div class="line">  printf(<span class="stringliteral">&quot;\nTime to color pixels: %f\n&quot;</span>, omp_get_wtime() - startTime);</div>
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Re-compile and run. The screen should still be red.</p>
+</div><!-- fragment --><p>Re-compile and run. The screen should still be red. It took 0.027261 seconds to color all of the pixels with four threads (about 1/4 of the original time) on our machine.</p>
 <p>Let's take a look at the parallel block:</p>
 <div class="fragment"><div class="line">ColorFloat color = RED;</div>
 <div class="line"><span class="preprocessor">#pragma omp parallel</span></div>
@@ -173,6 +185,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">}</div>
 </div><!-- fragment --><p><code>color</code> is set to <code>RED</code>, and a parallel block is made with <code>4</code> threads (see the <code>omp_set_num_threads()</code> function in the main method before we create a Canvas).</p>
 <p>Because of the <code>omp_set_num_threads(4);</code> statement in the <code>main()</code> function, the <code>#pragma omp parallel</code> directive causes the main thread to fork 3 new threads. Each of the four threads will then perform the statements in the block that follows the <code>pragma</code>. The <code>#pragma omp for</code> directive then divides up the iterations of the <code>for</code> loop that follows it among those four threads. Since the inner loop colors the pixels <code>RED</code>, all of the threads end up coloring their pixels the same color.</p>
+<p>It also speeds up the coloring of the pixels in proportion to the number of threads being used; in this case, four threads were used, so the time to color all of the pixels red was 1/4 of the original time.</p>
 <p>This is nice and all....but we can't really visualize the four threads coloring different pixels. We know they are coloring them <code>RED</code>, but which ones?</p>
 <p>Let's add some more code to better visualize this:</p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;tsgl.h&gt;</span></div>
@@ -202,10 +215,14 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">  omp_set_num_threads(4);  <span class="comment">//Set the number of threads to use</span></div>
 <div class="line">  <a class="code" href="classtsgl_1_1_canvas.html">Canvas</a> c(100, 100, 500, 500, <span class="stringliteral">&quot;Threading&quot;</span>);</div>
 <div class="line">  c.start();</div>
+<div class="line"></div>
+<div class="line">  <span class="keywordtype">double</span> startTime = omp_get_wtime();</div>
 <div class="line">  drawTutorial(c);</div>
+<div class="line"></div>
+<div class="line">  printf(<span class="stringliteral">&quot;\nTime to color pixels: %f\n&quot;</span>, omp_get_wtime() - startTime);</div>
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
-</div><!-- fragment --><p> Recompile and run. There should now be four differently colored sections!</p>
+</div><!-- fragment --><p> Recompile and run. There should now be four differently colored sections! (It took 0.044397 seconds to color the the screen four different colors on our machine!)</p>
 <p>Since the changes were made only to <code>drawTutorial()</code>, let's take a closer look at that function:</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> drawTutorial(Canvas &amp; can) {</div>
 <div class="line">  <span class="comment">//Parallel block</span></div>
@@ -267,20 +284,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">  omp_set_num_threads(threads); <span class="comment">//Use the number of threads passed via command-line</span></div>
 <div class="line">  <a class="code" href="classtsgl_1_1_canvas.html">Canvas</a> c(100, 100, width, height, <span class="stringliteral">&quot;Threading&quot;</span>);</div>
 <div class="line">  c.start();</div>
+<div class="line"></div>
+<div class="line">  <span class="keywordtype">double</span> startTime = omp_get_wtime();</div>
 <div class="line">  drawTutorial(c);</div>
+<div class="line"></div>
+<div class="line">  printf(<span class="stringliteral">&quot;\nTime to color pixels: %f\n&quot;</span>, omp_get_wtime() - startTime);</div>
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>We just added support for three command-line arguments: the width and height of the Canvas, and the number of threads to use in rendering. We added checks to make sure that they were valid arguments, and then we used the first two as the width and height of the Canvas.</p>
 <p>We are then passing the third argument, the number of threads to use, into <code>omp_set_num_threads()</code> so that we can use that number in rendering.</p>
 <p>Before continuing, note that we did not use an animation loop because our <code>drawTutorial()</code> function is not animating anything — it is just creating an inanimate drawing on the Canvas. We only need to use animation loops when we are animating something.</p>
-<p>Compile and run the program, passing these command-line arguments: 700, 700, 10. There should now be 10 differently colored sections of the Canvas!</p>
+<p>Compile and run the program, passing these command-line arguments: 700, 700, 10. There should now be 10 differently colored sections of the Canvas! (It took 0.116421 seconds to color the 10 different sections on our machine!)</p>
+<p>Since we passed 10 threads, the time should be 1/10 of the original time. Passing n threads, it should take about 1/n seconds of the original time (with one thread) to draw!</p>
 <p>In sum, OpenMP makes it easy to add multithreading to speed up a sequential program, and TSGL can be used to visualize what each thread is doing. You can use command-line arguments to control the number of threads; you can also a function that draws a particular drawing (with or without multithreading).</p>
 <p>That concludes this tutorial!</p>
 <p>We hope that these tutorial pages help you get started with TSGL, and that you make some amazing creations with this library! </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 24 2015 13:46:06 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 24 2015 14:32:52 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
