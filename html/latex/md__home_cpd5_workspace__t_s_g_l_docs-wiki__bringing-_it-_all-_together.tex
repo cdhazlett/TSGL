@@ -1,0 +1,270 @@
+$\ast$$\ast$$\ast$\-Linux/\-Mac users\-:$\ast$$\ast$$\ast$ Follow the steps from the previous tutorials. Name the folder \char`\"{}\-Tutorial9\char`\"{} and the file \char`\"{}thread.\-cpp\char`\"{}. Replace \char`\"{}program\char`\"{} in the \char`\"{}\-T\-A\-R\-G\-E\-T\char`\"{} line of the Makefile with \char`\"{}thread\char`\"{}.
+
+$\ast$$\ast$$\ast$\-Windows users\-:$\ast$$\ast$$\ast$ Follow the steps from the previous tutorials. Name the Solution folder \char`\"{}\-Tutorial9\char`\"{} and the Visual Studio project \char`\"{}\-Threads\char`\"{}. After adding the Property sheet, name the .cpp file \char`\"{}thread.\-cpp\char`\"{}.
+
+$\ast$$\ast$$\ast$\-All three platforms\-:$\ast$$\ast$$\ast$ Follow the steps in the \mbox{[}\mbox{[}Building Programs\mbox{]}\mbox{]} page on how to compile and run the program (Linux/\-Mac users, this is a single-\/file program).
+
+End of the line, folks!
+
+We've seen how T\-S\-G\-L draws shapes, handles colors, text, I/\-O events, and command-\/line arguments.
+
+Now...how exactly does threading come into play in this library?
+
+T\-S\-G\-L does stand for \char`\"{}\-Thread-\/\-Safe Graphics Library.\char`\"{}
+
+How can we utilize threading in our drawings?
+
+Simple. Let's first write some skeleton code\-:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }tsgl;
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  c.start();
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Compile and run. A gray screen should appear.
+
+When your program includes the header file {\ttfamily \hyperlink{tsgl_8h_source}{tsgl.\-h}}, it also includes the header file ({\ttfamily omp.\-h}) needed in order to use Open\-M\-P library functions such as {\ttfamily omp\-\_\-get\-\_\-num\-\_\-threads()} and {\ttfamily omp\-\_\-get\-\_\-thread\-\_\-num()} (which gets the number of threads spawned and the id number of a thread, respectively). It also allows us to utilize the {\ttfamily \#pragma omp} directive, which enables us to write blocks of code that should be executed in parallel.
+
+Now, we've seen drawing loops in the tutorial, \mbox{[}\mbox{[}Animation Loops\mbox{]}\mbox{]}, but we aren't going to be adding one to this code. Instead, we are going to do something a little differently\-:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }tsgl;
+
+\textcolor{keywordtype}{void} drawTutorial(\hyperlink{classtsgl_1_1_canvas}{Canvas} & can) \{
+
+\}
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  c.start();
+  drawTutorial(c);
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Let us explain what we did differently. We added a function stub ( {\ttfamily draw\-Tutorial()} ) that takes in a reference to a Canvas object.
+
+Next, let's define the function so that it actually draws something onto the passed Canvas\-:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }tsgl;
+
+\textcolor{keywordtype}{void} drawTutorial(\hyperlink{classtsgl_1_1_canvas}{Canvas} & can) \{
+   \hyperlink{structtsgl_1_1_color_float}{ColorFloat} color = RED;
+   \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+      \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
+         can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
+      \}
+   \}
+\}
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  c.start();
+  drawTutorial(c);
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Re-\/compile and run. The screen should now be red.
+
+The main function passes our created Canvas, {\ttfamily c}, and passes it to the {\ttfamily draw\-Tutorial()} function. That function colors each pixel of its {\ttfamily can} parameter red, and since {\ttfamily can} is a reference parameter for our argument {\ttfamily c}, this colors each pixel of {\ttfamily c} red.
+
+So where do threads come in?
+
+As it stands, we just have the main thread creating and initializing a Canvas object, and then coloring it red in the {\ttfamily draw\-Tutorial()} function. To spread the work of coloring the Canvas across multiple threads, we can add a parallel block and parallel {\ttfamily for} loop to our function\-:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }tsgl;
+
+\textcolor{keywordtype}{void} drawTutorial(\hyperlink{classtsgl_1_1_canvas}{Canvas} & can) \{
+   \hyperlink{structtsgl_1_1_color_float}{ColorFloat} color = RED;
+\textcolor{preprocessor}{   #pragma omp parallel}
+\textcolor{preprocessor}{}   \{
+\textcolor{preprocessor}{     #pragma omp for}
+\textcolor{preprocessor}{}     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+        \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
+           can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
+        \}
+     \}
+   \}
+\}
+
+\textcolor{keywordtype}{int} main() \{
+  omp\_set\_num\_threads(4);  \textcolor{comment}{//Set the number of threads to use}
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  c.start();
+  drawTutorial(c);
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+Re-\/compile and run. The screen should still be red.
+
+Let's take a look at the parallel block\-:
+
+
+\begin{DoxyCode}
+ColorFloat color = RED;
+\textcolor{preprocessor}{#pragma omp parallel}
+\textcolor{preprocessor}{}\{
+\textcolor{preprocessor}{  #pragma omp for}
+\textcolor{preprocessor}{}  \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
+        can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
+     \}
+  \}
+\}
+\end{DoxyCode}
+
+
+{\ttfamily color} is set to {\ttfamily R\-E\-D}, and a parallel block is made with {\ttfamily 4} threads (see the {\ttfamily omp\-\_\-set\-\_\-num\-\_\-threads()} function in the main method before we create a Canvas).
+
+Because of the {\ttfamily omp\-\_\-set\-\_\-num\-\_\-threads(4);} statement in the {\ttfamily main()} function, the {\ttfamily \#pragma omp parallel} directive causes the main thread to fork 3 new threads. Each of the four threads will then perform the statements in the block that follows the {\ttfamily pragma}. The {\ttfamily \#pragma omp for} directive then divides up the iterations of the {\ttfamily for} loop that follows it among those four threads. Since the inner loop colors the pixels {\ttfamily R\-E\-D}, all of the threads end up coloring their pixels the same color.
+
+This is nice and all....but we can't really visualize the four threads coloring different pixels. We know they are coloring them {\ttfamily R\-E\-D}, but which ones?
+
+Let's add some more code to better visualize this\-:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }tsgl;
+
+\textcolor{keywordtype}{void} drawTutorial(\hyperlink{classtsgl_1_1_canvas}{Canvas} & can) \{
+  \textcolor{comment}{//Parallel block}
+\textcolor{preprocessor}{  #pragma omp parallel}
+\textcolor{preprocessor}{}  \{
+    \textcolor{comment}{//Current thread id & number of threads}
+    \textcolor{keywordtype}{float} tid = omp\_get\_thread\_num();
+
+    \textcolor{comment}{//Give it a color}
+    \hyperlink{structtsgl_1_1_color_float}{ColorFloat} color = \hyperlink{classtsgl_1_1_colors_a93d3fc815542e586dbc1ecf3e984e0b6}{Colors::highContrastColor}(tid);
+
+    \textcolor{comment}{//Color the pixels}
+\textcolor{preprocessor}{    #pragma omp for}
+\textcolor{preprocessor}{}    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+        \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
+            can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
+          \}
+    \}
+  \}
+\}
+
+\textcolor{keywordtype}{int} main() \{
+  omp\_set\_num\_threads(4);  \textcolor{comment}{//Set the number of threads to use}
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  c.start();
+  drawTutorial(c);
+  c.wait();
+\}
+\end{DoxyCode}
+ Recompile and run. There should now be four differently colored sections!
+
+Since the changes were made only to {\ttfamily draw\-Tutorial()}, let's take a closer look at that function\-:
+
+
+\begin{DoxyCode}
+\textcolor{keywordtype}{void} drawTutorial(Canvas & can) \{
+  \textcolor{comment}{//Parallel block}
+\textcolor{preprocessor}{  #pragma omp parallel}
+\textcolor{preprocessor}{}  \{
+    \textcolor{comment}{//Current thread id & number of threads}
+    \textcolor{keywordtype}{float} tid = omp\_get\_thread\_num();
+
+    \textcolor{comment}{//Give it a color}
+    ColorFloat color = Colors::highContrastColor(tid);
+
+    \textcolor{comment}{//Color the pixels}
+\textcolor{preprocessor}{    #pragma omp for}
+\textcolor{preprocessor}{}    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.getWindowWidth(); i++) \{
+        \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.getWindowHeight(); j++) \{
+            can.drawPoint(i, j, color);
+          \}
+    \}
+  \}
+\}
+\end{DoxyCode}
+
+
+This function allows us to see the threads coloring different sections of the Canvas and thereby make it $\ast$$\ast$$\ast$\-M\-U\-C\-H$\ast$$\ast$$\ast$ easier to visualize.
+
+Next, let's add support for command-\/line arguments so that we can control the number of threads being used\-:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }tsgl;
+
+\textcolor{keywordtype}{void} drawTutorial(\hyperlink{classtsgl_1_1_canvas}{Canvas} & can) \{
+  \textcolor{comment}{//Parallel block}
+\textcolor{preprocessor}{  #pragma omp parallel}
+\textcolor{preprocessor}{}  \{
+    \textcolor{comment}{//Current thread id & number of threads}
+    \textcolor{keywordtype}{float} tid = omp\_get\_thread\_num();
+
+    \textcolor{comment}{//Give it a color}
+    \hyperlink{structtsgl_1_1_color_float}{ColorFloat} color = \hyperlink{classtsgl_1_1_colors_a93d3fc815542e586dbc1ecf3e984e0b6}{Colors::highContrastColor}(tid);
+
+    \textcolor{comment}{//Color the pixels}
+\textcolor{preprocessor}{    #pragma omp for}
+\textcolor{preprocessor}{}    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+        \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
+            can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
+          \}
+    \}
+  \}
+\}
+
+\textcolor{comment}{//Adding command-line argument support...}
+\textcolor{keywordtype}{int} main(\textcolor{keywordtype}{int} argc, \textcolor{keywordtype}{char} * argv[]) \{
+  \textcolor{keywordtype}{int} width = (argc > 1) ? atoi(argv[1]) : 700;
+  \textcolor{keywordtype}{int} height = (argc > 2) ? atoi(argv[2]) : 800;
+  \textcolor{keywordflow}{if}(width <= 0 || height <= 0) \{
+    width = height = 900;
+  \}
+  \textcolor{comment}{//Threads...}
+  \textcolor{keywordtype}{int} threads = (argc > 3) ? atoi(argv[3]) : omp\_get\_num\_procs();
+  \textcolor{keywordflow}{if}(threads <= 0) \{
+    \textcolor{comment}{//omp\_get\_num\_procs() gets the number of available processors on your system}
+    threads = omp\_get\_num\_procs();
+  \}
+  omp\_set\_num\_threads(threads); \textcolor{comment}{//Use the number of threads passed via command-line}
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, width, height, \textcolor{stringliteral}{"Threading"});
+  c.start();
+  drawTutorial(c);
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+We just added support for three command-\/line arguments\-: the width and height of the Canvas, and the number of threads to use in rendering. We added checks to make sure that they were valid arguments, and then we used the first two as the width and height of the Canvas.
+
+We are then passing the third argument, the number of threads to use, into {\ttfamily omp\-\_\-set\-\_\-num\-\_\-threads()} so that we can use that number in rendering.
+
+Before continuing, note that we did not use an animation loop because our {\ttfamily draw\-Tutorial()} function is not animating anything — it is just creating an inanimate drawing on the Canvas. We only need to use animation loops when we are animating something.
+
+Compile and run the program, passing these command-\/line arguments\-: 700, 700, 10. There should now be 10 differently colored sections of the Canvas!
+
+In sum, Open\-M\-P makes it easy to add multithreading to speed up a sequential program, and T\-S\-G\-L can be used to visualize what each thread is doing. You can use command-\/line arguments to control the number of threads; you can also a function that draws a particular drawing (with or without multithreading).
+
+That concludes this tutorial!
+
+We hope that these tutorial pages help you get started with T\-S\-G\-L, and that you make some amazing creations with this library! 
