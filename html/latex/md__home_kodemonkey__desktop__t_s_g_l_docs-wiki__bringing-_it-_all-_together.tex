@@ -291,11 +291,7 @@ Before continuing, note that we did not use an animation loop because our {\ttfa
 
 Compile and run the program, passing these command-\/line arguments\-: 700, 700, 10. There should now be 10 differently colored sections of the Canvas! (It took 0.\-830523 seconds to color the 10 different sections on our machine!)
 
-<<<<<<< HEAD:html/latex/md__home_kodemonkey__desktop__t_s_g_l_docs-wiki__bringing-_it-_all-_together.tex
 Since we used 10 threads, the time should be about 1/10 of the original time. Using n threads, it should take about 1/n seconds of the original time (with one thread) to draw, provided (a) we have enough work for the threads to do, (b) the work of each thread is independent of the others, and (c) there are enough cores available for them to run independently.
-=======
-Since we passed 10 threads, the time should be about 1/10 of the original time. Passing n threads, it should take about 1/n seconds of the original time (with one thread) to draw!
->>>>>>> 99238916743471226a22accfcab17a7f1c3adc63:html/latex/md__home_cpd5_workspace__t_s_g_l_docs-wiki__bringing-_it-_all-_together.tex
 
 In sum, Open\-M\-P makes it easy to add multithreading to speed up a sequential program, and T\-S\-G\-L can be used to visualize what each thread is doing. You can use command-\/line arguments to control the number of threads; you can also a function that draws a particular drawing (with or without multithreading).
 
