@@ -7,5 +7,5 @@ var searchData=
   ['array',['Array',['../classtsgl_1_1_array.html#acc018fe6db37e7eb5df06789de034904',1,'tsgl::Array']]],
   ['array_3c_20tsgl_3a_3ashape_20_2a_20_3e',['Array&lt; tsgl::Shape * &gt;',['../classtsgl_1_1_array.html',1,'tsgl']]],
   ['asstring',['asString',['../structtsgl_1_1_color_float.html#a1048e8773d65fa1554bc8782e76527ed',1,'tsgl::ColorFloat::asString()'],['../structtsgl_1_1_color_int.html#af2d134cd71ac7b14eccedca5bde627a0',1,'tsgl::ColorInt::asString()'],['../structtsgl_1_1_color_h_s_v.html#ab606504c5b0873b1cef707c523fe5eb1',1,'tsgl::ColorHSV::asString()']]],
-  ['animation_2dloops',['Animation-Loops',['../md__home_cpd5_workspace__t_s_g_l_docs-wiki__animation-_loops.html',1,'']]]
+  ['animation_2dloops',['Animation-Loops',['../md__home_kodemonkey__desktop__t_s_g_l_docs-wiki__animation-_loops.html',1,'']]]
 ];

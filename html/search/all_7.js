@@ -38,5 +38,5 @@ var searchData=
   ['getwindowwidth',['getWindowWidth',['../classtsgl_1_1_canvas.html#a086a0322f4a6ab27da6929b1aa0593af',1,'tsgl::Canvas']]],
   ['getwindowx',['getWindowX',['../classtsgl_1_1_canvas.html#a011ce2354d4565f9d2a323411a47d52d',1,'tsgl::Canvas']]],
   ['getwindowy',['getWindowY',['../classtsgl_1_1_canvas.html#ad6e98d17d3e43d79628a3bd05221ee8b',1,'tsgl::Canvas']]],
-  ['gcc_2dand_2domp',['GCC-and-OMP',['../md__home_cpd5_workspace__t_s_g_l_docs-wiki__g_c_c-and-_o_m_p.html',1,'']]]
+  ['gcc_2dand_2domp',['GCC-and-OMP',['../md__home_kodemonkey__desktop__t_s_g_l_docs-wiki__g_c_c-and-_o_m_p.html',1,'']]]
 ];

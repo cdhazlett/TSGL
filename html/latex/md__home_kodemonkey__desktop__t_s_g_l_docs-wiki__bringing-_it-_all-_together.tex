@@ -1,10 +1,10 @@
+End of the line, folks!
+
 $\ast$$\ast$$\ast$\-Linux/\-Mac users\-:$\ast$$\ast$$\ast$ Follow the steps from the previous tutorials. Name the folder \char`\"{}\-Tutorial9\char`\"{} and the file \char`\"{}thread.\-cpp\char`\"{}. Replace \char`\"{}program\char`\"{} in the \char`\"{}\-T\-A\-R\-G\-E\-T\char`\"{} line of the Makefile with \char`\"{}thread\char`\"{}.
 
 $\ast$$\ast$$\ast$\-Windows users\-:$\ast$$\ast$$\ast$ Follow the steps from the previous tutorials. Name the Solution folder \char`\"{}\-Tutorial9\char`\"{} and the Visual Studio project \char`\"{}\-Threads\char`\"{}. After adding the Property sheet, name the .cpp file \char`\"{}thread.\-cpp\char`\"{}.
 
 $\ast$$\ast$$\ast$\-All three platforms\-:$\ast$$\ast$$\ast$ Follow the steps in the \mbox{[}\mbox{[}Building Programs\mbox{]}\mbox{]} page on how to compile and run the program (Linux/\-Mac users, this is a single-\/file program).
-
-End of the line, folks!
 
 We've seen how T\-S\-G\-L draws shapes, handles colors, text, I/\-O events, and command-\/line arguments.
 
@@ -22,7 +22,7 @@ Simple. Let's first write some skeleton code\-:
 \textcolor{keyword}{using namespace }tsgl;
 
 \textcolor{keywordtype}{int} main() \{
-  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"}, FRAME);
   c.start();
   c.wait();
 \}
@@ -45,7 +45,7 @@ Now, we've seen drawing loops in the tutorial, \mbox{[}\mbox{[}Animation Loops\m
 \}
 
 \textcolor{keywordtype}{int} main() \{
-  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"}, FRAME);
   c.start();
 
   \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
@@ -69,6 +69,7 @@ Next, let's define the function so that it actually draws something onto the pas
 \textcolor{keywordtype}{void} drawTutorial(\hyperlink{classtsgl_1_1_canvas}{Canvas} & can) \{
    \hyperlink{structtsgl_1_1_color_float}{ColorFloat} color = RED;
    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+      can.\hyperlink{classtsgl_1_1_canvas_a2604fa056d4541f918ccf447eda1f3cf}{sleep}();
       \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
          can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
       \}
@@ -76,7 +77,7 @@ Next, let's define the function so that it actually draws something onto the pas
 \}
 
 \textcolor{keywordtype}{int} main() \{
-  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"}, FRAME);
   c.start();
 
   \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
@@ -88,9 +89,9 @@ Next, let's define the function so that it actually draws something onto the pas
 \end{DoxyCode}
 
 
-Re-\/compile and run. The screen should now be red. It took 0.\-007797 seconds to color all of the pixels.
+Re-\/compile and run. The screen should now be red. It took 8.\-319619 seconds to color all of the pixels on our machine. (Note that we are using the {\ttfamily can.\-sleep()} call to slow the computation down, so that you can see the main thread coloring the pixels.)
 
-The main function passes our created Canvas, {\ttfamily c}, and passes it to the {\ttfamily draw\-Tutorial()} function. That function colors each pixel of its {\ttfamily can} parameter red, and since {\ttfamily can} is a reference parameter for our argument {\ttfamily c}, this colors each pixel of {\ttfamily c} red.
+The main function passes our created Canvas, {\ttfamily c}, to the {\ttfamily draw\-Tutorial()} function. That function colors each pixel of its {\ttfamily can} parameter red, and since {\ttfamily can} is a reference parameter for our argument {\ttfamily c}, this colors each pixel of {\ttfamily c} red.
 
 So where do threads come in?
 
@@ -107,6 +108,7 @@ As it stands, we just have the main thread creating and initializing a Canvas ob
 \textcolor{preprocessor}{}   \{
 \textcolor{preprocessor}{     #pragma omp for}
 \textcolor{preprocessor}{}     \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+        can.\hyperlink{classtsgl_1_1_canvas_a2604fa056d4541f918ccf447eda1f3cf}{sleep}();
         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
            can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
         \}
@@ -116,7 +118,7 @@ As it stands, we just have the main thread creating and initializing a Canvas ob
 
 \textcolor{keywordtype}{int} main() \{
   omp\_set\_num\_threads(4);  \textcolor{comment}{//Set the number of threads to use}
-  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"}, FRAME);
   c.start();
 
   \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
@@ -128,7 +130,7 @@ As it stands, we just have the main thread creating and initializing a Canvas ob
 \end{DoxyCode}
 
 
-Re-\/compile and run. The screen should still be red. It took 0.\-027261 seconds to color all of the pixels with four threads (about 1/4 of the original time) on our machine.
+Re-\/compile and run. The screen should still be red. It took 2.\-080817 seconds to color all of the pixels with four threads (about 1/4 of the original time) on our machine.
 
 Let's take a look at the parallel block\-:
 
@@ -139,6 +141,7 @@ ColorFloat color = RED;
 \textcolor{preprocessor}{}\{
 \textcolor{preprocessor}{  #pragma omp for}
 \textcolor{preprocessor}{}  \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+     can.\hyperlink{classtsgl_1_1_canvas_a2604fa056d4541f918ccf447eda1f3cf}{sleep}();
      \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
         can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
      \}
@@ -151,7 +154,7 @@ ColorFloat color = RED;
 
 Because of the {\ttfamily omp\-\_\-set\-\_\-num\-\_\-threads(4);} statement in the {\ttfamily main()} function, the {\ttfamily \#pragma omp parallel} directive causes the main thread to fork 3 new threads. Each of the four threads will then perform the statements in the block that follows the {\ttfamily pragma}. The {\ttfamily \#pragma omp for} directive then divides up the iterations of the {\ttfamily for} loop that follows it among those four threads. Since the inner loop colors the pixels {\ttfamily R\-E\-D}, all of the threads end up coloring their pixels the same color.
 
-It also speeds up the coloring of the pixels in proportion to the number of threads being used; in this case, four threads were used, so the time to color all of the pixels red was 1/4 of the original time.
+It also speeds up the coloring of the pixels in proportion to the number of threads being used; in this case, four threads were used, so the time to color all of the pixels red was about 1/4 of the original time.
 
 This is nice and all....but we can't really visualize the four threads coloring different pixels. We know they are coloring them {\ttfamily R\-E\-D}, but which ones?
 
@@ -175,6 +178,7 @@ Let's add some more code to better visualize this\-:
     \textcolor{comment}{//Color the pixels}
 \textcolor{preprocessor}{    #pragma omp for}
 \textcolor{preprocessor}{}    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+        can.\hyperlink{classtsgl_1_1_canvas_a2604fa056d4541f918ccf447eda1f3cf}{sleep}();
         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
             can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
           \}
@@ -184,7 +188,7 @@ Let's add some more code to better visualize this\-:
 
 \textcolor{keywordtype}{int} main() \{
   omp\_set\_num\_threads(4);  \textcolor{comment}{//Set the number of threads to use}
-  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"});
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, 500, 500, \textcolor{stringliteral}{"Threading"}, FRAME);
   c.start();
 
   \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
@@ -194,7 +198,7 @@ Let's add some more code to better visualize this\-:
   c.wait();
 \}
 \end{DoxyCode}
- Recompile and run. There should now be four differently colored sections! (It took 0.\-044397 seconds to color the the screen four different colors on our machine!)
+ Recompile and run. There should now be four differently colored sections! (It took 2.\-079545 seconds to color the the screen four different colors on our machine!)
 
 Since the changes were made only to {\ttfamily draw\-Tutorial()}, let's take a closer look at that function\-:
 
@@ -213,6 +217,7 @@ Since the changes were made only to {\ttfamily draw\-Tutorial()}, let's take a c
     \textcolor{comment}{//Color the pixels}
 \textcolor{preprocessor}{    #pragma omp for}
 \textcolor{preprocessor}{}    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.getWindowWidth(); i++) \{
+        can.sleep();
         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.getWindowHeight(); j++) \{
             can.drawPoint(i, j, color);
           \}
@@ -244,6 +249,7 @@ Next, let's add support for command-\/line arguments so that we can control the 
     \textcolor{comment}{//Color the pixels}
 \textcolor{preprocessor}{    #pragma omp for}
 \textcolor{preprocessor}{}    \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} i = 0; i < can.\hyperlink{classtsgl_1_1_canvas_a086a0322f4a6ab27da6929b1aa0593af}{getWindowWidth}(); i++) \{
+        can.\hyperlink{classtsgl_1_1_canvas_a2604fa056d4541f918ccf447eda1f3cf}{sleep}();
         \textcolor{keywordflow}{for}(\textcolor{keywordtype}{unsigned} j = 0; j < can.\hyperlink{classtsgl_1_1_canvas_ad740ebe5d6bd69ab79cde3e84f369f35}{getWindowHeight}(); j++) \{
             can.\hyperlink{classtsgl_1_1_canvas_a6c17c90cd13f7b0184a25e4acc2b7426}{drawPoint}(i, j, color);
           \}
@@ -265,7 +271,7 @@ Next, let's add support for command-\/line arguments so that we can control the 
     threads = omp\_get\_num\_procs();
   \}
   omp\_set\_num\_threads(threads); \textcolor{comment}{//Use the number of threads passed via command-line}
-  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, width, height, \textcolor{stringliteral}{"Threading"});
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(100, 100, width, height, \textcolor{stringliteral}{"Threading"}, FRAME);
   c.start();
 
   \textcolor{keywordtype}{double} startTime = omp\_get\_wtime();
@@ -283,9 +289,9 @@ We are then passing the third argument, the number of threads to use, into {\ttf
 
 Before continuing, note that we did not use an animation loop because our {\ttfamily draw\-Tutorial()} function is not animating anything — it is just creating an inanimate drawing on the Canvas. We only need to use animation loops when we are animating something.
 
-Compile and run the program, passing these command-\/line arguments\-: 700, 700, 10. There should now be 10 differently colored sections of the Canvas! (It took 0.\-116421 seconds to color the 10 different sections on our machine!)
+Compile and run the program, passing these command-\/line arguments\-: 700, 700, 10. There should now be 10 differently colored sections of the Canvas! (It took 0.\-830523 seconds to color the 10 different sections on our machine!)
 
-Since we passed 10 threads, the time should be 1/10 of the original time. Passing n threads, it should take about 1/n seconds of the original time (with one thread) to draw!
+Since we used 10 threads, the time should be about 1/10 of the original time. Using n threads, it should take about 1/n seconds of the original time (with one thread) to draw, provided (a) we have enough work for the threads to do, (b) the work of each thread is independent of the others, and (c) there are enough cores available for them to run independently.
 
 In sum, Open\-M\-P makes it easy to add multithreading to speed up a sequential program, and T\-S\-G\-L can be used to visualize what each thread is doing. You can use command-\/line arguments to control the number of threads; you can also a function that draws a particular drawing (with or without multithreading).
 

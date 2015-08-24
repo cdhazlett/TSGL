@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>TSGL: TSGL</title>
+<title>TSGL: FAQ</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -76,35 +76,47 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">TSGL </div>  </div>
+<div class="title">FAQ </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Thread Safe Graphics Library</p>
-<p>You can generate Doxygen locally using 'make docs', or view the <a href="http://calvin-cs.github.io/TSGL/html/index.html">TSGL API here</a>. </p>
-<hr/>
- <h2>Description </h2>
-<p>TSGL is a thread-safe graphics library perfect for drawing graphics. You can do a wide variety of things with TSGL, including: image manipulation and rendering (.bmp, .jpeg, and .png image formats supported), 2D polygon drawing (rectangles, circles, triangles, etc.), text rendering, animations with keyboard and/or mouse events, and much more. All drawing and rendering is done with threads and in parallel. This library is currently supported on Windows, Mac OS, and Linux. 3D graphics are currently not supported by this library.</p>
-<p>If you would like TSGL in your local git repository, use the following command:</p>
-<p>git clone <a href="https://github.com/Calvin-CS/TSGL.git">https://github.com/Calvin-CS/TSGL.git</a></p>
-<p>Otherwise, click the "Download zip" button to download a zipped up version. </p>
-<hr/>
- <h2>Goals </h2>
-<p>The main goal of this library is to provide a thread-safe graphics library for 2D graphics. Other goals include: Helping beginning programming students learn about the complex process of parallelization by giving them hands-on tools to use in order to learn about parallelization without having them to worry about the problems associated with parallelization such as race conditions, mutexes, and more. It also helps educators teach programming students about parallelization through simple visualizations. </p>
-<hr/>
- <h2>Installation help </h2>
-<p>Linux - <a href="https://www.youtube.com/watch?v=htPo-tFSOdE">https://www.youtube.com/watch?v=htPo-tFSOdE</a></p>
-<p>Mac - <a href="https://www.youtube.com/watch?v=qIHrAAxdnmQ">https://www.youtube.com/watch?v=qIHrAAxdnmQ</a></p>
-<p>Windows - <a href="https://www.youtube.com/watch?v=v38PuL1Khhk">https://www.youtube.com/watch?v=v38PuL1Khhk</a> </p>
-<hr/>
- <h2>Dependencies </h2>
-<p>TSGL needs these libraries in order to function properly: GLEW, glfw, GL, freetype and stb. The stb library comes bundled with the TSGL source code, but the other four are not. For platform-specific dependencies, please see the "Installation help" section and then choose the video that shows the installtion of TSGL on the platform. </p>
-<hr/>
- <h2>Tutorials </h2>
-<p>Want to learn how to utilize the TSGL library? Check out the <a href="https://github.com/Calvin-CS/TSGL/wiki">wiki</a> pages for some tutorials! </p>
+<div class="textblock"><p>Welcome to the FAQ page! In here, you can ask whatever burning question you have in regards to the library.</p>
+<p>***Q:*** A test keeps crashing with the error "the font file could not be opened and read
+"! What do I do?</p>
+<p>***A:*** Are you in the bin folder of the tsgl folder? Some tests won't work unless you are in the bin folder. Specifically:</p>
+<p><code>testBlurImage</code>, <code>testCalcPi</code>, <code>testCosineIntegral</code>, <code>testGetPixels</code>, <code>testGreyscale</code>, <code>testImage</code>, <code>testImageCart</code>, <code>testInverter</code>, <code>testMandelbrot</code>, <code>testPhilosophers</code>, <code>testProgressBar</code>, <code>testSpectrogram</code>, <code>testText</code>, <code>testTextCart</code>, <code>testTextTwo</code>, <code>testUnits</code></p>
+<p>If the test that keeps crashing is in the list above, go into the bin folder and execute it from there.</p>
+<p>***Q:*** What is the maximum number of threads I can use in Windows?</p>
+<p>***A:*** You can only have up to 64 threads at a time in Windows.</p>
+<p>***Q:*** Why won't my tsgl Solution build in Windows?</p>
+<p>***A:*** Have you built the tsgl project first? You must build that first in order to create the lib file for TSGL. Then, you can build the entire Solution.</p>
+<p>***Q:*** Does TSGL have Debug messages in case things break?</p>
+<p>***A:*** In fact it does. Check out the <a href="http://calvin-cs.github.io/TSGL/html/_error_8h_source.html">Error.h</a> file and you will see a commented out line:</p>
+<div class="fragment"><div class="line"><span class="comment">//#define TSGL_DEBUG</span></div>
+</div><!-- fragment --><p>Uncommenting out this line will turn on Debug messages for the TSGL library in case things break (font not loading, image not found, etc...).</p>
+<p>***Q:*** With which operating systems does TSGL work?</p>
+<p>***A:*** Good question! TSGL has been sucessfully tested on: Ubuntu 14.0.4 and Arch Linux, MacOS 10.9.5 (Wrangler) and Mac 10.10.x (Yosemite), using g++ 4.9 and 5.1. It has also been sucessfully tested on Windows 7 &amp; Windows 10, using Visual Studio 2012 &amp; Visual Studio 2013.</p>
+<p>***Q:*** How do I update the Doxygen?</p>
+<p>***A:*** I'm glad you asked! Follow this process (via terminal or command-line):</p>
+<p>1). Navigate into the TSGL root directory (where the Makefile is).</p>
+<p>2). Type "make cleandocs".</p>
+<p>3). cd into the "docs" folder.</p>
+<p>4). Type "git rm -r html".</p>
+<p>5). cd back out of the "docs" folder (cd ..).</p>
+<p>6). Type "make docs".</p>
+<p>7). cd into the "docs" folder again.</p>
+<p>8). Type "git add html".</p>
+<p>9). Do a "git commit" inside of the docs folder.</p>
+<p>10). Type "git push origin gh-pages".</p>
+<p>11). cd back out of the "docs" folder.</p>
+<p>12). Do a "git add docs".</p>
+<p>13). Do a "git commit".</p>
+<p>14). Type "git push origin master".</p>
+<p>***NOTE:*** This process is for people who have cloned the repository on Linux/Mac. Windows users may use gitbash, though that has not been tested.</p>
+<p>***BIG NOTE:*** You ***NEED*** doxygen 1.8.6 in order to update the documentation correctly. Previous versions will cause a ***LOT*** of problems. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 24 2015 14:38:02 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 24 2015 16:21:24 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

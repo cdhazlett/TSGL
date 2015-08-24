@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>TSGL: Home</title>
+<title>TSGL: GCC-and-OMP</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -76,20 +76,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Home </div>  </div>
+<div class="title">GCC-and-OMP </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Welcome to the TSGL wiki!</p>
-<p>In here, you'll find a plethora of information about TSGL.</p>
-<p>Need help on how to get started? Check out the [[Using Canvas]] page!</p>
-<p>Wondering how to build and compile a program with TSGL code? See [[Building Programs]]!</p>
-<p>Have a burning question that needs to be answered? Perhaps its in the [[FAQ]] page!</p>
-<p>Want to check out the API for each TSGL class? The [[TSGL API]] page is where it’s at!</p>
-<p>You'll find all of that information and more here! </p>
+<div class="textblock"><p>GCC version 4.9 supports version 4.0 of OpenMP<a href="https://software.intel.com/en-us/articles/gcc-49-openmp-code-cannot-be-linked-with-intel-openmp-runtime">\[1\]</a>. This makes any code compiled with OMP before GCC 4.9 binary uncompatable with code compiled under 4.9 or higher. One error cause by this is something similar to <code>Undefined "GOMP_parallel"</code>.</p>
+<p>To resolve this error, you can either downgrade your compiler to GCC 4.8 or earlier, or recompile all OMP code under GCC 4.9 or later. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 24 2015 14:38:02 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 24 2015 16:21:24 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

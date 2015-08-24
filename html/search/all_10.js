@@ -1,8 +1,8 @@
 var searchData=
 [
   ['tsgl_20index_20page',['TSGL Index Page',['../index.html',1,'']]],
-  ['tsgl_2dapi',['TSGL-API',['../md__home_cpd5_workspace__t_s_g_l_docs-wiki__t_s_g_l-_a_p_i.html',1,'']]],
-  ['tsgl',['TSGL',['../md__home_cpd5_workspace__t_s_g_l_readme.html',1,'']]],
+  ['tsgl_2dapi',['TSGL-API',['../md__home_kodemonkey__desktop__t_s_g_l_docs-wiki__t_s_g_l-_a_p_i.html',1,'']]],
+  ['tsgl',['TSGL',['../md__home_kodemonkey__desktop__t_s_g_l_readme.html',1,'']]],
   ['takescreenshot',['takeScreenShot',['../classtsgl_1_1_canvas.html#ac035f43763b198f6915a0772973a5ea9',1,'tsgl::Canvas']]],
   ['tangentfunction',['TangentFunction',['../classtsgl_1_1_tangent_function.html',1,'tsgl']]],
   ['text',['Text',['../classtsgl_1_1_text.html#ad1a6a77a4762f4420527457a7a5c24e7',1,'tsgl::Text']]],
