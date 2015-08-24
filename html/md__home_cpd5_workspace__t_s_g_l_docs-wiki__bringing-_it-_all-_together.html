@@ -79,10 +79,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Bringing-It-All-Together </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***Linux/Mac users:*** Follow the steps from the previous tutorials. Name the folder "Tutorial9" and the file "thread.cpp". Replace "program" in the "TARGET" line of the Makefile with "thread".</p>
+<div class="textblock"><p>End of the line, folks!</p>
+<p>***Linux/Mac users:*** Follow the steps from the previous tutorials. Name the folder "Tutorial9" and the file "thread.cpp". Replace "program" in the "TARGET" line of the Makefile with "thread".</p>
 <p>***Windows users:*** Follow the steps from the previous tutorials. Name the Solution folder "Tutorial9" and the Visual Studio project "Threads". After adding the Property sheet, name the .cpp file "thread.cpp".</p>
 <p>***All three platforms:*** Follow the steps in the [[Building Programs]] page on how to compile and run the program (Linux/Mac users, this is a single-file program).</p>
-<p>End of the line, folks!</p>
 <p>We've seen how TSGL draws shapes, handles colors, text, I/O events, and command-line arguments.</p>
 <p>Now...how exactly does threading come into play in this library?</p>
 <p>TSGL does stand for "Thread-Safe Graphics Library."</p>
@@ -141,7 +141,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="line">  printf(<span class="stringliteral">&quot;\nTime to color pixels: %f\n&quot;</span>, omp_get_wtime() - startTime);</div>
 <div class="line">  c.wait();</div>
 <div class="line">}</div>
-</div><!-- fragment --><p>Re-compile and run. The screen should now be red. It took 8.319619 seconds to color all of the pixels on our machine.</p>
+</div><!-- fragment --><p>Re-compile and run. The screen should now be red. It took 8.319619 seconds to color all of the pixels on our machine. (Note that we are using the <code>can.sleep()</code> call to slow the computation down, so that you can see the main thread coloring the pixels.)</p>
 <p>The main function passes our created Canvas, <code>c</code>, and passes it to the <code>drawTutorial()</code> function. That function colors each pixel of its <code>can</code> parameter red, and since <code>can</code> is a reference parameter for our argument <code>c</code>, this colors each pixel of <code>c</code> red.</p>
 <p>So where do threads come in?</p>
 <p>As it stands, we just have the main thread creating and initializing a Canvas object, and then coloring it red in the <code>drawTutorial()</code> function. To spread the work of coloring the Canvas across multiple threads, we can add a parallel block and parallel <code>for</code> loop to our function:</p>
@@ -308,7 +308,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Mon Aug 24 2015 15:12:03 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Mon Aug 24 2015 15:27:23 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

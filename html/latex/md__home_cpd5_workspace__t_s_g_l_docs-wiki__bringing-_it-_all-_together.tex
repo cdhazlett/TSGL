@@ -1,10 +1,10 @@
+End of the line, folks!
+
 $\ast$$\ast$$\ast$\-Linux/\-Mac users\-:$\ast$$\ast$$\ast$ Follow the steps from the previous tutorials. Name the folder \char`\"{}\-Tutorial9\char`\"{} and the file \char`\"{}thread.\-cpp\char`\"{}. Replace \char`\"{}program\char`\"{} in the \char`\"{}\-T\-A\-R\-G\-E\-T\char`\"{} line of the Makefile with \char`\"{}thread\char`\"{}.
 
 $\ast$$\ast$$\ast$\-Windows users\-:$\ast$$\ast$$\ast$ Follow the steps from the previous tutorials. Name the Solution folder \char`\"{}\-Tutorial9\char`\"{} and the Visual Studio project \char`\"{}\-Threads\char`\"{}. After adding the Property sheet, name the .cpp file \char`\"{}thread.\-cpp\char`\"{}.
 
 $\ast$$\ast$$\ast$\-All three platforms\-:$\ast$$\ast$$\ast$ Follow the steps in the \mbox{[}\mbox{[}Building Programs\mbox{]}\mbox{]} page on how to compile and run the program (Linux/\-Mac users, this is a single-\/file program).
-
-End of the line, folks!
 
 We've seen how T\-S\-G\-L draws shapes, handles colors, text, I/\-O events, and command-\/line arguments.
 
@@ -89,7 +89,7 @@ Next, let's define the function so that it actually draws something onto the pas
 \end{DoxyCode}
 
 
-Re-\/compile and run. The screen should now be red. It took 8.\-319619 seconds to color all of the pixels on our machine.
+Re-\/compile and run. The screen should now be red. It took 8.\-319619 seconds to color all of the pixels on our machine. (Note that we are using the {\ttfamily can.\-sleep()} call to slow the computation down, so that you can see the main thread coloring the pixels.)
 
 The main function passes our created Canvas, {\ttfamily c}, and passes it to the {\ttfamily draw\-Tutorial()} function. That function colors each pixel of its {\ttfamily can} parameter red, and since {\ttfamily can} is a reference parameter for our argument {\ttfamily c}, this colors each pixel of {\ttfamily c} red.
 
