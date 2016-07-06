@@ -1,10 +1,11 @@
 var searchData=
 [
+  ['rpm',['RPM',['../md__home_kodemonkey_workspace__t_s_g_l_docs-wiki__r_p_m.html',1,'']]],
   ['randomcolor',['randomColor',['../classtsgl_1_1_colors.html#a0f28a13af4a0fc352a250c23ecc97e4f',1,'tsgl::Colors']]],
   ['recomputedimensions',['recomputeDimensions',['../classtsgl_1_1_cartesian_canvas.html#ac833a44fe7367f6411292707de37beef',1,'tsgl::CartesianCanvas']]],
   ['recordfornumframes',['recordForNumFrames',['../classtsgl_1_1_canvas.html#a47436daa39473ddb4044bac7b3b27151',1,'tsgl::Canvas']]],
-  ['rectangle',['Rectangle',['../classtsgl_1_1_rectangle.html',1,'tsgl']]],
   ['rectangle',['Rectangle',['../classtsgl_1_1_rectangle.html#a1fb2a492ffc57b2da380ea23d89e887b',1,'tsgl::Rectangle']]],
+  ['rectangle',['Rectangle',['../classtsgl_1_1_rectangle.html',1,'tsgl']]],
   ['rectangleevaluate',['rectangleEvaluate',['../classtsgl_1_1_integral_viewer.html#a213d814ac293686ecd06c45344fa242f',1,'tsgl::IntegralViewer']]],
   ['reset',['reset',['../classtsgl_1_1_canvas.html#ada6403439b583910d27e497148da5f2e',1,'tsgl::Canvas::reset()'],['../classtsgl_1_1_timer.html#a67a01c03c033c52056b7f1c733cd93e4',1,'tsgl::Timer::reset()'],['../classtsgl_1_1_visual_task_queue.html#a1cd23a5361c0209ac950db6afcd68a19',1,'tsgl::VisualTaskQueue::reset()']]],
   ['resumedrawing',['resumeDrawing',['../classtsgl_1_1_canvas.html#a56bf3c6e4eb7b06015d1c115aaa143f8',1,'tsgl::Canvas']]],

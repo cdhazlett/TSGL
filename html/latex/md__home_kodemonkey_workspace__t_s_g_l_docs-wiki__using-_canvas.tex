@@ -1,0 +1,84 @@
+$\ast$$\ast$$\ast$\-B\-E\-F\-O\-R\-E P\-R\-O\-C\-E\-E\-D\-I\-N\-G, P\-L\-E\-A\-S\-E S\-E\-E T\-H\-E \mbox{[}\mbox{[}Building Programs\mbox{]}\mbox{]} P\-A\-G\-E F\-O\-R M\-O\-R\-E I\-N\-F\-O\-R\-M\-A\-T\-I\-O\-N O\-N H\-O\-W T\-O C\-O\-M\-P\-I\-L\-E A\-N\-D R\-U\-N A P\-R\-O\-G\-R\-A\-M W\-I\-T\-H T\-S\-G\-L C\-O\-D\-E!!!$\ast$$\ast$$\ast$
+
+So, you've downloaded and installed T\-S\-G\-L. Congrats! Now what? Well, there's a {\itshape lot} you can do with T\-S\-G\-L. For now, let's start by making a simple Hello World program!
+
+$\ast$$\ast$$\ast$\-Linux/\-Mac users$\ast$$\ast$$\ast$\-: Start off by creating a folder and name it \char`\"{}\-Tutorial1\char`\"{}. Create a file inside of Tutorial1 and name it \char`\"{}hello.\-cpp\char`\"{}. Then, navigate to the T\-S\-G\-L-\/master folder and into the generic\-Makefile folder. Copy the Makefile into Tutorial1 and change the \char`\"{}\-T\-A\-R\-G\-E\-T\char`\"{} line so that \char`\"{}program\char`\"{} is now \char`\"{}hello\char`\"{}.
+
+$\ast$$\ast$$\ast$\-Windows users$\ast$$\ast$$\ast$\-: Create a new Solution folder and call it \char`\"{}\-Tutorial1\char`\"{}. Then, add a Visual Studio project to that folder and call it \char`\"{}\-Canvas\char`\"{}. Then, go to the Property Manager section and right click on the Canvas project. Click \char`\"{}\-Add existing Property sheet\char`\"{}, and navigate to the T\-S\-G\-L-\/master folder. Select \char`\"{}test\-Properties\char`\"{} and then go back to the Solution Explorer. Open up Tutorial1 and right click on Canvas. Add a .cpp file and name it \char`\"{}canvas.\-cpp\char`\"{}.
+
+$\ast$$\ast$$\ast$\-All three platforms\-:$\ast$$\ast$$\ast$ Follow the steps in the \mbox{[}\mbox{[}Building Programs\mbox{]}\mbox{]} page on how to compile and run the program (Linux/\-Mac users, this is a single-\/file program).
+
+Now, we'll be writing in C++, so let's place our \#include and using directives\-:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }tsgl;
+\end{DoxyCode}
+
+
+{\ttfamily \hyperlink{tsgl_8h_source}{tsgl.\-h}} contains \#include directives for all of the necessary header files needed in order to use the T\-S\-G\-L library. This includes vital class header files such as those for the Canvas class and the Timer class. T\-S\-G\-L also has its own namespace which must be used when using the T\-S\-G\-L library.
+
+Moving forward, let's add some code that will create and initialize a Canvas. A Canvas is essentially a screen that draws and displays whatever it is that you want to draw and display. There's a special kind of Canvas, the Cartesian\-Canvas, that we will look at later on.
+
+For now, let's focus on the normal Canvas\-:
+
+
+\begin{DoxyCode}
+\textcolor{keywordtype}{int} main() \{
+  Canvas c(0, 0, 600, 350, \textcolor{stringliteral}{"Hello World!"});
+  c.start();
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+This is essentially the skeleton code for any T\-S\-G\-L program. Let's break it down. In the main method, a Canvas object is created positioned at {\ttfamily (0, 0)} (on your monitor) with a width of {\ttfamily 600} and a height of {\ttfamily 350}. It has a title, {\ttfamily Hello World!}.
+
+The {\ttfamily c.\-start()} and {\ttfamily c.\-wait()} statements tell the Canvas to start drawing and then wait to close once it has completed drawing.
+
+In between the {\ttfamily c.\-start()} and {\ttfamily c.\-wait()} statements is where the magic happens. We will place a new statement which will draw a line to the Canvas\-:
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <tsgl.h>}
+\textcolor{keyword}{using namespace }tsgl;
+
+\textcolor{keywordtype}{int} main() \{
+  \hyperlink{classtsgl_1_1_canvas}{Canvas} c(0, 0, 600, 350, \textcolor{stringliteral}{"Hello World!"});
+  c.start();
+  \textcolor{comment}{//'H'}
+  c.drawLine(100, 50, 100, 300);
+  c.drawLine(100, 150, 165, 150);
+  c.drawLine(165, 50, 165, 300);
+
+  \textcolor{comment}{//'E'}
+  c.drawLine(200, 50, 280, 50);
+  c.drawLine(200, 50, 200, 300);
+  c.drawLine(200, 150, 280, 150);
+  c.drawLine(200, 300, 280, 300);
+
+  \textcolor{comment}{//The two 'L's}
+  c.drawLine(300, 50, 300, 300);
+  c.drawLine(300, 300, 320, 300);
+  c.drawLine(350, 50, 350, 300);
+  c.drawLine(350, 300, 370, 300);
+
+  \textcolor{comment}{//'O'}
+  c.drawCircle(480, 180, 100, 64, BLACK, \textcolor{keyword}{false});
+  c.wait();
+\}
+\end{DoxyCode}
+
+
+We will examine the {\ttfamily draw\-Line()} and {\ttfamily draw\-Circle()} methods in the \mbox{[}\mbox{[}Using Shapes\mbox{]}\mbox{]} tutorial. For now, just know that {\ttfamily draw\-Line()} draws a line to the Canvas and {\ttfamily draw\-Circle()} draws a circle to the Canvas.
+
+Our code is now complete! Compile the code, and then once it has compiled correctly, run it. A window should pop up with \char`\"{}\-Hello\char`\"{} written on it. To close the window, press the E\-S\-C key or click the 'x' in one of the corners.
+
+Please note that the {\ttfamily c.\-start()} and {\ttfamily c.\-wait()} methods {\itshape M\-U\-S\-T} be used at least once when working with the Canvas class. Bad things will happen if you do not have these methods and decide to draw something on a Canvas.
+
+Also, the special Canvas, Cartesian\-Canvas, handles lines and circles in much the same way as the standard Canvas does (but on a Cartesian coordinate system instead).
+
+You've just made your first T\-S\-G\-L project, congratulations!
+
+Next up, in \mbox{[}\mbox{[}Using Shapes\mbox{]}\mbox{]}, we take a look at how to draw shapes onto a Canvas. 
