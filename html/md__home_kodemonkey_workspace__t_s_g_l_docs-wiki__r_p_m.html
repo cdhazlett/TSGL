@@ -79,11 +79,37 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">RPM </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***NOTE*** This page is for Fedora/RedHat users. If you are an Ubuntu/Debian user, please see the [[Debian (Aptitude)]] section! </p>
+<div class="textblock"><p>***NOTE:*** This page is for Fedora/RedHat users. If you are an Ubuntu/Debian user, please see the [[Debian (Aptitude)]] section!</p>
+<p>***NOTE:*** These steps are for Fedora users only. CentOS users can use the install-centos script. Steps to install tsgl using yum/dnf on CentOS will be provided soon.</p>
+<p>As of Summer 2016, an RPM package has been made for easy installation of TSGL.</p>
+<p>This means that you can use yum/dnf to install TSGL on your machine.</p>
+<p>Follow these steps in order to do so:</p>
+<p>1). Add the openSUSE repo. </p>
+<pre class="fragment"> * cd into the /etc/yum.repos.d/ directory.
+ * sudo su.
+ * Create this file: home_TSGL_Maker.repo.
+ * Using your favorite text editor, add these changes to the .repo file:
+
+    [home_TSGL_Maker]
+    name=home:TSGL_Maker (Fedora_24)
+    type=rpm-md
+    baseurl=http://download.opensuse.org/repositories/home:/TSGL_Maker/Fedora_24/
+    gpgcheck=1
+    gpgkey=http://download.opensuse.org/repositories/home:/TSGL_Maker/Fedora_24//repodata/repomd.xml.key    
+    enabled=1
+</pre><p>2). Clean yum/dnf.</p>
+<ul>
+<li>Type sudo dnf clean all (or sudo yum clean all).</li>
+<li>sudo dnf update (or sudo yum update). 3). Install tsgl.</li>
+<li>sudo dnf install tsgl (or sudo yum install tsgl).</li>
+</ul>
+<p>The TSGL package will be installed on your machine along with a packaged version of GLFW.</p>
+<p>As a result of installing the TSGL package, the generic Makefile for building programs will be located in /home/GENERIC_MAKEFILE/. Copy the Makefile over to your project directory in order to create applications that utilize the TSGL library.</p>
+<p>***NOTE:*** In order to receive updated TSGL packages from the openSUSE build service repo, you will have to repeat step 2. This ensures that the openSUSE repo appears as updated on your machine. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Jul 6 2016 15:41:48 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Jul 6 2016 15:58:12 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

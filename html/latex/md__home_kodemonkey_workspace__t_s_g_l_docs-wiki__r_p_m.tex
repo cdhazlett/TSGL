@@ -1,1 +1,37 @@
-$\ast$$\ast$$\ast$\-N\-O\-T\-E$\ast$$\ast$$\ast$ This page is for Fedora/\-Red\-Hat users. If you are an Ubuntu/\-Debian user, please see the \mbox{[}\mbox{[}Debian (Aptitude)\mbox{]}\mbox{]} section! 
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This page is for Fedora/\-Red\-Hat users. If you are an Ubuntu/\-Debian user, please see the \mbox{[}\mbox{[}Debian (Aptitude)\mbox{]}\mbox{]} section!
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ These steps are for Fedora users only. Cent\-O\-S users can use the install-\/centos script. Steps to install tsgl using yum/dnf on Cent\-O\-S will be provided soon.
+
+As of Summer 2016, an R\-P\-M package has been made for easy installation of T\-S\-G\-L.
+
+This means that you can use yum/dnf to install T\-S\-G\-L on your machine.
+
+Follow these steps in order to do so\-:
+
+1). Add the open\-S\-U\-S\-E repo. \begin{DoxyVerb} * cd into the /etc/yum.repos.d/ directory.
+ * sudo su.
+ * Create this file: home_TSGL_Maker.repo.
+ * Using your favorite text editor, add these changes to the .repo file:
+
+    [home_TSGL_Maker]
+    name=home:TSGL_Maker (Fedora_24)
+    type=rpm-md
+    baseurl=http://download.opensuse.org/repositories/home:/TSGL_Maker/Fedora_24/
+    gpgcheck=1
+    gpgkey=http://download.opensuse.org/repositories/home:/TSGL_Maker/Fedora_24//repodata/repomd.xml.key    
+    enabled=1
+\end{DoxyVerb}
+
+
+2). Clean yum/dnf.
+\begin{DoxyItemize}
+\item Type sudo dnf clean all (or sudo yum clean all).
+\item sudo dnf update (or sudo yum update). 3). Install tsgl.
+\item sudo dnf install tsgl (or sudo yum install tsgl).
+\end{DoxyItemize}
+
+The T\-S\-G\-L package will be installed on your machine along with a packaged version of G\-L\-F\-W.
+
+As a result of installing the T\-S\-G\-L package, the generic Makefile for building programs will be located in /home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E/. Copy the Makefile over to your project directory in order to create applications that utilize the T\-S\-G\-L library.
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ In order to receive updated T\-S\-G\-L packages from the open\-S\-U\-S\-E build service repo, you will have to repeat step 2. This ensures that the open\-S\-U\-S\-E repo appears as updated on your machine. 
