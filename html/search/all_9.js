@@ -7,5 +7,6 @@ var searchData=
   ['intersects',['intersects',['../classtsgl_1_1_concave_polygon.html#a0fdc4936df5e1bff64031041fa84fee5',1,'tsgl::ConcavePolygon']]],
   ['isempty',['isEmpty',['../classtsgl_1_1_array.html#a2676cc880c5638849db5777f33680c9c',1,'tsgl::Array']]],
   ['isopen',['isOpen',['../classtsgl_1_1_canvas.html#ada31408e9a96ecb1639f552d8f0de475',1,'tsgl::Canvas']]],
+  ['introduction',['Introduction',['../md__home_kodemonkey_workspace__t_s_g_l_docs-wiki__installing-_t_s_g_l.html',1,'']]],
   ['issues_2dand_2dreviews',['Issues-and-Reviews',['../md__home_kodemonkey_workspace__t_s_g_l_docs-wiki__issues-and-_reviews.html',1,'']]]
 ];

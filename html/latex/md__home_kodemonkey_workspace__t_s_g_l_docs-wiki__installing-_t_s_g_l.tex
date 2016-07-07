@@ -1,0 +1,67 @@
+There are two main ways that you can install T\-S\-G\-L\-: via a binary package (recommended), or directly from source.
+
+In essence, the binary packages depend on a laundry list of libraries (which are installed along with the package itself). The same is true when you install from source.
+
+However, the three main library dependencies are\-:
+
+
+\begin{DoxyItemize}
+\item \href{https://www.freetype.org/download.html}{\tt Free\-Type}
+\item \href{https://www.glfw.org/download.html}{\tt G\-L\-F\-W}
+\item \href{https://downloads.sourceforge.net/project/glew/glew/1.12.0/glew-1.12.0.zip}{\tt G\-L\-E\-W}
+\end{DoxyItemize}
+
+When installing T\-S\-G\-L using a binary package, the following is true\-:
+
+
+\begin{DoxyItemize}
+\item Debian/\-Ubuntu\-:
+\begin{DoxyItemize}
+\item The Debian packages install libfreetype6 and libfreetype6-\/dev. This resolves the Free\-Type dependency.
+\item The Debian package for Ubuntu 14.\-04 installs libglew1.\-10 and libglew-\/dev, while the Debian package for Ubuntu 16.\-04 installs libglew-\/dev. This resolves the G\-L\-E\-W dependency.
+\item A packaged version of the G\-L\-F\-W library is installed along with the T\-S\-G\-L Debian packages. This resolves the G\-L\-F\-W dependency.
+\item An Open\-G\-L version check occurs before the packages are installed in order to see if the version is sufficient ($>$= 3.\-2). If the version is not sufficient, the packages will not be installed. Should this happen, you can update your graphics drivers by typing the following command\-: 'sudo ubuntu-\/drivers autoinstall'. If that does not work, there are plenty of online tutorials which should help you.
+\end{DoxyItemize}
+\item Fedora/\-R\-P\-M\-:
+\begin{DoxyItemize}
+\item The R\-P\-M package installs freetype and freetype-\/devel. This resolves the Free\-Type dependency.
+\item The R\-P\-M package installs glew and glew-\/devel. This resolves the G\-L\-E\-W dependency.
+\item A packaged version of the G\-L\-F\-W library (named glfw\-T\-S\-G\-L) is also installed along with T\-S\-G\-L. This resolves the G\-L\-F\-W dependency.
+\item As with the Debian packages, an Open\-G\-L version check occurs before the R\-P\-M packages are installed. If the version is less than 3.\-2, the packages are not installed. Should this happen, there are many online tutorials which will help you to update your graphics drivers (and the Open\-G\-L version).
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+As for installing from source, the following is true\-:
+
+
+\begin{DoxyItemize}
+\item Debian/\-Ubuntu\-:
+\begin{DoxyItemize}
+\item 
+\end{DoxyItemize}
+\item Fedora/\-R\-P\-M\-:
+\begin{DoxyItemize}
+\item 
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+When installing T\-S\-G\-L from source, the following is true\-:
+
+\subsubsection*{Install T\-S\-G\-L From Binary Package}
+
+Please see the respective page for you O\-S\-:
+
+
+\begin{DoxyItemize}
+\item Linux
+\begin{DoxyItemize}
+\item \href{https://github.com/Calvin-CS/TSGL/wiki/Debian-%28Aptitude%29}{\tt Debian/\-Ubuntu}
+\item \href{https://github.com/Calvin-CS/TSGL/wiki/RPM}{\tt Fedora/\-R\-P\-M}
+\end{DoxyItemize}
+\item Mac\-O\-S
+\begin{DoxyItemize}
+\item $\ast$$\ast$$\ast$\-C\-O\-M\-I\-N\-G S\-O\-O\-N!$\ast$$\ast$$\ast$
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+\subsubsection*{Install T\-S\-G\-L From Source}

@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>TSGL: Class Members</title>
+<title>TSGL: Introduction</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -38,8 +38,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
   <div id="navrow1" class="tabs">
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
-      <li><a href="pages.html"><span>Related&#160;Pages</span></a></li>
-      <li class="current"><a href="annotated.html"><span>Classes</span></a></li>
+      <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
+      <li><a href="annotated.html"><span>Classes</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -59,44 +59,6 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       </li>
     </ul>
   </div>
-  <div id="navrow2" class="tabs2">
-    <ul class="tablist">
-      <li><a href="annotated.html"><span>Class&#160;List</span></a></li>
-      <li><a href="classes.html"><span>Class&#160;Index</span></a></li>
-      <li><a href="hierarchy.html"><span>Class&#160;Hierarchy</span></a></li>
-      <li class="current"><a href="functions.html"><span>Class&#160;Members</span></a></li>
-    </ul>
-  </div>
-  <div id="navrow3" class="tabs2">
-    <ul class="tablist">
-      <li class="current"><a href="functions.html"><span>All</span></a></li>
-      <li><a href="functions_func.html"><span>Functions</span></a></li>
-    </ul>
-  </div>
-  <div id="navrow4" class="tabs3">
-    <ul class="tablist">
-      <li><a href="functions.html#index_a"><span>a</span></a></li>
-      <li class="current"><a href="functions_b.html#index_b"><span>b</span></a></li>
-      <li><a href="functions_c.html#index_c"><span>c</span></a></li>
-      <li><a href="functions_d.html#index_d"><span>d</span></a></li>
-      <li><a href="functions_f.html#index_f"><span>f</span></a></li>
-      <li><a href="functions_g.html#index_g"><span>g</span></a></li>
-      <li><a href="functions_h.html#index_h"><span>h</span></a></li>
-      <li><a href="functions_i.html#index_i"><span>i</span></a></li>
-      <li><a href="functions_l.html#index_l"><span>l</span></a></li>
-      <li><a href="functions_o.html#index_o"><span>o</span></a></li>
-      <li><a href="functions_p.html#index_p"><span>p</span></a></li>
-      <li><a href="functions_r.html#index_r"><span>r</span></a></li>
-      <li><a href="functions_s.html#index_s"><span>s</span></a></li>
-      <li><a href="functions_t.html#index_t"><span>t</span></a></li>
-      <li><a href="functions_u.html#index_u"><span>u</span></a></li>
-      <li><a href="functions_v.html#index_v"><span>v</span></a></li>
-      <li><a href="functions_w.html#index_w"><span>w</span></a></li>
-      <li><a href="functions_z.html#index_z"><span>z</span></a></li>
-      <li><a href="functions_~.html#index_~"><span>~</span></a></li>
-    </ul>
-  </div>
-</div><!-- top -->
 <!-- window showing the filter options -->
 <div id="MSearchSelectWindow"
      onmouseover="return searchBox.OnSearchSelectShow()"
@@ -111,21 +73,64 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
+</div><!-- top -->
+<div class="header">
+  <div class="headertitle">
+<div class="title">Introduction </div>  </div>
+</div><!--header-->
 <div class="contents">
-<div class="textblock">Here is a list of all documented class members with links to the class documentation for each member:</div>
-
-<h3><a class="anchor" id="index_b"></a>- b -</h3><ul>
-<li>bindToButton()
-: <a class="el" href="classtsgl_1_1_canvas.html#a26f2f1acf2b80eee95e42bc13dbc7600">tsgl::Canvas</a>
+<div class="textblock"><p>There are two main ways that you can install TSGL: via a binary package (recommended), or directly from source.</p>
+<p>In essence, the binary packages depend on a laundry list of libraries (which are installed along with the package itself). The same is true when you install from source.</p>
+<p>However, the three main library dependencies are:</p>
+<ul>
+<li><a href="https://www.freetype.org/download.html">FreeType</a></li>
+<li><a href="https://www.glfw.org/download.html">GLFW</a></li>
+<li><a href="https://downloads.sourceforge.net/project/glew/glew/1.12.0/glew-1.12.0.zip">GLEW</a></li>
+</ul>
+<p>When installing TSGL using a binary package, the following is true:</p>
+<ul>
+<li>Debian/Ubuntu:<ul>
+<li>The Debian packages install libfreetype6 and libfreetype6-dev. This resolves the FreeType dependency.</li>
+<li>The Debian package for Ubuntu 14.04 installs libglew1.10 and libglew-dev, while the Debian package for Ubuntu 16.04 installs libglew-dev. This resolves the GLEW dependency.</li>
+<li>A packaged version of the GLFW library is installed along with the TSGL Debian packages. This resolves the GLFW dependency.</li>
+<li>An OpenGL version check occurs before the packages are installed in order to see if the version is sufficient (&gt;= 3.2). If the version is not sufficient, the packages will not be installed. Should this happen, you can update your graphics drivers by typing the following command: 'sudo ubuntu-drivers autoinstall'. If that does not work, there are plenty of online tutorials which should help you.</li>
+</ul>
 </li>
-<li>bindToScroll()
-: <a class="el" href="classtsgl_1_1_canvas.html#aecd3d94790d2e660db380a5e951ae394">tsgl::Canvas</a>
-</li>
-<li>blend()
-: <a class="el" href="classtsgl_1_1_colors.html#a26a34b86c0b70fe4984a91a24a0f263f">tsgl::Colors</a>
+<li>Fedora/RPM:<ul>
+<li>The RPM package installs freetype and freetype-devel. This resolves the FreeType dependency.</li>
+<li>The RPM package installs glew and glew-devel. This resolves the GLEW dependency.</li>
+<li>A packaged version of the GLFW library (named glfwTSGL) is also installed along with TSGL. This resolves the GLFW dependency.</li>
+<li>As with the Debian packages, an OpenGL version check occurs before the RPM packages are installed. If the version is less than 3.2, the packages are not installed. Should this happen, there are many online tutorials which will help you to update your graphics drivers (and the OpenGL version).</li>
+</ul>
 </li>
 </ul>
-</div><!-- contents -->
+<p>As for installing from source, the following is true:</p>
+<ul>
+<li>Debian/Ubuntu:<ul>
+<li></li>
+</ul>
+</li>
+<li>Fedora/RPM:<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+<p>When installing TSGL from source, the following is true:</p>
+<h3>Install TSGL From Binary Package</h3>
+<p>Please see the respective page for you OS:</p>
+<ul>
+<li>Linux<ul>
+<li><a href="https://github.com/Calvin-CS/TSGL/wiki/Debian-%28Aptitude%29">Debian/Ubuntu</a></li>
+<li><a href="https://github.com/Calvin-CS/TSGL/wiki/RPM">Fedora/RPM</a></li>
+</ul>
+</li>
+<li>MacOS<ul>
+<li>***COMING SOON!***</li>
+</ul>
+</li>
+</ul>
+<h3>Install TSGL From Source</h3>
+</div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated on Thu Jul 7 2016 10:31:08 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
