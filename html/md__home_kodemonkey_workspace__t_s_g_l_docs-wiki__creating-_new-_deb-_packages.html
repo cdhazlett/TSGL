@@ -79,11 +79,197 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Creating-New-Deb-Packages </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***COMING SOON!*** </p>
+<div class="textblock"><p>***WORK IN PROGRESS!!!*** </p>
+<hr/>
+ <h2>| HOW TO CREATE NEW TSGL DEBIAN PACKAGES FOR UBUNTU (Last updated: 07/21/16) | </h2>
+<p>(Example of making the same package for a different distro: tsgl (1.1-1~&lt;distro-name&gt;) &lt;distro-name&gt;</p>
+<p>***NOTE:*** This document guides you in the process of creating Debian packages by hand. The package creation process has already been automated, so you do not need to follow this document if the automation process is working fine. If, however, the automation process has failed and you need to make an RPM package by hand, please continue to read the document. DO NOT ATTEMPT TO CREATE A DEBIAN PACKAGE BY HAND IF THE AUTOMATION PROCESS IS STILL FUNCTIONAL!!!</p>
+<p>***NOTE:*** This document attempts to guide you in the process of Debian package creation. Given that, package creation can be a long and complex process. If there's something that we missed, or perhaps have misleading information, please edit this page accordingly!</p>
+<p>Hello!</p>
+<p>So, you need to make a new Debian package for TSGL.</p>
+<p>Package creation isn't trivial, and has a steep learning curve.</p>
+<p>What's more, we think that creating a Debian package is a ***LOT*** more complex than creating an RPM package.</p>
+<p>Luckily, this document will attempt to guide you through the process.</p>
+<p>Let's get started with a brief intro to Debian packages. </p>
+<hr/>
+ <h2>| Creating Debian packages: intro | </h2>
+<p>Alright! The PPA is all set up, the library has been updated, coffee has been made, you're ready to go!</p>
+<p>Now, what's in a debian package?</p>
+<p>Magic? Close.</p>
+<p>There are three components to a Debian package:</p>
+<p>1). Upstream tarball - the original source code for the library/application. This comes from developers "upstream", which means that they are the original authors of the code. 2). Source package - has all of the necessary files needed to compile/build the software. Includes: the upstream tarball with .tar.gz ending, a description file (.dsc), and a tarball with any changes made to the upstream source code and all files created for the debian package. 3). Binary packages - what actually get installed on a user's system.</p>
+<p>You usually have to get the upstream tarball from some developers who are working on a piece of software. (You type "sudo apt-get source &lt;package-name&gt;" in order to fetch it).</p>
+<p>In this case, however, the upstream tarball will be created by you. You, and everyone else who has worked on this library, are considered as the original authors of the code inside of it. Therefore, there is no need to get an upstream tarball. You'll create one yourself!</p>
+<p>Follow these steps:</p>
+<p>1). Create a new folder and call it "tsgl-&lt;version-number&gt;", replacing &lt;version-number&gt; with whatever version TSGL is currently. (If you've made changes to the library recently, bump up the middle number of the version number by one. i.e. 1.1.1 -&gt; 1.2.1). (If not, make no changes to the version number). 2). Go to wherever you have the TSGL folder (which you can get using git if you don't have it: git clone <a href="https://www.github.com/Calvin-CS/TSGL.git">https://www.github.com/Calvin-CS/TSGL.git</a>). 3). Take ALL of the files in the TSGL folder, and copy them over to the tsgl-&lt;version-number&gt; folder.</p>
+<p>Okay, now we'll create the actual upstream tarball.</p>
+<p>1). Open up a terminal, and go to the place where the tsgl-&lt;version-number&gt; folder is located. 2). Type </p>
+<pre class="fragment">tar czvf tsgl-&lt;version-number&gt;.tar.gz tsgl-&lt;version-number&gt;
+</pre><p> 3). Type ls, and you should see files that look like this: </p>
+<pre class="fragment">tsgl-&lt;version-number&gt;.tar.gz tsgl-&lt;version-number&gt; 
+</pre><p>Congrats! You created the upstream tarball, and have taken your first step in making a Debian package. </p>
+<hr/>
+ <h2>| Creating Debian packages: files, files, and more files | </h2>
+<p>Now that you have the upstream tarball created, it's time to get into the nitty gritty of packaging.</p>
+<p>We'll go next into setting up the library to be made into a package.</p>
+<p>You know how you have to prepare a turkey before actually cooking it?</p>
+<p>The process is somewhat similar when creating a Debian package.</p>
+<p>Go into the tsgl-&lt;version-number&gt; folder after creating the upstream tarball. Create a folder named "debian".</p>
+<p>This one folder, debian, will store all of the necessary files needed in order to create a debian package.</p>
+<p>And quite a lot of files we need....</p>
+<ul>
+<li>changelog</li>
+<li>control</li>
+<li>rules</li>
+<li>compat</li>
+<li>tsgl.install</li>
+<li>copyright</li>
+<li>source/format</li>
+</ul>
+<p>There are MANY more, but these will suffice.</p>
+<p>You're going to have to create each and every one of these files. Let's get started with the changelog. </p>
+<hr/>
+ <h2>| changelog file | </h2>
+<p>This file essentially explains what has been changed in the Debian package. Ranging from a minor change to the control file (explained shortly), or a full scale rework of the entire package, you have to explain what you changed in this file. Don't worry, you don't have to explain EVERY little detail. You only have to summarize your changes.</p>
+<p>This file is also EXTREMELY picky in regards to format. There is a specific format for this file that <em>MUST</em> be followed.</p>
+<p>Since you're creating a brand new package, nothing's really been changed! So, you'll have to create the file. Luckily, there's a way to autogenerate this file.</p>
+<p>To create the changelog file, be in the tsgl-&lt;version-number&gt; directory, and type this command:</p>
+<p>dch &ndash;create -v &lt;version-number&gt; &ndash;package tsgl</p>
+<p>(If dch isn't installed, sudo apt-get install devscripts).</p>
+<p>You'll be asked to pick an editor. Pick whichever one is the easiest one to use.</p>
+<p>Now, you should see something like this:</p>
+<p>tsgl (&lt;version-number-debnumber&gt;) UNRELEASED; urgency=medium</p>
+<ul>
+<li>Initial release. (Closes: #XXXXXX)</li>
+</ul>
+<p>&ndash; kodemonkey &lt;kodemonkey-desktop&gt; Mon, 06 Jun 2016 15:56:57 -0400</p>
+<p>Let's break it down:</p>
+<ul>
+<li>tsgl (&lt;version-number&gt;) specifies the name of the package and the current version-number. The debnumber tells us what version is the DEBIAN package. In this case, since we are creating it, set this number to 1. If this were an already created package, we would have to bump up the debnumber by 1.</li>
+<li>UNRELEASED specifies the Linux distro that we developed the library for. trusty is Ubuntu 14.04, xenial is for Ubuntu 16.04. If you are creating a new TSGL package for either one of those distros, replace UNRELEASED with the distro name. (If you are creating a new TSGL package for a new distro, please close this file and look at the "HowToNewDistros.txt" file).</li>
+<li>urgency=medium specifies the priority level for this package. You can leave it as is.</li>
+<li>* Initial release. specifies what has been changed in the library. You can leave it as is.</li>
+<li>Remove the (Closes: #XXXXXX) as that is for bug fixes.</li>
+<li>&ndash; kodemonkey &lt;kodemonkey-desktop&gt; Mon, 06 Jun 2016 15:56:57 -0400 specifies the person who made the changes (kodemonkey), an email that you can contact them by (kodemonkey-desktop), and the time and date that the changes were made. You'll want to replace the name and email with the ones associated with your ppa.</li>
+</ul>
+<p>You should end up with a file like this after changes have been made:</p>
+<p>tsgl (1.0-1) trusty; urgency=medium</p>
+<ul>
+<li>Initial release.</li>
+</ul>
+<p>&ndash; Chris Dilley <a href="#" onclick="location.href='mai'+'lto:'+'cod'+'em'+'onk'+'ey'+'941'+'@g'+'mai'+'l.'+'com'; return false;">codem<span style="display: none;">.nosp@m.</span>onke<span style="display: none;">.nosp@m.</span>y941@<span style="display: none;">.nosp@m.</span>gmai<span style="display: none;">.nosp@m.</span>l.com</a> Mon, 06 Jun 2016 15:56:57 -0400</p>
+<p>Save the changes and close the file. </p>
+<hr/>
+ <h2>| control file | </h2>
+<p>This file tells apt-get how to manage the package.</p>
+<p>It's also a real workhorse of a file.</p>
+<p>Here's the general format:</p>
+<p>1 Source: tsgl 2 Maintainer: Chris Dilley <a href="#" onclick="location.href='mai'+'lto:'+'cod'+'em'+'onk'+'ey'+'941'+'@g'+'mai'+'l.'+'com'; return false;">codem<span style="display: none;">.nosp@m.</span>onke<span style="display: none;">.nosp@m.</span>y941@<span style="display: none;">.nosp@m.</span>gmai<span style="display: none;">.nosp@m.</span>l.com</a> 3 Section: libs 4 Priority: optional 5 Standards-Version: 3.9.5 6 Build-Depends: debhelper (&gt;= 9), glfw, doxygen, libglew-dev, libglew1.10, libfreetype6-dev, libfreetype6, libxrandr-dev, libxi-dev, 7 x11proto-xf86vidmode-dev, libglu1-mesa-dev 8 9 Package: tsgl 10 Architecture: amd64 11 Depends: ${shlibs:Depends}, ${misc:Depends}, glfw, libfreetype6, libfreetype6-dev, libglew1.10, libglew-dev, libxrandr-dev, doxygen, devscripts, build-essential 12 Description: A Thread-Safe Graphics Library.</p>
+<p>(Line numbers added)</p>
+<p>As you can see, there are two sections. Lines 1-7 specify information for the source package, while lines 9-12 specify information for the binary package.</p>
+<p>Let's break them down:</p>
+<p>-&mdash;SOURCE-&mdash;</p>
+<ul>
+<li>Source specifies the name of the source package.</li>
+<li>Maintainer specifies the person who is keeping track of the package in terms of updates, tweaks, etc.</li>
+<li>Section species the section of the distribution that the source package goes into (in this case, libs).</li>
+<li>Priority specifies the importance of this package.</li>
+<li>Standards-Version specifies the Debian standards for packaging that we are following.</li>
+<li>Build-Depends specifies what libraries need to be present in order to build our library.</li>
+</ul>
+<p>-&mdash;BINARY-&mdash;</p>
+<ul>
+<li>Package specifies the name of the package. Note that the Source and Package name fields do NOT have to be the same.</li>
+<li>Architecture specifies the architectures that the binary package can be compiled for.</li>
+<li>Depends specifies what libraries need to be present in order for our binary package to behave correctly.</li>
+<li>Description specifies a short summary of what the package is.</li>
+</ul>
+<p>At the time of this writing, this was the control file for the trusty TSGL debian package.</p>
+<p>This is the one for the xenial TSGL package:</p>
+<p>Source: tsgl Maintainer: Chris Dilley <a href="#" onclick="location.href='mai'+'lto:'+'cod'+'em'+'onk'+'ey'+'941'+'@g'+'mai'+'l.'+'com'; return false;">codem<span style="display: none;">.nosp@m.</span>onke<span style="display: none;">.nosp@m.</span>y941@<span style="display: none;">.nosp@m.</span>gmai<span style="display: none;">.nosp@m.</span>l.com</a> Section: libs Priority: optional Standards-Version: 3.9.5 Build-Depends: debhelper (&gt;= 9), glfw, doxygen, libglew-dev, libfreetype6-dev, libfreetype6, libxrandr-dev, libxi-dev, x11proto-xf86vidmode-dev, libglu1-mesa-dev</p>
+<p>Package: tsgl Architecture: amd64 Depends: ${shlibs:Depends}, ${misc:Depends}, glfw, libfreetype6, libfreetype6-dev, libglew-dev, libxrandr-dev, doxygen, devscripts, build-essential Description: A Thread-Safe Graphics Library.</p>
+<p>The one for the trusty TSGL package is essentially the same, but with libGLEW1.10 added to Build-Depends and Depends.</p>
+<p>If nothing has changed (no new dependencies have been added...), simply copy and paste it into the new control file. Change the Maintainer field to your name and email associated with the ppa.</p>
+<p>Save the changes and close the file. </p>
+<hr/>
+ <h2>| compat file | </h2>
+<p>This is the easiest file to make. Create the file, and type "9". Save the changes and don't touch the file again.</p>
+<p>Essentially, all this file does is tell the packaging tools to use debhelper version 9.</p>
+<p>This means, "Use the tools which help build Debian packages from version 9." </p>
+<hr/>
+ <h2>| rules file | </h2>
+<p>This file tells the build system how to make the binary package (in this case, the one that will be built in our ppa after we upload the source package).</p>
+<p>As mentioned above, there are three components to a Debian package: upstream tarball, source package, and binary package.</p>
+<p>We've already made the upstream tarball.</p>
+<p>Our source and binary packages, however, will be made for us.</p>
+<p>The source package will be made as a result of the work done in the next section.</p>
+<p>The PPA has a build system which takes our uploaded source package and creates a binary package out of that.</p>
+<p>It then publishes the upstream tarball, source package, and binary packages so that users can download and install tsgl.</p>
+<p>You can upload binaries, though it is NOT recommended.</p>
+<p>At any rate, this is what the rules files looks like for both the trusty and xenial packages:</p>
+<hr/>
+ <h2>| tsgl.install file | </h2>
+<p>This file explains where files need to go when the package is being installed.</p>
+<p>Whenever something is installed on a user's system, certain files need to go to certain places.</p>
+<p>An example would be an executable. Normally, you put executables inside of a user's /usr/bin when it is being installed.</p>
+<p>This file specifies where certain files go on a user's system.</p>
+<p>In our case, we need to put the libtsgl.so (and libtsgl.a file if created) into /usr/lib/, the .h files from src/TSGL into /usr/include/TSGL/, and the generic Makefile into /usr/include/TSGLMAKE/ (so users can create programs with TSGL with ease).</p>
+<hr/>
+ <h2>| source/format | </h2>
+<hr/>
+ <h2>| copyright | </h2>
+<p>This file is used to store licensing information and legal stuff associated with your software.</p>
+<p>In much the same way as inventors patent their products in order to protect them, software developers use licenses in order to protect their software.</p>
+<p>"Protection" means not having your ideas stolen, etc.</p>
+<p>It's essentially a way of telling everyone, "This software is availible for use, but with some restrictions."</p>
+<p>In the case of TSGL, we use the GPL v3 license.</p>
+<p>This is located in the TSGL main folder, in a file called, "license".</p>
+<p>Simply open that file up, copy the contents, and paste them into the copyright file. </p>
+<hr/>
+ <h2>| preinst | </h2>
+<p>This file is usually a shell/bash script that is executed before the installation of the package.</p>
+<p>You can do all sorts of things with this file, ranging from checking library versions, to making sure that everything is in place for installing your package.</p>
+<p>In the case of TSGL, we use this file to check the OpenGL version.</p>
+<p>It <em>MUST</em> be 3.2 or greater, because TSGL relies on functions that were implemented in OpenGL 3.2 and greater.</p>
+<p>To check the OpenGL version, one method that we used was:</p>
+<p>#!/bin/sh</p>
+<p>versInfo=$(glxinfo | grep OpenGL)</p>
+<p>#http://stackoverflow.com/questions/18147884/shell-variable-in-a-grep-regex #Get the OpenGL version string check="OpenGL version string: " versString=$(echo "$versInfo" | grep "$check")</p>
+<p>#http://stackoverflow.com/questions/7516455/sed-extract-version-number-from-string-only-version-without-other-numbers #http://superuser.com/questions/363865/how-to-extract-a-version-number-using-sed #Extract the version number versNum=$(echo "$versString" | sed 's/[^0-9.]*([0-9.]*).*/\1/')</p>
+<p>#http://tldp.org/LDP/abs/html/comparison-ops.html #Check if the OpenGL version number is 3.2 or greater. if [[ "$versNum" &lt; "3.2" ]] then exit 1 fi</p>
+<p>Simply copy and paste the code above into the preinst file, save and then close it. </p>
+<hr/>
+ <h2>| postinst | </h2>
+<p>This file is usually a shell/bash script that is executed after the installation of the package.</p>
+<p>Whew, that was a lot of files!</p>
+<p>Let's move onto the easiest part of Debian package creation: actually creating one! </p>
+<hr/>
+ <h2>| Creating Debian packages: debuild is your friend | </h2>
+<p>So, you have created all of the files in the debian folder.</p>
+<p>Now all that's left to do is to create the files needed in order to create our full Debian package and upload said package.</p>
+<p>You'll also have to sign the package (so Debian knows that you made the package) with a GPG key, located in keyID.txt.</p>
+<p>How do we do all that?</p>
+<p>debuild.</p>
+<p>debuild creates our Debian package and files needed in order to upload said package.</p>
+<p>Simply type: </p>
+<pre class="fragment">cd ../
+debuild -S -rfakeroot -k&lt;key-id&gt; (replacing &lt;key-id&gt; with the key ID located in key.txt). 
+</pre><p>and debuild takes care of the rest!</p>
+<p>debuild -S -rfakeroot -k&lt;key-id&gt; cd .. ls &lt;package-name&gt;.source_changes </p>
+<hr/>
+ <h2>| MISC | </h2>
+<p>Does something not make sense? Have we missed something? Take a look at these links for more information.</p>
+<p><a href="https://wiki.debian.org/Packaging/Intro?action=show&redirect=IntroDebianPackaging">https://wiki.debian.org/Packaging/Intro?action=show&amp;redirect=IntroDebianPackaging</a></p>
+<p><a href="https://en.wikipedia.org/wiki/Upstream_%28software_development%29">https://en.wikipedia.org/wiki/Upstream_%28software_development%29</a></p>
+<p><a href="https://wiki.debian.org/Packaging/SourcePackage?action=show&redirect=SourcePackage">https://wiki.debian.org/Packaging/SourcePackage?action=show&amp;redirect=SourcePackage</a></p>
+<p><a href="https://www.debian.org/doc/manuals/maint-guide/dreq.en.html">https://www.debian.org/doc/manuals/maint-guide/dreq.en.html</a></p>
+<p><a href="https://www.debian.org/doc/manuals/maint-guide/dreq.en.html#control">https://www.debian.org/doc/manuals/maint-guide/dreq.en.html#control</a></p>
+<p><a href="https://wiki.debian.org/Packaging/SourcePackage?action=show&redirect=SourcePackage#Working_with_a_source_package">https://wiki.debian.org/Packaging/SourcePackage?action=show&amp;redirect=SourcePackage#Working_with_a_source_package</a></p>
+<p>***PLEASE*** update this document if you come across new links, or if there's missing/false information. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 21 2016 10:06:34 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 21 2016 12:37:42 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
