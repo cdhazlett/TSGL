@@ -1,0 +1,37 @@
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This process is for people who have cloned the repository on Linux/\-Mac. Windows users may use \href{https://git-scm.com/download/win}{\tt Git Bash}, though that has not been tested.
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ Before updating the Doxygen, please see the \href{https://github.com/Calvin-CS/TSGL/blob/master/READMEMISC.txt}{\tt R\-E\-A\-D\-M\-E\-M\-I\-S\-C.\-txt} file. {\bfseries You will not be able to update the Doxygen correctly if you fail to read \href{https://github.com/Calvin-CS/TSGL/blob/master/READMEMISC.txt}{\tt R\-E\-A\-D\-M\-E\-M\-I\-S\-C.\-txt} first!}
+
+$\ast$$\ast$$\ast$\-B\-I\-G N\-O\-T\-E\-:$\ast$$\ast$$\ast$ You $\ast$$\ast$$\ast$\-N\-E\-E\-D$\ast$$\ast$$\ast$ doxygen 1.\-8.\-6 in order to update the documentation correctly. Previous versions will cause a $\ast$$\ast$$\ast$\-L\-O\-T$\ast$$\ast$$\ast$ of problems.
+
+In order to provide an A\-P\-I and extensive documentation for the T\-S\-G\-L library, we rely on a tool known as \href{http://www.stack.nl/~dimitri/doxygen/}{\tt Doxygen}.
+
+If you need to update our Doxygen pages for whatever reason (you've added a new class, found a typo and fixed it, etc...), follow this process (via terminal or command-\/line)\-:
+
+1). Navigate into the T\-S\-G\-L root directory (where the Makefile is).
+
+2). Type \char`\"{}make cleandocs\char`\"{}.
+
+3). cd into the \char`\"{}docs\char`\"{} folder.
+
+4). Type \char`\"{}git rm -\/r html\char`\"{}.
+
+5). cd back out of the \char`\"{}docs\char`\"{} folder (cd ..).
+
+6). Type \char`\"{}make docs\char`\"{}.
+
+7). cd into the \char`\"{}docs\char`\"{} folder again.
+
+8). Type \char`\"{}git add html\char`\"{}.
+
+9). Do a \char`\"{}git commit\char`\"{} inside of the docs folder.
+
+10). Type \char`\"{}git push origin gh-\/pages\char`\"{}.
+
+11). cd back out of the \char`\"{}docs\char`\"{} folder.
+
+12). Do a \char`\"{}git add docs\char`\"{}.
+
+13). Do a \char`\"{}git commit\char`\"{}.
+
+14). Type \char`\"{}git push origin master\char`\"{}. 

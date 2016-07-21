@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['zoom',['zoom',['../classtsgl_1_1_cartesian_canvas.html#a69a378f61868c4c880889c33ec33c992',1,'tsgl::CartesianCanvas::zoom(Decimal x, Decimal y, Decimal scale)'],['../classtsgl_1_1_cartesian_canvas.html#adb1e999087c0ec7e4405d8ebd3ca9760',1,'tsgl::CartesianCanvas::zoom(Decimal x1, Decimal y1, Decimal x2, Decimal y2)']]]
+  ['windows_3a',['Windows:',['../md__home_kodemonkey_workspace__t_s_g_l_docs-wiki__library-_versions.html',1,'']]],
+  ['wait',['wait',['../classtsgl_1_1_canvas.html#a39e69fd4d1ad8cf0e22ecea12f1ddf08',1,'tsgl::Canvas']]]
 ];

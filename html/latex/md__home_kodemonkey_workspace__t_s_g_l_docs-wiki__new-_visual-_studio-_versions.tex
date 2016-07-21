@@ -1,1 +1,430 @@
-$\ast$$\ast$$\ast$\-C\-O\-M\-I\-N\-G S\-O\-O\-N!$\ast$$\ast$$\ast$ 
+$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S!!$\ast$$\ast$$\ast$
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This page contains information which has been acquired to the best of our abilities. There may be some things that the documentation fails to report, or things may have changed. If this is the case, P\-L\-E\-A\-S\-E update this page so that others may benefit from your findings! (See $\ast$$\ast$$\ast$\-Updating the Wiki$\ast$$\ast$$\ast$ for more information on how to updated the wiki pages).
+
+Hello!
+
+A new Visual Studio version has come out, and the T\-S\-G\-L Solution must be updated.
+
+The process is long and tedious, but this page will guide you.
+
+Before you begin, make sure you have read \char`\"{}\-Creating a new Windows installer for T\-S\-G\-L\char`\"{}.
+
+Get the zip file from Git\-Hub.
+
+Install T\-S\-G\-L.
+
+Make a clone of T\-S\-G\-L in a different place using Git Bash.
+
+Copy over the lib and include directories from the zip file location to the cloned T\-S\-G\-L directory.
+
+Create a new V\-S$\ast$$\ast$$\ast$$\ast$ folder inside of the cloned T\-S\-G\-L directory (replacing $\ast$$\ast$$\ast$$\ast$ with the Visual Studio version).
+
+Open up Visual Studio $\ast$$\ast$$\ast$$\ast$, and create a new tsgl project inside of the cloned T\-S\-G\-L folder. (File -\/$>$ New -\/$>$ Project, then change the name to tsgl and the Location to wherever you put the cloned T\-S\-G\-L folder).
+
+You should now have a tsgl folder inside of the cloned T\-S\-G\-L folder.
+
+Go into that folder, and into the tsgl folder inside of it, and copy all files into the cloned T\-S\-G\-L folder.
+
+Now, go up one folder, and copy over all files (E\-X\-C\-E\-P\-T the tsgl folder) into the cloned T\-S\-G\-L folder.
+
+You should have the solution file, and the project files for tsgl in the cloned T\-S\-G\-L workspace. (Plus a few extra).
+
+Close V\-S$\ast$$\ast$$\ast$$\ast$, and delete the tsgl folder from the cloned T\-S\-G\-L workspace.
+
+Reopen V\-S$\ast$$\ast$$\ast$$\ast$, and open up the T\-S\-G\-L solution file that's in the cloned T\-S\-G\-L workspace. (File -\/$>$ Open -\/$>$ Project/\-Solution, then choose the solution file that is in the tsgl workspace).
+
+It will say that it can't find the tsgl project (or that it can't load it).
+
+You'll have to re-\/add it back into the solution.
+
+Remove the failed tsgl project (right click on tsgl -\/$>$ Remove).
+
+Now, right click on \char`\"{}\-Solution 'tsgl'\char`\"{}, Add, then Existing Project.
+
+Get the tsgl project that's in the cloned T\-S\-G\-L workspace.
+
+Now, before we move onto the next step, M\-A\-K\-E S\-U\-R\-E T\-H\-A\-T Y\-O\-U H\-A\-V\-E D\-E\-B\-U\-G S\-E\-T T\-O x86 O\-R W\-I\-N32!
+
+Now, add the .cpp and .h files to the tsgl project. (Right-\/click -\/$>$ Add -\/$>$ Existing Item, then go to the src/\-T\-S\-G\-L folder inside of the cloned T\-S\-G\-L workspace folder, and add A\-L\-L of the files to the project).
+
+Once that is done, and now that tsgl is added back into the appropriate solution file, right-\/click on it. Choose \char`\"{}\-Properties\char`\"{}.
+
+Here is where the magic happens. We'll have to edit a few of these in order for tsgl to build correctly.
+
+Here are the ones that {\itshape M\-U\-S\-T} be edited (for tsgl)\-:
+
+General\-:
+
+
+\begin{DoxyItemize}
+\item Target Platform Version\-: 10.\-0.\-10586.\-0 (If that doesn't work, do 8.\-1. You'll have to install the Windows 10 S\-D\-K then).
+\item Output Directory\-: lib\textbackslash{}
+\item Intermediate Directory\-: \$(Target\-Name)\textbackslash{}
+\item Target Extension\-: .lib
+\item Build Log File\-: \$(M\-S\-Build\-Project\-Name).log
+\item Platform Toolset\-: Whatever version of Visual Studio that you are currently working in.
+\item Configuration Type\-: Static library (.lib)
+\item Click Apply -\/
+\end{DoxyItemize}
+
+Debugging\-:
+
+
+\begin{DoxyItemize}
+\item Environment\-: P\-A\-T\-H=;P\-A\-T\-H\% 
+\item Click Apply -\/
+\end{DoxyItemize}
+
+V\-C++ Directories\-:
+
+
+\begin{DoxyItemize}
+\item Include Directories\-: ;
+\item Library Directories\-: lib;
+\item Click Apply -\/
+\end{DoxyItemize}
+
+C/\-C++\-:
+
+
+\begin{DoxyItemize}
+\item Under General\-:
+\begin{DoxyItemize}
+\item Debug Information Format\-: Program Database (/\-Zi)
+\item Warning Level\-: Turn Off All Warnings (/\-W0)
+\item S\-D\-L checks\-: No (/sdl-\/)
+\end{DoxyItemize}
+\item Under Preprocessor\-:
+\begin{DoxyItemize}
+\item Preprocessor Definitions\-: W\-I\-N32;\-\_\-\-D\-E\-B\-U\-G;\-\_\-\-W\-I\-N\-D\-O\-W\-S;\%(Preprocessor\-Definitions)
+\end{DoxyItemize}
+\item Under Language\-:
+\begin{DoxyItemize}
+\item Open M\-P Support\-: Yes (/openmp)
+\end{DoxyItemize}
+\item Click Apply -\/
+\end{DoxyItemize}
+
+Now, Click \char`\"{}\-Ok\char`\"{}.
+
+Moment of truth. Right click on tsgl, and click \char`\"{}\-Build\char`\"{}.
+
+If it builds successively, then congrats! You have the new V\-S$\ast$$\ast$$\ast$$\ast$ tsgl project inside of the main T\-S\-G\-L repo!
+
+Now, let's move onto the tests....
+
+These are a bit more tricky to add.
+
+For starters, they have different properties than the tsgl project.
+
+Also, they belong within the V\-S$\ast$$\ast$$\ast$$\ast$ folder that we made earlier.
+
+Some also have extra files that need to be added, like test\-Langton and test\-Philosophers.
+
+And to top it off, there are 41 of them. (At the time of this writing).
+
+$\ast$$\ast$$\ast$(A\-D\-D T\-H\-E test\-Properties S\-H\-E\-E\-T T\-O tsgl!!!!)$\ast$$\ast$$\ast$
+
+Which means, you'll have to repeat this process 41 times.
+
+Yes, 41 times.
+
+On the bright side, there's a property sheet that you can use and apply to all of them which has macros that specify where T\-S\-G\-L header files are and such.
+
+Go back to the downloaded T\-S\-G\-L zip file from earlier, copy the test\-Properties sheet, and stick that in the cloned T\-S\-G\-L workspace.
+
+We'll be applying that sheet to the test projects as we make them.
+
+Let's get started with test\-Alpha\-Rectangle.
+
+Right-\/click on \char`\"{}\-Solution 'tsgl'\char`\"{} -\/$>$ Add -\/$>$ New Project, make it a Visual C++ Empty Project, and name it \char`\"{}test\-Alpha\-Rectangle\char`\"{}. Change the Location to point at the V\-S$\ast$$\ast$$\ast$$\ast$ folder inside of the cloned T\-S\-G\-L workspace.
+
+Go into the V\-S$\ast$$\ast$$\ast$$\ast$ folder, and you'll see a folder named \char`\"{}test\-Alpha\-Rectangle\char`\"{}.
+
+Just like we did with the tsgl project, we'll have to take out the files from this folder.
+
+Go into the test\-Alpha\-Rectangle folder, copy the files over to the V\-S$\ast$$\ast$$\ast$$\ast$ directory that's in the cloned T\-S\-G\-L workspace (one directory up), and delete the test\-Alpha\-Rectangle folder.
+
+Remove the test\-Alpha\-Rectangle project from the tsgl solution, and add the copied test\-Alpha\-Rectangle project that's in the V\-S$\ast$$\ast$$\ast$$\ast$ folder.
+
+Now, add the test\-Alpha\-Rectangle.\-cpp file to the project. (Right-\/click -\/$>$ Add -\/$>$ Existing Item, then go to src/tests and add test\-Alpha\-Rectangle.\-cpp).
+
+Now, Click on View -\/$>$ Other Windows -\/$>$ Property Manager.
+
+This is the place where we'll be adding the test\-Properties sheet to the test projects.
+
+Right-\/click on test\-Alpha\-Rectangle -\/$>$ Add Existing Property Sheet, and choose the test\-Properties sheet that's in the cloned T\-S\-G\-L workspace.
+
+Click on the save icon (the one that looks like a floppy disk), and that saves the sheet for test\-Alpha\-Rectangle.
+
+Go back to the Solution Explorer (View -\/$>$ Solution Explorer), and right-\/click on test\-Alpha\-Rectangle. Choose Properties.
+
+Like we did for the tsgl project, we'll have to edit the properties for each test.
+
+Luckily, this applies to all tests. The properties are generally the same for all tests.
+
+Here are the ones that you have to change\-:
+
+General\-:
+
+
+\begin{DoxyItemize}
+\item Target Platform\-: 10.\-0.\-10586.\-0 (or 8.\-1 if you don't have the Windows 10 S\-D\-K).
+\item Intermediate Directory\-: \$(Target\-Name)\textbackslash{}
+\item Platform Toolset\-: Whatever version of Visual Studio that you are currently working in.
+\end{DoxyItemize}
+
+V\-C++ Directories\-:
+
+
+\begin{DoxyItemize}
+\item Include Directories\-: ;;
+\item Library Directories\-: ;;
+\end{DoxyItemize}
+
+C/\-C++\-:
+
+
+\begin{DoxyItemize}
+\item Under Language\-:
+\begin{DoxyItemize}
+\item Open M\-P Support\-: Yes (/openmp)
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Linker\-:
+
+
+\begin{DoxyItemize}
+\item Under Input\-:
+\begin{DoxyItemize}
+\item Additional Dependencies\-: tsgl.\-lib;freeglutd.\-lib;freetype.\-lib;glew32sd.\-lib;glfw3.\-lib;\%(Additional\-Dependencies)
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+Once that is all done, Right-\/click -\/$>$ Build Dependencies -\/$>$ Project Depdendencies, and check the box for tsgl. This means that test\-Alpha\-Rectangle depends on the tsgl project and won't build until after the tsgl project has been built.
+
+Before we get to another moment of truth, go into the lib folder inside of the cloned T\-S\-G\-L folder. Copy over the freetype6.\-dll and zlib1.\-dll files over to the Debug folder inside of the cloned T\-S\-G\-L workspace.
+
+test\-Alpha\-Rectangle won't work without those files inside of that folder.
+
+Moment of truth again. Clean the solution (Right-\/click on Solution 'tsgl' -\/$>$ Clean Solution).
+
+Now, build it. (Right-\/click on Solution 'tsgl' -\/$>$ Build Solution).
+
+To run it, right-\/click on it -\/$>$ Debug -\/$>$ Start new instance.
+
+If you see a screen that says \char`\"{}\-Fancy Rectangles\char`\"{} pop up, then congrats! You integrated the first test project into the main Git\-Hub repo.
+
+Now, you have to repeat this process 40 (at the time of this writing) times.
+
+The general pattern for adding a new project is\-:
+
+1). Add a new project to the tsgl solution.
+\begin{DoxyItemize}
+\item Right-\/click -\/$>$ Add -\/$>$ New Project.
+\item Make it a Visual C++ Empty Project.
+\item Call it test$\ast$, and place it in the V\-S$\ast$$\ast$$\ast$$\ast$ folder inside of the cloned T\-S\-G\-L workspace.
+\end{DoxyItemize}
+
+2). Go to the V\-S$\ast$$\ast$$\ast$$\ast$ folder, and into the newly added project folder.
+
+3). Copy all files to the V\-S$\ast$$\ast$$\ast$$\ast$ directory in the cloned T\-S\-G\-L workspace, and delete the project folder from the V\-S$\ast$$\ast$$\ast$$\ast$ folder.
+
+4). Remove the deleted project from the tsgl solution, and add the copied one that's in the V\-S$\ast$$\ast$$\ast$$\ast$ folder.
+\begin{DoxyItemize}
+\item Right-\/click -\/$>$ Add -\/$>$ Existing Project.
+\item Choose the project that's in the V\-S$\ast$$\ast$$\ast$$\ast$ folder inside of the cloned T\-S\-G\-L folder.
+\end{DoxyItemize}
+
+5). Add the necessary .cpp and .h files to the project.
+\begin{DoxyItemize}
+\item Right-\/click -\/$>$ Add -\/$>$ Existing Item.
+\item The files should be in the src/tests/ folder inside of the cloned T\-S\-G\-L workspace.
+\end{DoxyItemize}
+
+6). Add the test\-Properties sheet to the project.
+\begin{DoxyItemize}
+\item View -\/$>$ Other Windows -\/$>$ Property Manager.
+\item Right-\/click on the project -\/$>$ Add Existing Property Sheet, and add test\-Properties (which should be inside of the cloned T\-S\-G\-L workspace folder).
+\item View -\/$>$ Solution Explorer.
+\end{DoxyItemize}
+
+7). Make sure the Properties are correct. \begin{DoxyVerb}* Right-click on the project -> Properties.
+* Check these Properties:
+
+General:    
+
++ Target Platform: 10.0.10586.0 (or 8.1 if you don't have the Windows 10 SDK).
++ Intermediate Directory: $(Configuration)\$(TargetName)\
++ Platform Toolset: Whatever version of Visual Studio that you are currently working in.
+
+- Click Apply -
+
+VC++ Directories:
+
++ Include Directories: $(TsglSourceDir);$(TsglIncludeDir);$(IncludePath)
++ Library Directories: $(TsglLibDir);$(TsglExternalLibDir);$(LibraryPath)
+
+- Click Apply -
+
+C/C++:
+
+* Under Language:
+
+    + Open MP Support: Yes (/openmp)
+
+- Click Apply -
+
+Linker:
+
+* Under Input:
+
+    + Additional Dependencies: tsgl.lib;freeglutd.lib;freetype.lib;glew32sd.lib;glfw3.lib;%(AdditionalDependencies)
+
+- Click Apply, then Ok -
+\end{DoxyVerb}
+
+
+8). Add tsgl as a Project Dependency. \begin{DoxyVerb}* Right-click on the project -> Build Dependencies -> Project Dependencies
+* Check the tsgl box and click Ok.
+\end{DoxyVerb}
+
+
+9). Rebuild the solution.
+
+10). Run the new project! \begin{DoxyVerb}* Right-click on the project -> Debug -> Start new instance
+\end{DoxyVerb}
+
+
+11). Repeat until no more projects need to be added.
+
+List of projects that have to be added (at the time of this writing)\-:
+
+test\-Alpha\-Rectangle
+
+test\-Aura
+
+test\-Ballroom
+
+test\-Blur\-Image
+
+test\-Calc\-Pi
+
+test\-Color\-Points
+
+test\-Color\-Wheel
+
+test\-Concave\-Polygon
+
+test\-Conway
+
+test\-Cosine\-Integral
+
+test\-Dumb\-Sort
+
+test\-Fireworks
+
+test\-Forest\-Fire
+
+test\-Function
+
+test\-Get\-Pixels
+
+test\-Gradient\-Wheel
+
+test\-Graydient
+
+test\-Greyscale
+
+test\-High\-Data
+
+test\-Image
+
+test\-Image\-Cart
+
+test\-Inverter
+
+test\-Langton
+
+test\-Line\-Chain
+
+test\-Line\-Fan
+
+test\-Mandelbrot
+
+test\-Mouse
+
+test\-Newton\-Pendulum
+
+test\-Philosophers
+
+test\-Pong
+
+test\-Projectiles
+
+test\-Screenshot
+
+test\-Sea\-Urchin
+
+test\-Smart\-Sort
+
+test\-Spectrogram
+
+test\-Spectrum
+
+test\-Text
+
+test\-Text\-Cart
+
+test\-Text\-Two
+
+test\-Units
+
+test\-Voronoi
+
+As mentioned, some project require extra files. These are\-:
+
+
+\begin{DoxyItemize}
+\item test\-Conway -\/$>$ Life\-Farm.\-h, Life\-Farm.\-cpp
+\item test\-Inverter -\/$>$ Image\-Inverter.\-h, Image\-Inverter.\-cpp
+\item test\-Langton -\/$>$ Ant\-Farm.\-h, Langton\-Ant.\-h, Ant\-Farm.\-cpp, Langton\-Ant.\-cpp
+\item test\-Mandelbrot -\/$>$ Buddhabrot.\-h, Gradient\-Mandelbrot.\-h, Julia.\-h, Mandelbrot.\-h, Nova.\-h, Buddhabrot.\-cpp, Gradient\-Mandelbrot.\-cpp, Julia.\-cpp, Mandelbrot.\-cpp, Nova.\-cpp
+\item test\-Pong -\/$>$ Ball.\-h, Paddle.\-h, Pong.\-h, Ball.\-cpp, Paddle.\-cpp, Pong.\-cpp
+\item test\-Sea\-Urchin -\/$>$ Sea\-Urchin.\-h, Sea\-Urchin.\-cpp
+\item test\-Voronoi -\/$>$ Shaded\-Voronoi.\-h, Voronoi.\-h, Shaded\-Voronoi.\-cpp, Voronoi.\-cpp
+\end{DoxyItemize}
+
+They are located within the tests folder, inside of the directory that has the name of the test. (Example\-: test\-Mandelbrot -\/$>$ $\ast$.h \&\& $\ast$.cpp are inside of Mandelbrot).
+
+When you get to those tests, just add those .h and .cpp files as you would add the test$\ast$.cpp file. (Right-\/click on the project -\/$>$ Add -\/$>$ Existing Item, then add the files.)
+
+Create a new win\-V\-S$\ast$$\ast$$\ast$$\ast$ folder inside of the cloned T\-S\-G\-L workspace folder.
+
+Move the vs2015 folder into that folder.
+
+Delete the include and lib folders.
+
+Move the Debug folder into the win\-V\-S$\ast$$\ast$$\ast$$\ast$ folder (the one inside of the cloned T\-S\-G\-L workspace folder).
+
+Move the tsgl solution and tsgl project files into the win\-V\-S$\ast$$\ast$$\ast$$\ast$ folder.
+
+Move the test\-Properties sheet into the win\-V\-S$\ast$$\ast$$\ast$$\ast$ folder.
+
+Move the readmetests.\-txt and runtests.\-bat files out of the windows folder and into the win\-V\-S$\ast$$\ast$$\ast$$\ast$ folder.
+
+Read \char`\"{}\-Creating a new Windows installer for T\-S\-G\-L\char`\"{}.
+
+Do a dry-\/run install of T\-S\-G\-L B\-E\-F\-O\-R\-E pushing your changes\-: \begin{DoxyVerb}1). Unzip a fresh TSGL-master folder (the one downloaded from GitHub).
+
+2). Copy over the winVS**** folder and installer from your cloned TSGL workspace folder over to the freshly unzipped TSGL-master folder.
+
+3). As you would normally do, run the new installer from the freshly unzipped TSGL-master folder. Hopefully, the new VS**** components will be in the correct places. 
+\end{DoxyVerb}
+
+
+Fire up the V\-S$\ast$$\ast$$\ast$$\ast$ solution, make sure that Debug is x86, and Rebuild the solution. Run a test, any test. They A\-L\-L should work.
+
+Wait until V\-S says \char`\"{}\-Ready\char`\"{} at the bottom left corner. Rename the installer to \char`\"{}install-\/windows\-V\-S$\ast$$\ast$$\ast$$\ast$\char`\"{} and move it to the cloned T\-S\-G\-L workspace folder. Delete the Debug folder from the V\-S$\ast$$\ast$$\ast$$\ast$ folder. Delete all files E\-X\-C\-E\-P\-T for the freetype6.\-dll and zlib.\-dll files. Rebuild Solution. Delete the x64 folders from the Property Manager section for A\-L\-L projects. Delete .V\-C files. Move the hidden .suo file into V\-S$\ast$$\ast$$\ast$$\ast$ file and call it \char`\"{}tsgl.\-v$\ast$$\ast$\char`\"{}, replacing $\ast$$\ast$ with whatever toolset version you are using. (It'll be in a hidden folder called \char`\"{}vs\char`\"{}, inside of the cloned T\-S\-G\-L workspace folder.) If you ever need to make an edit, take the include and lib folders from an unzipped T\-S\-G\-L-\/master folder (that's been installed), and place them inside of the cloned T\-S\-G\-L workspace folder. Then, move the V\-S$\ast$$\ast$$\ast$$\ast$ folder, the tsgl solution and project folders, tsgl.\-v$\ast$$\ast$.suo file, and test\-Properties sheet out of the win\-V\-S$\ast$$\ast$$\ast$$\ast$ folder and into the cloned T\-S\-G\-L workspace. Make as many edits to your heart's content. 

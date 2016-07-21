@@ -79,11 +79,277 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">New-Visual-Studio-Versions </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***COMING SOON!*** </p>
+<div class="textblock"><p>***WORK IN PROGRESS!!***</p>
+<p>***NOTE:*** This page contains information which has been acquired to the best of our abilities. There may be some things that the documentation fails to report, or things may have changed. If this is the case, PLEASE update this page so that others may benefit from your findings! (See ***Updating the Wiki*** for more information on how to updated the wiki pages).</p>
+<p>Hello!</p>
+<p>A new Visual Studio version has come out, and the TSGL Solution must be updated.</p>
+<p>The process is long and tedious, but this page will guide you.</p>
+<p>Before you begin, make sure you have read "Creating a new Windows installer for TSGL".</p>
+<p>Get the zip file from GitHub.</p>
+<p>Install TSGL.</p>
+<p>Make a clone of TSGL in a different place using Git Bash.</p>
+<p>Copy over the lib and include directories from the zip file location to the cloned TSGL directory.</p>
+<p>Create a new VS**** folder inside of the cloned TSGL directory (replacing **** with the Visual Studio version).</p>
+<p>Open up Visual Studio ****, and create a new tsgl project inside of the cloned TSGL folder. (File -&gt; New -&gt; Project, then change the name to tsgl and the Location to wherever you put the cloned TSGL folder).</p>
+<p>You should now have a tsgl folder inside of the cloned TSGL folder.</p>
+<p>Go into that folder, and into the tsgl folder inside of it, and copy all files into the cloned TSGL folder.</p>
+<p>Now, go up one folder, and copy over all files (EXCEPT the tsgl folder) into the cloned TSGL folder.</p>
+<p>You should have the solution file, and the project files for tsgl in the cloned TSGL workspace. (Plus a few extra).</p>
+<p>Close VS****, and delete the tsgl folder from the cloned TSGL workspace.</p>
+<p>Reopen VS****, and open up the TSGL solution file that's in the cloned TSGL workspace. (File -&gt; Open -&gt; Project/Solution, then choose the solution file that is in the tsgl workspace).</p>
+<p>It will say that it can't find the tsgl project (or that it can't load it).</p>
+<p>You'll have to re-add it back into the solution.</p>
+<p>Remove the failed tsgl project (right click on tsgl -&gt; Remove).</p>
+<p>Now, right click on "Solution 'tsgl'", Add, then Existing Project.</p>
+<p>Get the tsgl project that's in the cloned TSGL workspace.</p>
+<p>Now, before we move onto the next step, MAKE SURE THAT YOU HAVE DEBUG SET TO x86 OR WIN32!</p>
+<p>Now, add the .cpp and .h files to the tsgl project. (Right-click -&gt; Add -&gt; Existing Item, then go to the src/TSGL folder inside of the cloned TSGL workspace folder, and add ALL of the files to the project).</p>
+<p>Once that is done, and now that tsgl is added back into the appropriate solution file, right-click on it. Choose "Properties".</p>
+<p>Here is where the magic happens. We'll have to edit a few of these in order for tsgl to build correctly.</p>
+<p>Here are the ones that <em>MUST</em> be edited (for tsgl):</p>
+<p>General:</p>
+<ul>
+<li>Target Platform Version: 10.0.10586.0 (If that doesn't work, do 8.1. You'll have to install the Windows 10 SDK then).</li>
+<li>Output Directory: lib\</li>
+<li>Intermediate Directory: $(TargetName)\</li>
+<li>Target Extension: .lib</li>
+<li>Build Log File: $(MSBuildProjectName).log</li>
+<li>Platform Toolset: Whatever version of Visual Studio that you are currently working in.</li>
+<li>Configuration Type: Static library (.lib)</li>
+<li>Click Apply -</li>
+</ul>
+<p>Debugging:</p>
+<ul>
+<li>Environment: PATH=;PATH% </li>
+<li>Click Apply -</li>
+</ul>
+<p>VC++ Directories:</p>
+<ul>
+<li>Include Directories: ;</li>
+<li>Library Directories: lib;</li>
+<li>Click Apply -</li>
+</ul>
+<p>C/C++:</p>
+<ul>
+<li>Under General:<ul>
+<li>Debug Information Format: Program Database (/Zi)</li>
+<li>Warning Level: Turn Off All Warnings (/W0)</li>
+<li>SDL checks: No (/sdl-)</li>
+</ul>
+</li>
+<li>Under Preprocessor:<ul>
+<li>Preprocessor Definitions: WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</li>
+</ul>
+</li>
+<li>Under Language:<ul>
+<li>Open MP Support: Yes (/openmp)</li>
+</ul>
+</li>
+<li>Click Apply -</li>
+</ul>
+<p>Now, Click "Ok".</p>
+<p>Moment of truth. Right click on tsgl, and click "Build".</p>
+<p>If it builds successively, then congrats! You have the new VS**** tsgl project inside of the main TSGL repo!</p>
+<p>Now, let's move onto the tests....</p>
+<p>These are a bit more tricky to add.</p>
+<p>For starters, they have different properties than the tsgl project.</p>
+<p>Also, they belong within the VS**** folder that we made earlier.</p>
+<p>Some also have extra files that need to be added, like testLangton and testPhilosophers.</p>
+<p>And to top it off, there are 41 of them. (At the time of this writing).</p>
+<p>***(ADD THE testProperties SHEET TO tsgl!!!!)***</p>
+<p>Which means, you'll have to repeat this process 41 times.</p>
+<p>Yes, 41 times.</p>
+<p>On the bright side, there's a property sheet that you can use and apply to all of them which has macros that specify where TSGL header files are and such.</p>
+<p>Go back to the downloaded TSGL zip file from earlier, copy the testProperties sheet, and stick that in the cloned TSGL workspace.</p>
+<p>We'll be applying that sheet to the test projects as we make them.</p>
+<p>Let's get started with testAlphaRectangle.</p>
+<p>Right-click on "Solution 'tsgl'" -&gt; Add -&gt; New Project, make it a Visual C++ Empty Project, and name it "testAlphaRectangle". Change the Location to point at the VS**** folder inside of the cloned TSGL workspace.</p>
+<p>Go into the VS**** folder, and you'll see a folder named "testAlphaRectangle".</p>
+<p>Just like we did with the tsgl project, we'll have to take out the files from this folder.</p>
+<p>Go into the testAlphaRectangle folder, copy the files over to the VS**** directory that's in the cloned TSGL workspace (one directory up), and delete the testAlphaRectangle folder.</p>
+<p>Remove the testAlphaRectangle project from the tsgl solution, and add the copied testAlphaRectangle project that's in the VS**** folder.</p>
+<p>Now, add the testAlphaRectangle.cpp file to the project. (Right-click -&gt; Add -&gt; Existing Item, then go to src/tests and add testAlphaRectangle.cpp).</p>
+<p>Now, Click on View -&gt; Other Windows -&gt; Property Manager.</p>
+<p>This is the place where we'll be adding the testProperties sheet to the test projects.</p>
+<p>Right-click on testAlphaRectangle -&gt; Add Existing Property Sheet, and choose the testProperties sheet that's in the cloned TSGL workspace.</p>
+<p>Click on the save icon (the one that looks like a floppy disk), and that saves the sheet for testAlphaRectangle.</p>
+<p>Go back to the Solution Explorer (View -&gt; Solution Explorer), and right-click on testAlphaRectangle. Choose Properties.</p>
+<p>Like we did for the tsgl project, we'll have to edit the properties for each test.</p>
+<p>Luckily, this applies to all tests. The properties are generally the same for all tests.</p>
+<p>Here are the ones that you have to change:</p>
+<p>General:</p>
+<ul>
+<li>Target Platform: 10.0.10586.0 (or 8.1 if you don't have the Windows 10 SDK).</li>
+<li>Intermediate Directory: $(TargetName)\</li>
+<li>Platform Toolset: Whatever version of Visual Studio that you are currently working in.</li>
+</ul>
+<p>VC++ Directories:</p>
+<ul>
+<li>Include Directories: ;;</li>
+<li>Library Directories: ;;</li>
+</ul>
+<p>C/C++:</p>
+<ul>
+<li>Under Language:<ul>
+<li>Open MP Support: Yes (/openmp)</li>
+</ul>
+</li>
+</ul>
+<p>Linker:</p>
+<ul>
+<li>Under Input:<ul>
+<li>Additional Dependencies: tsgl.lib;freeglutd.lib;freetype.lib;glew32sd.lib;glfw3.lib;%(AdditionalDependencies)</li>
+</ul>
+</li>
+</ul>
+<p>Once that is all done, Right-click -&gt; Build Dependencies -&gt; Project Depdendencies, and check the box for tsgl. This means that testAlphaRectangle depends on the tsgl project and won't build until after the tsgl project has been built.</p>
+<p>Before we get to another moment of truth, go into the lib folder inside of the cloned TSGL folder. Copy over the freetype6.dll and zlib1.dll files over to the Debug folder inside of the cloned TSGL workspace.</p>
+<p>testAlphaRectangle won't work without those files inside of that folder.</p>
+<p>Moment of truth again. Clean the solution (Right-click on Solution 'tsgl' -&gt; Clean Solution).</p>
+<p>Now, build it. (Right-click on Solution 'tsgl' -&gt; Build Solution).</p>
+<p>To run it, right-click on it -&gt; Debug -&gt; Start new instance.</p>
+<p>If you see a screen that says "Fancy Rectangles" pop up, then congrats! You integrated the first test project into the main GitHub repo.</p>
+<p>Now, you have to repeat this process 40 (at the time of this writing) times.</p>
+<p>The general pattern for adding a new project is:</p>
+<p>1). Add a new project to the tsgl solution.</p>
+<ul>
+<li>Right-click -&gt; Add -&gt; New Project.</li>
+<li>Make it a Visual C++ Empty Project.</li>
+<li>Call it test*, and place it in the VS**** folder inside of the cloned TSGL workspace.</li>
+</ul>
+<p>2). Go to the VS**** folder, and into the newly added project folder.</p>
+<p>3). Copy all files to the VS**** directory in the cloned TSGL workspace, and delete the project folder from the VS**** folder.</p>
+<p>4). Remove the deleted project from the tsgl solution, and add the copied one that's in the VS**** folder.</p>
+<ul>
+<li>Right-click -&gt; Add -&gt; Existing Project.</li>
+<li>Choose the project that's in the VS**** folder inside of the cloned TSGL folder.</li>
+</ul>
+<p>5). Add the necessary .cpp and .h files to the project.</p>
+<ul>
+<li>Right-click -&gt; Add -&gt; Existing Item.</li>
+<li>The files should be in the src/tests/ folder inside of the cloned TSGL workspace.</li>
+</ul>
+<p>6). Add the testProperties sheet to the project.</p>
+<ul>
+<li>View -&gt; Other Windows -&gt; Property Manager.</li>
+<li>Right-click on the project -&gt; Add Existing Property Sheet, and add testProperties (which should be inside of the cloned TSGL workspace folder).</li>
+<li>View -&gt; Solution Explorer.</li>
+</ul>
+<p>7). Make sure the Properties are correct. </p>
+<pre class="fragment">* Right-click on the project -&gt; Properties.
+* Check these Properties:
+
+General:    
+
++ Target Platform: 10.0.10586.0 (or 8.1 if you don't have the Windows 10 SDK).
++ Intermediate Directory: $(Configuration)\$(TargetName)\
++ Platform Toolset: Whatever version of Visual Studio that you are currently working in.
+
+- Click Apply -
+
+VC++ Directories:
+
++ Include Directories: $(TsglSourceDir);$(TsglIncludeDir);$(IncludePath)
++ Library Directories: $(TsglLibDir);$(TsglExternalLibDir);$(LibraryPath)
+
+- Click Apply -
+
+C/C++:
+
+* Under Language:
+
+    + Open MP Support: Yes (/openmp)
+
+- Click Apply -
+
+Linker:
+
+* Under Input:
+
+    + Additional Dependencies: tsgl.lib;freeglutd.lib;freetype.lib;glew32sd.lib;glfw3.lib;%(AdditionalDependencies)
+
+- Click Apply, then Ok -
+</pre><p>8). Add tsgl as a Project Dependency. </p>
+<pre class="fragment">* Right-click on the project -&gt; Build Dependencies -&gt; Project Dependencies
+* Check the tsgl box and click Ok.
+</pre><p>9). Rebuild the solution.</p>
+<p>10). Run the new project! </p>
+<pre class="fragment">* Right-click on the project -&gt; Debug -&gt; Start new instance
+</pre><p>11). Repeat until no more projects need to be added.</p>
+<p>List of projects that have to be added (at the time of this writing):</p>
+<p>testAlphaRectangle</p>
+<p>testAura</p>
+<p>testBallroom</p>
+<p>testBlurImage</p>
+<p>testCalcPi</p>
+<p>testColorPoints</p>
+<p>testColorWheel</p>
+<p>testConcavePolygon</p>
+<p>testConway</p>
+<p>testCosineIntegral</p>
+<p>testDumbSort</p>
+<p>testFireworks</p>
+<p>testForestFire</p>
+<p>testFunction</p>
+<p>testGetPixels</p>
+<p>testGradientWheel</p>
+<p>testGraydient</p>
+<p>testGreyscale</p>
+<p>testHighData</p>
+<p>testImage</p>
+<p>testImageCart</p>
+<p>testInverter</p>
+<p>testLangton</p>
+<p>testLineChain</p>
+<p>testLineFan</p>
+<p>testMandelbrot</p>
+<p>testMouse</p>
+<p>testNewtonPendulum</p>
+<p>testPhilosophers</p>
+<p>testPong</p>
+<p>testProjectiles</p>
+<p>testScreenshot</p>
+<p>testSeaUrchin</p>
+<p>testSmartSort</p>
+<p>testSpectrogram</p>
+<p>testSpectrum</p>
+<p>testText</p>
+<p>testTextCart</p>
+<p>testTextTwo</p>
+<p>testUnits</p>
+<p>testVoronoi</p>
+<p>As mentioned, some project require extra files. These are:</p>
+<ul>
+<li>testConway -&gt; LifeFarm.h, LifeFarm.cpp</li>
+<li>testInverter -&gt; ImageInverter.h, ImageInverter.cpp</li>
+<li>testLangton -&gt; AntFarm.h, LangtonAnt.h, AntFarm.cpp, LangtonAnt.cpp</li>
+<li>testMandelbrot -&gt; Buddhabrot.h, GradientMandelbrot.h, Julia.h, Mandelbrot.h, Nova.h, Buddhabrot.cpp, GradientMandelbrot.cpp, Julia.cpp, Mandelbrot.cpp, Nova.cpp</li>
+<li>testPong -&gt; Ball.h, Paddle.h, Pong.h, Ball.cpp, Paddle.cpp, Pong.cpp</li>
+<li>testSeaUrchin -&gt; SeaUrchin.h, SeaUrchin.cpp</li>
+<li>testVoronoi -&gt; ShadedVoronoi.h, Voronoi.h, ShadedVoronoi.cpp, Voronoi.cpp</li>
+</ul>
+<p>They are located within the tests folder, inside of the directory that has the name of the test. (Example: testMandelbrot -&gt; *.h &amp;&amp; *.cpp are inside of Mandelbrot).</p>
+<p>When you get to those tests, just add those .h and .cpp files as you would add the test*.cpp file. (Right-click on the project -&gt; Add -&gt; Existing Item, then add the files.)</p>
+<p>Create a new winVS**** folder inside of the cloned TSGL workspace folder.</p>
+<p>Move the vs2015 folder into that folder.</p>
+<p>Delete the include and lib folders.</p>
+<p>Move the Debug folder into the winVS**** folder (the one inside of the cloned TSGL workspace folder).</p>
+<p>Move the tsgl solution and tsgl project files into the winVS**** folder.</p>
+<p>Move the testProperties sheet into the winVS**** folder.</p>
+<p>Move the readmetests.txt and runtests.bat files out of the windows folder and into the winVS**** folder.</p>
+<p>Read "Creating a new Windows installer for TSGL".</p>
+<p>Do a dry-run install of TSGL BEFORE pushing your changes: </p>
+<pre class="fragment">1). Unzip a fresh TSGL-master folder (the one downloaded from GitHub).
+
+2). Copy over the winVS**** folder and installer from your cloned TSGL workspace folder over to the freshly unzipped TSGL-master folder.
+
+3). As you would normally do, run the new installer from the freshly unzipped TSGL-master folder. Hopefully, the new VS**** components will be in the correct places. 
+</pre><p>Fire up the VS**** solution, make sure that Debug is x86, and Rebuild the solution. Run a test, any test. They ALL should work.</p>
+<p>Wait until VS says "Ready" at the bottom left corner. Rename the installer to "install-windowsVS****" and move it to the cloned TSGL workspace folder. Delete the Debug folder from the VS**** folder. Delete all files EXCEPT for the freetype6.dll and zlib.dll files. Rebuild Solution. Delete the x64 folders from the Property Manager section for ALL projects. Delete .VC files. Move the hidden .suo file into VS**** file and call it "tsgl.v**", replacing ** with whatever toolset version you are using. (It'll be in a hidden folder called "vs", inside of the cloned TSGL workspace folder.) If you ever need to make an edit, take the include and lib folders from an unzipped TSGL-master folder (that's been installed), and place them inside of the cloned TSGL workspace folder. Then, move the VS**** folder, the tsgl solution and project folders, tsgl.v**.suo file, and testProperties sheet out of the winVS**** folder and into the cloned TSGL workspace. Make as many edits to your heart's content. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 7 2016 10:31:08 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 21 2016 09:07:38 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

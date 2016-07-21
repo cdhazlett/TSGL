@@ -79,9 +79,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">FAQ </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Welcome to the FAQ page! In here, you can ask whatever burning question you have in regards to the library.</p>
-<p>***Q:*** A test keeps crashing with the error "the font file could not be opened and read
-"! What do I do?</p>
+<div class="textblock"><p>Welcome to the FAQ page! In here, we try to answer the most common questions that users may have in regards to TSGL.</p>
+<p>***Q:*** A test keeps crashing with the error "the font file could not be opened and read"! What do I do?</p>
 <p>***A:*** Are you in the bin folder of the tsgl folder? Some tests won't work unless you are in the bin folder. Specifically:</p>
 <p><code>testBlurImage</code>, <code>testCalcPi</code>, <code>testCosineIntegral</code>, <code>testGetPixels</code>, <code>testGreyscale</code>, <code>testImage</code>, <code>testImageCart</code>, <code>testInverter</code>, <code>testMandelbrot</code>, <code>testPhilosophers</code>, <code>testProgressBar</code>, <code>testSpectrogram</code>, <code>testText</code>, <code>testTextCart</code>, <code>testTextTwo</code>, <code>testUnits</code></p>
 <p>If the test that keeps crashing is in the list above, go into the bin folder and execute it from there.</p>
@@ -94,29 +93,53 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="fragment"><div class="line"><span class="comment">//#define TSGL_DEBUG</span></div>
 </div><!-- fragment --><p>Uncommenting out this line will turn on Debug messages for the TSGL library in case things break (font not loading, image not found, etc...).</p>
 <p>***Q:*** With which operating systems does TSGL work?</p>
-<p>***A:*** Good question! TSGL has been sucessfully tested on: Ubuntu 14.04 (Trusty Tahr), Ubuntu 16.04 (Xenial Xerus), Arch Linux, MacOS 10.9.5 (Wrangler) and Mac 10.10.x (Yosemite), using g++-4.8, g++-4.9 and g++-5.1. It has also been sucessfully tested on Windows 7 &amp; Windows 10, using Visual Studio 2012, Visual Studio 2013, &amp; Visual Studio 2015. As for Red Hat distributions, CentOS 7 and Fedora 24.</p>
-<p>***Q:*** How do I update the Doxygen?</p>
-<p>***A:*** I'm glad you asked! Follow this process (via terminal or command-line):</p>
-<p>1). Navigate into the TSGL root directory (where the Makefile is).</p>
-<p>2). Type "make cleandocs".</p>
-<p>3). cd into the "docs" folder.</p>
-<p>4). Type "git rm -r html".</p>
-<p>5). cd back out of the "docs" folder (cd ..).</p>
-<p>6). Type "make docs".</p>
-<p>7). cd into the "docs" folder again.</p>
-<p>8). Type "git add html".</p>
-<p>9). Do a "git commit" inside of the docs folder.</p>
-<p>10). Type "git push origin gh-pages".</p>
-<p>11). cd back out of the "docs" folder.</p>
-<p>12). Do a "git add docs".</p>
-<p>13). Do a "git commit".</p>
-<p>14). Type "git push origin master".</p>
-<p>***NOTE:*** This process is for people who have cloned the repository on Linux/Mac. Windows users may use gitbash, though that has not been tested.</p>
-<p>***BIG NOTE:*** You ***NEED*** doxygen 1.8.6 in order to update the documentation correctly. Previous versions will cause a ***LOT*** of problems. </p>
+<p>***A:*** Good question! TSGL has been successfully tested on:</p>
+<h4>Linux</h4>
+<ul>
+<li>Ubuntu 14.04 (Trusty Tahr)</li>
+<li>Ubuntu 16.04 (Xenial Xerus)</li>
+<li>Arch Linux</li>
+</ul>
+<p>(With g++-4.8, g++-4.9 and g++-5.1).</p>
+<h4>Red Hat</h4>
+<ul>
+<li>CentOS 7</li>
+<li>Fedora 24</li>
+</ul>
+<p>(With g++-4.8).</p>
+<h4>Windows</h4>
+<ul>
+<li>Windows 7</li>
+<li>Windows 10</li>
+</ul>
+<p>(With Visual Studio 2012, Visual Studio 2013, and Visual Studio 2015).</p>
+<h4>Mac OS X</h4>
+<ul>
+<li>MacOS 10.9.5 (Wrangler)</li>
+<li>MacOS 10.10.x (Yosemite)</li>
+<li>MacOS 10.11.x (El Capitan)</li>
+</ul>
+<p>(With g++-4.8, g++4.9).</p>
+<p>***Q:*** How do I update the Doxygen pages?</p>
+<p>***A:*** I'm glad you asked! See the [[Doxygen]] page.</p>
+<p>***Q:*** What about the Wiki? I found that a change needs to be made to one of the pages.</p>
+<p>***A:*** Take a look at our [[Updating the Wiki]] page!</p>
+<p>***Q:*** I'm an Ubuntu user. Is there a Debian package out there for TSGL?</p>
+<p>***A:*** Indeed there is! As of summer 2016, TSGL has a Debian package for easy installation. See the [[Debian (Aptitude)]] page.</p>
+<p>***Q:*** What about Red Hat users? Is there an RPM package?</p>
+<p>***A:*** Of course! See the [[RPM]] page!</p>
+<p>***Q:*** So, if TSGL has a Debian package, and an RPM package, how do I create new ones?</p>
+<p>***A:*** Take a look at our [[Creating New Deb Packages]] and [[Creating New RPM Packages]] pages. However, it is not recommended, as the process for creating these packages has already been automated.</p>
+<p>***Q:*** A new version of Visual Studio has come out, but there's no TSGL Solution made! How do I create one?</p>
+<p>***A:*** Check out our [[New Visual Studio Versions]] page for detailed instructions on how to make a new Visual Studio Solution.</p>
+<p>***Q:*** What about a binary installer for MacOS X? If I recall correctly, it was especially difficult to install TSGL on a Mac...</p>
+<p>***A:*** Yes, the process was a tad bit difficult for MacOS X users. Luckily, we have made a new MacOS X .pkg Installer which automates the entire installation process. Take a look at the [[MacOS X]] page.</p>
+<p>***Q:*** What about creating new MacOS X .pkg Installers?</p>
+<p>***A:*** Excellent question! See the [[Creating New MacOS X Packages]] page. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 7 2016 10:31:08 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 21 2016 09:07:38 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

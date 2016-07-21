@@ -1,7 +1,6 @@
-Welcome to the F\-A\-Q page! In here, you can ask whatever burning question you have in regards to the library.
+Welcome to the F\-A\-Q page! In here, we try to answer the most common questions that users may have in regards to T\-S\-G\-L.
 
-$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ A test keeps crashing with the error \char`\"{}the font file could not be opened and read
-\char`\"{}! What do I do?
+$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ A test keeps crashing with the error \char`\"{}the font file could not be opened and read\char`\"{}! What do I do?
 
 $\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Are you in the bin folder of the tsgl folder? Some tests won't work unless you are in the bin folder. Specifically\-:
 
@@ -31,40 +30,78 @@ Uncommenting out this line will turn on Debug messages for the T\-S\-G\-L librar
 
 $\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ With which operating systems does T\-S\-G\-L work?
 
-$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Good question! T\-S\-G\-L has been sucessfully tested on\-: Ubuntu 14.\-04 (Trusty Tahr), Ubuntu 16.\-04 (Xenial Xerus), Arch Linux, Mac\-O\-S 10.\-9.\-5 (Wrangler) and Mac 10.\-10.\-x (Yosemite), using g++-\/4.8, g++-\/4.9 and g++-\/5.1. It has also been sucessfully tested on Windows 7 \& Windows 10, using Visual Studio 2012, Visual Studio 2013, \& Visual Studio 2015. As for Red Hat distributions, Cent\-O\-S 7 and Fedora 24.
+$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Good question! T\-S\-G\-L has been successfully tested on\-:
 
-$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ How do I update the Doxygen?
+\paragraph*{Linux}
 
-$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ I'm glad you asked! Follow this process (via terminal or command-\/line)\-:
 
-1). Navigate into the T\-S\-G\-L root directory (where the Makefile is).
+\begin{DoxyItemize}
+\item Ubuntu 14.\-04 (Trusty Tahr)
+\item Ubuntu 16.\-04 (Xenial Xerus)
+\item Arch Linux
+\end{DoxyItemize}
 
-2). Type \char`\"{}make cleandocs\char`\"{}.
+(With g++-\/4.8, g++-\/4.9 and g++-\/5.1).
 
-3). cd into the \char`\"{}docs\char`\"{} folder.
+\paragraph*{Red Hat}
 
-4). Type \char`\"{}git rm -\/r html\char`\"{}.
 
-5). cd back out of the \char`\"{}docs\char`\"{} folder (cd ..).
+\begin{DoxyItemize}
+\item Cent\-O\-S 7
+\item Fedora 24
+\end{DoxyItemize}
 
-6). Type \char`\"{}make docs\char`\"{}.
+(With g++-\/4.8).
 
-7). cd into the \char`\"{}docs\char`\"{} folder again.
+\paragraph*{Windows}
 
-8). Type \char`\"{}git add html\char`\"{}.
 
-9). Do a \char`\"{}git commit\char`\"{} inside of the docs folder.
+\begin{DoxyItemize}
+\item Windows 7
+\item Windows 10
+\end{DoxyItemize}
 
-10). Type \char`\"{}git push origin gh-\/pages\char`\"{}.
+(With Visual Studio 2012, Visual Studio 2013, and Visual Studio 2015).
 
-11). cd back out of the \char`\"{}docs\char`\"{} folder.
+\paragraph*{Mac O\-S X}
 
-12). Do a \char`\"{}git add docs\char`\"{}.
 
-13). Do a \char`\"{}git commit\char`\"{}.
+\begin{DoxyItemize}
+\item Mac\-O\-S 10.\-9.\-5 (Wrangler)
+\item Mac\-O\-S 10.\-10.\-x (Yosemite)
+\item Mac\-O\-S 10.\-11.\-x (El Capitan)
+\end{DoxyItemize}
 
-14). Type \char`\"{}git push origin master\char`\"{}.
+(With g++-\/4.8, g++4.9).
 
-$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This process is for people who have cloned the repository on Linux/\-Mac. Windows users may use gitbash, though that has not been tested.
+$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ How do I update the Doxygen pages?
 
-$\ast$$\ast$$\ast$\-B\-I\-G N\-O\-T\-E\-:$\ast$$\ast$$\ast$ You $\ast$$\ast$$\ast$\-N\-E\-E\-D$\ast$$\ast$$\ast$ doxygen 1.\-8.\-6 in order to update the documentation correctly. Previous versions will cause a $\ast$$\ast$$\ast$\-L\-O\-T$\ast$$\ast$$\ast$ of problems. 
+$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ I'm glad you asked! See the \mbox{[}\mbox{[}Doxygen\mbox{]}\mbox{]} page.
+
+$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ What about the Wiki? I found that a change needs to be made to one of the pages.
+
+$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Take a look at our \mbox{[}\mbox{[}Updating the Wiki\mbox{]}\mbox{]} page!
+
+$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ I'm an Ubuntu user. Is there a Debian package out there for T\-S\-G\-L?
+
+$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Indeed there is! As of summer 2016, T\-S\-G\-L has a Debian package for easy installation. See the \mbox{[}\mbox{[}Debian (Aptitude)\mbox{]}\mbox{]} page.
+
+$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ What about Red Hat users? Is there an R\-P\-M package?
+
+$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Of course! See the \mbox{[}\mbox{[}R\-P\-M\mbox{]}\mbox{]} page!
+
+$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ So, if T\-S\-G\-L has a Debian package, and an R\-P\-M package, how do I create new ones?
+
+$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Take a look at our \mbox{[}\mbox{[}Creating New Deb Packages\mbox{]}\mbox{]} and \mbox{[}\mbox{[}Creating New R\-P\-M Packages\mbox{]}\mbox{]} pages. However, it is not recommended, as the process for creating these packages has already been automated.
+
+$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ A new version of Visual Studio has come out, but there's no T\-S\-G\-L Solution made! How do I create one?
+
+$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Check out our \mbox{[}\mbox{[}New Visual Studio Versions\mbox{]}\mbox{]} page for detailed instructions on how to make a new Visual Studio Solution.
+
+$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ What about a binary installer for Mac\-O\-S X? If I recall correctly, it was especially difficult to install T\-S\-G\-L on a Mac...
+
+$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Yes, the process was a tad bit difficult for Mac\-O\-S X users. Luckily, we have made a new Mac\-O\-S X .pkg Installer which automates the entire installation process. Take a look at the \mbox{[}\mbox{[}Mac\-O\-S X\mbox{]}\mbox{]} page.
+
+$\ast$$\ast$$\ast$\-Q\-:$\ast$$\ast$$\ast$ What about creating new Mac\-O\-S X .pkg Installers?
+
+$\ast$$\ast$$\ast$\-A\-:$\ast$$\ast$$\ast$ Excellent question! See the \mbox{[}\mbox{[}Creating New Mac\-O\-S X Packages\mbox{]}\mbox{]} page. 
