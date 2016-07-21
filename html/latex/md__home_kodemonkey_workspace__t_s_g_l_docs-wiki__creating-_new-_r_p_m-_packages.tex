@@ -1,1 +1,360 @@
-$\ast$$\ast$$\ast$\-C\-O\-M\-I\-N\-G S\-O\-O\-N!$\ast$$\ast$$\ast$ 
+$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S$\ast$$\ast$$\ast$ 
+
+ \subsection*{$\vert$ C\-R\-E\-A\-T\-I\-N\-G N\-E\-W R\-P\-M P\-A\-C\-K\-A\-G\-E\-S F\-O\-R R\-E\-D H\-A\-T (F\-E\-D\-O\-R\-A) (Last updated\-: 07/20/16) $\vert$ }
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This document guides you in the process of creating R\-P\-M packages by hand. The package creation process has already been automated, so you do not need to follow this document if the automation process is working fine. If, however, the automation process has failed and you need to make an R\-P\-M package by hand, please continue to read the document. D\-O N\-O\-T A\-T\-T\-E\-M\-P\-T T\-O C\-R\-E\-A\-T\-E A\-N R\-P\-M P\-A\-C\-K\-A\-G\-E B\-Y H\-A\-N\-D I\-F T\-H\-E A\-U\-T\-O\-M\-A\-T\-I\-O\-N P\-R\-O\-C\-E\-S\-S I\-S S\-T\-I\-L\-L F\-U\-N\-C\-T\-I\-O\-N\-A\-L!!!
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This document attempts to guide you in the process of R\-P\-M package creation. Given that, package creation can be a long and complex process. If there's something that we missed, or perhaps have misleading information, please edit this page accordingly!
+
+Hey there!
+
+So, you need to create a new R\-P\-M package for Red Hat (Fedora).
+
+Package creation is no simple task.
+
+It is a complex procedure, with a steep learning curve.
+
+Fortunately, this document will guide you in the creation of R\-P\-M packages.
+
+Before we continue, make sure that you are on a machine that has Red Hat on it! (Preferably Fedora!)
+
+Also, make sure that your graphics drivers are up-\/to-\/date. (T\-S\-G\-L needs at least Open\-G\-L 3.\-0 in order to function correctly). There are many online tutorials that will help you do this.
+
+Got all that? Okay, we're ready to go! 
+
+ \subsection*{$\vert$ Setting up $\vert$ }
+
+Okay, first we need to set you up so that you can build and test R\-P\-M packages.
+
+Open up a terminal, and type the following\-:
+
+sudo dnf install fedora-\/packager rpmdevtools
+
+(For Fedora 23 and lower, use yum instead of dnf).
+
+This should set you up with the necessary tools. Once they are all installed, make sure that you are in your home/ directory. Then, type\-:
+
+``` rpmdev-\/setuptree
+
+``` (If you get a permission denied error, use sudo).
+
+What this command does is setup all of the directories that will be used as we create R\-P\-M packages. If you do a quick 'ls', you will see that a new directory named \char`\"{}rpmbuild\char`\"{} has been created. cd into it, and do a quick 'ls'. You should see the following directories\-:
+
+B\-U\-I\-L\-D -\/ where your application/library is unpacked and compiled. R\-P\-M\-S -\/ where the binary R\-P\-M\-S are located (what gets installed on a user's machine). S\-O\-U\-R\-C\-E\-S -\/ where the source code for the application/library should be when you create an R\-P\-M (e.\-g. the upstream tarball, patch files, etc). S\-P\-E\-C\-S -\/ where S\-P\-E\-C files should go (more on those later). S\-R\-P\-M\-S -\/ where the source R\-P\-M\-S are located (s\-R\-P\-Ms are files that contain the upstream tarball and patch files for your application/library).
+
+Each one of these directories will be utilized in the creation of R\-P\-M packages.
+
+That concludes the \char`\"{}\-Setting up\char`\"{} section! 
+
+ \subsection*{$\vert$ S\-P\-E\-C file\-: the heart of an R\-P\-M $\vert$ }
+
+Regardless of what package you are trying to make, there's always some sort of metadata involved.
+
+For Debian, it's the debian files (control, changelog, rules....).
+
+For R\-P\-M, it's the S\-P\-E\-C file.
+
+We like to call the metadata the \char`\"{}heart\char`\"{} of the package.
+
+The reason is because, without metadata, it would almost be impossible to create a package.
+
+The metadata specifies dependencies, how to build the application/library, and more.
+
+In the case of an R\-P\-M package, the S\-P\-E\-C file does all of this.
+
+S\-P\-E\-C files are not hard to make, though they can get complicated.
+
+Let's start out with a simple one\-:
+
+\subsubsection*{A simple S\-P\-E\-C file}
+
+```
+
+Summary\-:
+
+Name\-:
+
+Version\-:
+
+Release\-:
+
+Group\-:
+
+License\-:
+
+U\-R\-L\-:
+
+Source\-:
+
+Build\-Requires\-:
+
+Requires\-:
+
+description
+
+prep
+
+build
+
+install
+
+files
+
+changelog
+
+```
+
+There are 9 different sections included within a S\-P\-E\-C file, 7 of which are shown. Let's go through each one\-:
+
+1). The Preamble
+
+```
+
+Summary\-:
+
+Name\-:
+
+Version\-:
+
+Release\-:
+
+Group\-:
+
+License\-:
+
+U\-R\-L\-:
+
+Source\-:
+
+Build\-Requires\-:
+
+Requires\-:
+
+```
+
+This puppy is a human-\/readable form for the specification of the R\-P\-M package being created. Each tag has a function\-:
+
+{\ttfamily Summary} -\/ a one sentence summary of the application/library being packaged (do N\-O\-T end it with a period).
+
+{\ttfamily Name} -\/ the name of the package.
+
+{\ttfamily Version} -\/ the version of the software being packaged.
+
+{\ttfamily Release} -\/ how many times the software has been packaged up.
+
+{\ttfamily Group} -\/ how the packaged software should be grouped with other packages (e.\-g. Development/\-Library/\-Other) (type less /usr/share/doc/rpm/\-G\-R\-O\-U\-P\-S in a Terminal for more names)
+
+{\ttfamily License} -\/ the open source license protecting the software.
+
+{\ttfamily U\-R\-L} -\/ a website that gives more information for the software being packaged.
+
+{\ttfamily Source} -\/ the source code being packaged. (Usually a U\-R\-L, but not for our purposes).
+
+{\ttfamily Build\-Requires} -\/ what libraries need to be present in order to build the application/library.
+
+{\ttfamily Requires} -\/ what libraries need to be present in order for the application/library to function correctly. (The libraries may or may not be the same as those in {\ttfamily Build\-Requires}).
+
+There are many more tags, but these should suffice.
+
+2). {\ttfamily description} -\/ a longer explanation of the software being packaged.
+
+3). {\ttfamily prep} -\/ prepares the sources and gets stuff ready in order to build the application/software. This is similar to the configure step in a standard configure-\/make-\/make install process. You can just use the setup macro here, which unpacks the sources and cd's into the source directory.
+
+4). {\ttfamily build} -\/ the compilation and building of the application/library occurs here. Similar to the make part of the standard configure-\/make-\/make install. If you have a Makefile in your sources, you can simply put make in here.
+
+5). {\ttfamily install} -\/ installs your application/library on a user's machine. Similar to the make install part of the standard configure-\/make-\/make install. If your Makefile already has a make install section, place make install here.
+
+6). {\ttfamily files} -\/ lists the files that are included in the binary package. You {\itshape M\-U\-S\-T} have this section in the S\-P\-E\-C file, and it must list {\itshape A\-L\-L} files that have been installed.
+
+7). {\ttfamily changelog} -\/ this lists the changes that have been made to the R\-P\-M package. Format for a new entry in the change log is\-:
+
+```
+\begin{DoxyItemize}
+\item $<$date$>$ $<$packager's Name$>$ $<$packager's-\/email$>$ $<$version-\/revision$>$
+\end{DoxyItemize}
+
+``` Then, under that line, you create a list of changes made\-:
+
+```
+\begin{DoxyItemize}
+\item Change \#1.
+\item Change \#2.
+\end{DoxyItemize}```
+
+The other two sections are {\ttfamily clean}, which cleans up after the installation of an R\-P\-M, and scriptlet sections which peform various tasks before the installation of an R\-P\-M, after the installation, before the removal of an R\-P\-M, and after the removal of an R\-P\-M.
+
+We will not worry about the {\ttfamily clean} section for the T\-S\-G\-L S\-P\-E\-C file.
+
+Unfortunately, the simplified S\-P\-E\-C file above will {\itshape N\-O\-T} suffice for our T\-S\-G\-L S\-P\-E\-C file.
+
+You can see why by looking at an old T\-S\-G\-L S\-P\-E\-C file below\-:
+
+```
+
+\section*{specfile for package T\-S\-G\-L}
+
+Summary\-: A Thread-\/\-Safe Graphics Library
+
+Name\-: tsgl
+
+Version\-: 1.\-0
+
+Release\-: 1\%\{?dist\}
+
+Group\-: Development/\-Libraries/\-Other
+
+License\-: G\-P\-Lv3
+
+U\-R\-L\-:https\-://github.com/\-Calvin-\/\-C\-S/\-T\-S\-G\-L
+
+Source\-: tsgl-\/1.\-1.\-tar.\-gz
+
+Build\-Requires\-: glfw\-T\-S\-G\-L, lib\-X11-\/devel lib\-Xrandr-\/devel lib\-Xinerama-\/devel lib\-Xcursor-\/devel mesa-\/lib\-G\-L\-U-\/devel lib\-Xmu-\/devel lib\-Xi-\/devel lib\-G\-L-\/devel glew-\/devel freetype-\/devel doxygen
+
+Requires\-: glfw\-T\-S\-G\-L, freetype, glew
+
+\#https\-://fedoraproject.org/wiki/\-Packaging\-:Debuginfo\-::\-Useless\-\_\-or\-\_\-incomplete\-\_\-debuginfo\-\_\-packages\-\_\-due\-\_\-to\-\_\-other\-\_\-reasons \#\-It is not necessary to generate debug packages global debug\-\_\-package \%\{nil\}
+
+description A Thread-\/\-Safe Graphics Library which draws 2\-D graphics in parallel.
+
+\#\-This is the preinstall step. \#\-Check the Open\-G\-L version. pre if \mbox{[} \$1 -\/gt 1 \mbox{]} ; then G\-L\-Vers\-Info=\$(glxinfo $\vert$ grep Open\-G\-L) G\-L\-Vers\-String=\$(echo \char`\"{}\$\-G\-L\-Vers\-Info\char`\"{} $\vert$ grep \char`\"{}\-Open G\-L version string\-: \char`\"{}) G\-L\-Vers\-Num=\$(echo \char`\"{}\-G\-L\-Vers\-String\char`\"{} $\vert$ sed 's/\mbox{[}$^\wedge$0-\/9.\mbox{]}$\ast$(\mbox{[}0-\/9.\mbox{]}$\ast$).$\ast$/\textbackslash{}1/') if \mbox{[} \char`\"{}\$\-G\-L\-Vers\-Num\char`\"{} $<$ \char`\"{}3.\-2\char`\"{} \mbox{]} ; then exit 1 fi exit 0 fi
+
+\#\-This is the preparation step. \#\-Simply use the setup macro. prep setup
+
+\#\-This is the build step. \#\-Use the master Makefile to make the library. build make
+
+\#http\-://www.tldp.\-org/\-H\-O\-W\-T\-O/\-R\-P\-M-\/\-H\-O\-W\-T\-O/build.html \#\-This is the install step. \#\-Create any directories (lib64, T\-S\-G\-L, G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E). \#\-Install the files into those directories (install is like cp, but you can set file \#permissions on the fly). install mkdir -\/p \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/lib64 mkdir -\/p \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/include/\-T\-S\-G\-L mkdir -\/p \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E
+
+install -\/m 0644 lib/libtsgl.\-a \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/lib64/ install -\/m 0755 lib/libtsgl.\-so \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/lib64/ install -\/m 0777 generic\-Makefile/\-Makefile \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E/ install -\/t \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/include/\-T\-S\-G\-L src/\-T\-S\-G\-L/$\ast$.h
+
+\#\-This is the postinstall step. \#\-Create a symlink to the Open\-G\-L library. post ln -\/sfn /usr/lib64/lib\-G\-L.so.\-1 /usr/lib64/lib\-G\-L.so exit 0
+
+\#\-This is the postuninstall step. \#\-Remove the symlink created in the postinstall step. \#\-Also, remove the G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E directory. postun unlink /usr/lib64/lib\-G\-L.so rm -\/rf /home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E exit 0
+
+\#\-These files belong to the tsgl package. \#\-The license file, libtsgl.\-so, libtsgl.\-a, and the Makefile. files license license /usr/lib64/$\ast$ /usr/include/$\ast$ /home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E/$\ast$
+
+\section*{-\/ Summary of changes}
+
+changelog
+\begin{DoxyItemize}
+\item Wed Jul 6 2016 Chris Dilley \href{mailto:codemonkey941@gmail.com}{\tt codemonkey941@gmail.\-com} 1.\-0-\/1
+\item Created the first T\-S\-G\-L rpm package.
+\item Uploaded to open\-S\-U\-S\-E build server, tested installation on Fedora 24.
+\item Added post, postun, and pre sections to S\-P\-E\-C file.
+\end{DoxyItemize}
+
+```
+
+As you can see, we have the 7 sections, but we also have a lot more than that.
+
+Here's the extra stuff that we have\-:
+
+
+\begin{DoxyItemize}
+\item {\ttfamily pre}, {\ttfamily post}, {\ttfamily postun}.
+\begin{DoxyItemize}
+\item These are scriplets which are run before and after installing the T\-S\-G\-L package, as well as after removing the T\-S\-G\-L package. The {\ttfamily pre} scriptlet checks the Open\-G\-L version, while the {\ttfamily post} scriplet makes a symlink to the correct Open\-G\-L library (if one doesn't already exist). The {\ttfamily postun} scriplet removes the symlink and the generic Makefile directory. Each scriplet {\itshape M\-U\-S\-T} exit with 0 (to show that it executed successfully).
+\end{DoxyItemize}
+\item {\ttfamily install} section.
+\begin{DoxyItemize}
+\item We have a make install section in our master Makefile for the T\-S\-G\-L library, but we ran into some problems when attempting to use it for the install section. (In particular, \char`\"{}permission denied\char`\"{} problems). So, we decided to install each file manually.
+\item We had to create {\ttfamily /usr/lib64}, {\ttfamily /usr/include}, and {\ttfamily home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E} directories whenever we simulated a build of the package. This is because they are not there by default whenever you simulate a build. You must include {\ttfamily \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T} in the directory path. See \href{http://stackoverflow.com/questions/8084796/what-actually-is-rpm-build-root}{\tt http\-://stackoverflow.\-com/questions/8084796/what-\/actually-\/is-\/rpm-\/build-\/root} for reasons why.
+\end{DoxyItemize}
+\item {\ttfamily global debug\-\_\-package \%\{nil\}}
+\begin{DoxyItemize}
+\item Whenever an R\-P\-M package is created, debuginfo packages are also created (see \href{https://fedoraproject.org/wiki/Packaging:Debuginfo#Useless_or_incomplete_debuginfo_packages_due_to_other_reasons}{\tt https\-://fedoraproject.\-org/wiki/\-Packaging\-:\-Debuginfo\#\-Useless\-\_\-or\-\_\-incomplete\-\_\-debuginfo\-\_\-packages\-\_\-due\-\_\-to\-\_\-other\-\_\-reasons}). We do N\-O\-T need those for T\-S\-G\-L, and so as a result, they are not built. This causes errors in the build process, and so we needed to define a global macro which told our build repos to not make debuginfo packages.
+\end{DoxyItemize}
+\item {\ttfamily files} section
+\begin{DoxyItemize}
+\item The {\ttfamily license} macro specifies the license for the software and separates it from documentation files. See \href{https://fedoraproject.org/wiki/Changes/Use_license_macro_in_RPMs_for_packages_in_Cloud_Image}{\tt https\-://fedoraproject.\-org/wiki/\-Changes/\-Use\-\_\-license\-\_\-macro\-\_\-in\-\_\-\-R\-P\-Ms\-\_\-for\-\_\-packages\-\_\-in\-\_\-\-Cloud\-\_\-\-Image}
+\item The {\ttfamily $\ast$} after the directories says that whatever the binary package put into those directories belongs to it. This is an easy way to specify what files belong to the binary package without having to know what files are installed by it.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+This makes the T\-S\-G\-L S\-P\-E\-C file a bit more complicated than your run of the mill S\-P\-E\-C file.
+
+If anything needs changing, please make your changes to this version of the S\-P\-E\-C file.
+
+That includes new library dependencies that have not been added, new version number, etc.
+
+Save your changes in a file named \char`\"{}tsgl.\-spec\char`\"{}, and place that file in the S\-P\-E\-C\-S directory inside of the rpmbuild/ directory.
+
+That concludes this section! 
+
+ \subsection*{$\vert$ Building the R\-P\-M $\vert$ }
+
+The heart of the R\-P\-M package isn't the only thing you need.
+
+You've got most of what you need to create an R\-P\-M, but you're missing a key ingredient.
+
+Can you think of what it is?
+
+Hint\-: there's code involved.
+
+The upstream tarball.
+
+You need that in order to build an R\-P\-M.
+
+Why? Think about it.
+
+The upstream tarball contains the source code needed in order to build your application/library... You need to build your application/library before installing it onto a user's machine... Because you can't create the T\-S\-G\-L .so and .a files out of thin air.... You can only create them through compilation... Which involves the T\-S\-G\-L source code...
+
+See where we're going with this?
+
+To create the upstream tarball, first make sure that you have the most recent version of the T\-S\-G\-L source code.
+
+You can get this either by downloading the zip file from our Git\-Hub repo, or by cloning the repo with this command\-:
+
+``` \begin{DoxyVerb}git clone https://www.github.com/Calvin-CS/TSGL.git
+\end{DoxyVerb}
+
+
+```
+
+If you've already done this, and have an edited version of the code, use that.
+
+Make sure that you know the version number associated with it. This is usually found in the S\-P\-E\-C file, so whatever version you put in the S\-P\-E\-C file, make sure that that's the version you use!
+
+Now, create a directory named \char`\"{}tsgl-\/$<$version-\/number$>$\char`\"{}, replacing $<$version-\/number$>$ with the version number that T\-S\-G\-L is currently.
+
+Copy all files from your T\-S\-G\-L source code directory over to th.
+
+After that, type\-:
+
+``` \begin{DoxyVerb}tar xczf tsgl-<version-number>.tar.gz tsgl-<version-number>
+\end{DoxyVerb}
+
+
+``` This will create your upstream tarball.
+
+Usually, upstream tarballs go into the S\-O\-U\-R\-C\-E directory that's in your rpmbuild directory. Place the newly created upstream tarball inside of that directory.
+
+Now, the moment of truth.
+
+Go into the S\-P\-E\-C\-S folder, and type this command\-:
+
+``` \begin{DoxyVerb}rpmbuild -ba tsgl.spec
+\end{DoxyVerb}
+
+
+```
+
+That concludes the building of R\-P\-M packages! 
+
+ \subsection*{$\vert$ M\-I\-S\-C $\vert$ }
+
+If you need anymore help, or something is unclear, please see these links\-:
+
+\href{https://fedoraproject.org/wiki/How_to_create_an_RPM_package#Getting_ready_to_package_a_particular_program}{\tt https\-://fedoraproject.\-org/wiki/\-How\-\_\-to\-\_\-create\-\_\-an\-\_\-\-R\-P\-M\-\_\-package\#\-Getting\-\_\-ready\-\_\-to\-\_\-package\-\_\-a\-\_\-particular\-\_\-program}
+
+\href{http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html}{\tt http\-://www.\-rpm.\-org/max-\/rpm/s1-\/rpm-\/build-\/creating-\/spec-\/file.\-html}
+
+\href{http://www.rpm.org/max-rpm/ch-rpm-build.html}{\tt http\-://www.\-rpm.\-org/max-\/rpm/ch-\/rpm-\/build.\-html}
+
+\href{https://fedoraproject.org/wiki/Packaging:Scriptlets}{\tt https\-://fedoraproject.\-org/wiki/\-Packaging\-:\-Scriptlets}
+
+\href{https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/Packagers_Guide/sect-Packagers_Guide-Creating_a_Basic_Spec_File.html}{\tt https\-://docs.\-fedoraproject.\-org/en-\/\-U\-S/\-Fedora\-\_\-\-Draft\-\_\-\-Documentation/0.\-1/html/\-Packagers\-\_\-\-Guide/sect-\/\-Packagers\-\_\-\-Guide-\/\-Creating\-\_\-a\-\_\-\-Basic\-\_\-\-Spec\-\_\-\-File.\-html}
+
+\href{http://www.tldp.org/HOWTO/RPM-HOWTO/build.html}{\tt http\-://www.\-tldp.\-org/\-H\-O\-W\-T\-O/\-R\-P\-M-\/\-H\-O\-W\-T\-O/build.\-html}
+
+If you find anymore links, or want to update this document, please change the \char`\"{}\-Last updated\-:\char`\"{} date above and make your changes. (This will help future students down the road!) 

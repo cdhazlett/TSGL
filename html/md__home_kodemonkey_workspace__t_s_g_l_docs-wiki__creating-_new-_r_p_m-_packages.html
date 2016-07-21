@@ -79,11 +79,212 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Creating-New-RPM-Packages </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***COMING SOON!*** </p>
+<div class="textblock"><p>***WORK IN PROGRESS*** </p>
+<hr/>
+ <h2>| CREATING NEW RPM PACKAGES FOR RED HAT (FEDORA) (Last updated: 07/20/16) | </h2>
+<p>***NOTE:*** This document guides you in the process of creating RPM packages by hand. The package creation process has already been automated, so you do not need to follow this document if the automation process is working fine. If, however, the automation process has failed and you need to make an RPM package by hand, please continue to read the document. DO NOT ATTEMPT TO CREATE AN RPM PACKAGE BY HAND IF THE AUTOMATION PROCESS IS STILL FUNCTIONAL!!!</p>
+<p>***NOTE:*** This document attempts to guide you in the process of RPM package creation. Given that, package creation can be a long and complex process. If there's something that we missed, or perhaps have misleading information, please edit this page accordingly!</p>
+<p>Hey there!</p>
+<p>So, you need to create a new RPM package for Red Hat (Fedora).</p>
+<p>Package creation is no simple task.</p>
+<p>It is a complex procedure, with a steep learning curve.</p>
+<p>Fortunately, this document will guide you in the creation of RPM packages.</p>
+<p>Before we continue, make sure that you are on a machine that has Red Hat on it! (Preferably Fedora!)</p>
+<p>Also, make sure that your graphics drivers are up-to-date. (TSGL needs at least OpenGL 3.0 in order to function correctly). There are many online tutorials that will help you do this.</p>
+<p>Got all that? Okay, we're ready to go! </p>
+<hr/>
+ <h2>| Setting up | </h2>
+<p>Okay, first we need to set you up so that you can build and test RPM packages.</p>
+<p>Open up a terminal, and type the following:</p>
+<p>sudo dnf install fedora-packager rpmdevtools</p>
+<p>(For Fedora 23 and lower, use yum instead of dnf).</p>
+<p>This should set you up with the necessary tools. Once they are all installed, make sure that you are in your home/ directory. Then, type:</p>
+<p>``` rpmdev-setuptree</p>
+<p>``` (If you get a permission denied error, use sudo).</p>
+<p>What this command does is setup all of the directories that will be used as we create RPM packages. If you do a quick 'ls', you will see that a new directory named "rpmbuild" has been created. cd into it, and do a quick 'ls'. You should see the following directories:</p>
+<p>BUILD - where your application/library is unpacked and compiled. RPMS - where the binary RPMS are located (what gets installed on a user's machine). SOURCES - where the source code for the application/library should be when you create an RPM (e.g. the upstream tarball, patch files, etc). SPECS - where SPEC files should go (more on those later). SRPMS - where the source RPMS are located (sRPMs are files that contain the upstream tarball and patch files for your application/library).</p>
+<p>Each one of these directories will be utilized in the creation of RPM packages.</p>
+<p>That concludes the "Setting up" section! </p>
+<hr/>
+ <h2>| SPEC file: the heart of an RPM | </h2>
+<p>Regardless of what package you are trying to make, there's always some sort of metadata involved.</p>
+<p>For Debian, it's the debian files (control, changelog, rules....).</p>
+<p>For RPM, it's the SPEC file.</p>
+<p>We like to call the metadata the "heart" of the package.</p>
+<p>The reason is because, without metadata, it would almost be impossible to create a package.</p>
+<p>The metadata specifies dependencies, how to build the application/library, and more.</p>
+<p>In the case of an RPM package, the SPEC file does all of this.</p>
+<p>SPEC files are not hard to make, though they can get complicated.</p>
+<p>Let's start out with a simple one:</p>
+<h3>A simple SPEC file</h3>
+<p>```</p>
+<p>Summary:</p>
+<p>Name:</p>
+<p>Version:</p>
+<p>Release:</p>
+<p>Group:</p>
+<p>License:</p>
+<p>URL:</p>
+<p>Source:</p>
+<p>BuildRequires:</p>
+<p>Requires:</p>
+<p>description</p>
+<p>prep</p>
+<p>build</p>
+<p>install</p>
+<p>files</p>
+<p>changelog</p>
+<p>```</p>
+<p>There are 9 different sections included within a SPEC file, 7 of which are shown. Let's go through each one:</p>
+<p>1). The Preamble</p>
+<p>```</p>
+<p>Summary:</p>
+<p>Name:</p>
+<p>Version:</p>
+<p>Release:</p>
+<p>Group:</p>
+<p>License:</p>
+<p>URL:</p>
+<p>Source:</p>
+<p>BuildRequires:</p>
+<p>Requires:</p>
+<p>```</p>
+<p>This puppy is a human-readable form for the specification of the RPM package being created. Each tag has a function:</p>
+<p><code>Summary</code> - a one sentence summary of the application/library being packaged (do NOT end it with a period).</p>
+<p><code>Name</code> - the name of the package.</p>
+<p><code>Version</code> - the version of the software being packaged.</p>
+<p><code>Release</code> - how many times the software has been packaged up.</p>
+<p><code>Group</code> - how the packaged software should be grouped with other packages (e.g. Development/Library/Other) (type less /usr/share/doc/rpm/GROUPS in a Terminal for more names)</p>
+<p><code>License</code> - the open source license protecting the software.</p>
+<p><code>URL</code> - a website that gives more information for the software being packaged.</p>
+<p><code>Source</code> - the source code being packaged. (Usually a URL, but not for our purposes).</p>
+<p><code>BuildRequires</code> - what libraries need to be present in order to build the application/library.</p>
+<p><code>Requires</code> - what libraries need to be present in order for the application/library to function correctly. (The libraries may or may not be the same as those in <code>BuildRequires</code>).</p>
+<p>There are many more tags, but these should suffice.</p>
+<p>2). <code>description</code> - a longer explanation of the software being packaged.</p>
+<p>3). <code>prep</code> - prepares the sources and gets stuff ready in order to build the application/software. This is similar to the configure step in a standard configure-make-make install process. You can just use the setup macro here, which unpacks the sources and cd's into the source directory.</p>
+<p>4). <code>build</code> - the compilation and building of the application/library occurs here. Similar to the make part of the standard configure-make-make install. If you have a Makefile in your sources, you can simply put make in here.</p>
+<p>5). <code>install</code> - installs your application/library on a user's machine. Similar to the make install part of the standard configure-make-make install. If your Makefile already has a make install section, place make install here.</p>
+<p>6). <code>files</code> - lists the files that are included in the binary package. You <em>MUST</em> have this section in the SPEC file, and it must list <em>ALL</em> files that have been installed.</p>
+<p>7). <code>changelog</code> - this lists the changes that have been made to the RPM package. Format for a new entry in the change log is:</p>
+<p>```</p>
+<ul>
+<li>&lt;date&gt; &lt;packager's Name&gt; &lt;packager's-email&gt; &lt;version-revision&gt;</li>
+</ul>
+<p>``` Then, under that line, you create a list of changes made:</p>
+<p>```</p>
+<ul>
+<li>Change #1.</li>
+<li>Change #2.</li>
+</ul>
+<p>```</p>
+<p>The other two sections are <code>clean</code>, which cleans up after the installation of an RPM, and scriptlet sections which peform various tasks before the installation of an RPM, after the installation, before the removal of an RPM, and after the removal of an RPM.</p>
+<p>We will not worry about the <code>clean</code> section for the TSGL SPEC file.</p>
+<p>Unfortunately, the simplified SPEC file above will <em>NOT</em> suffice for our TSGL SPEC file.</p>
+<p>You can see why by looking at an old TSGL SPEC file below:</p>
+<p>```</p>
+<h1>specfile for package TSGL</h1>
+<p>Summary: A Thread-Safe Graphics Library</p>
+<p>Name: tsgl</p>
+<p>Version: 1.0</p>
+<p>Release: 1%{?dist}</p>
+<p>Group: Development/Libraries/Other</p>
+<p>License: GPLv3</p>
+<p>URL:https://github.com/Calvin-CS/TSGL</p>
+<p>Source: tsgl-1.1.tar.gz</p>
+<p>BuildRequires: glfwTSGL, libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel mesa-libGLU-devel libXmu-devel libXi-devel libGL-devel glew-devel freetype-devel doxygen</p>
+<p>Requires: glfwTSGL, freetype, glew</p>
+<p>#https://fedoraproject.org/wiki/Packaging:Debuginfo::Useless_or_incomplete_debuginfo_packages_due_to_other_reasons #It is not necessary to generate debug packages global debug_package %{nil}</p>
+<p>description A Thread-Safe Graphics Library which draws 2D graphics in parallel.</p>
+<p>#This is the preinstall step. #Check the OpenGL version. pre if [ $1 -gt 1 ] ; then GLVersInfo=$(glxinfo | grep OpenGL) GLVersString=$(echo "$GLVersInfo" | grep "Open GL version string: ") GLVersNum=$(echo "GLVersString" | sed 's/[^0-9.]*([0-9.]*).*/\1/') if [ "$GLVersNum" &lt; "3.2" ] ; then exit 1 fi exit 0 fi</p>
+<p>#This is the preparation step. #Simply use the setup macro. prep setup</p>
+<p>#This is the build step. #Use the master Makefile to make the library. build make</p>
+<p>#http://www.tldp.org/HOWTO/RPM-HOWTO/build.html #This is the install step. #Create any directories (lib64, TSGL, GENERIC_MAKEFILE). #Install the files into those directories (install is like cp, but you can set file #permissions on the fly). install mkdir -p $RPM_BUILD_ROOT/usr/lib64 mkdir -p $RPM_BUILD_ROOT/usr/include/TSGL mkdir -p $RPM_BUILD_ROOT/home/GENERIC_MAKEFILE</p>
+<p>install -m 0644 lib/libtsgl.a $RPM_BUILD_ROOT/usr/lib64/ install -m 0755 lib/libtsgl.so $RPM_BUILD_ROOT/usr/lib64/ install -m 0777 genericMakefile/Makefile $RPM_BUILD_ROOT/home/GENERIC_MAKEFILE/ install -t $RPM_BUILD_ROOT/usr/include/TSGL src/TSGL/*.h</p>
+<p>#This is the postinstall step. #Create a symlink to the OpenGL library. post ln -sfn /usr/lib64/libGL.so.1 /usr/lib64/libGL.so exit 0</p>
+<p>#This is the postuninstall step. #Remove the symlink created in the postinstall step. #Also, remove the GENERIC_MAKEFILE directory. postun unlink /usr/lib64/libGL.so rm -rf /home/GENERIC_MAKEFILE exit 0</p>
+<p>#These files belong to the tsgl package. #The license file, libtsgl.so, libtsgl.a, and the Makefile. files license license /usr/lib64/* /usr/include/* /home/GENERIC_MAKEFILE/*</p>
+<h1>- Summary of changes</h1>
+<p>changelog</p>
+<ul>
+<li>Wed Jul 6 2016 Chris Dilley <a href="#" onclick="location.href='mai'+'lto:'+'cod'+'em'+'onk'+'ey'+'941'+'@g'+'mai'+'l.'+'com'; return false;">codem<span style="display: none;">.nosp@m.</span>onke<span style="display: none;">.nosp@m.</span>y941@<span style="display: none;">.nosp@m.</span>gmai<span style="display: none;">.nosp@m.</span>l.com</a> 1.0-1</li>
+<li>Created the first TSGL rpm package.</li>
+<li>Uploaded to openSUSE build server, tested installation on Fedora 24.</li>
+<li>Added post, postun, and pre sections to SPEC file.</li>
+</ul>
+<p>```</p>
+<p>As you can see, we have the 7 sections, but we also have a lot more than that.</p>
+<p>Here's the extra stuff that we have:</p>
+<ul>
+<li><code>pre</code>, <code>post</code>, <code>postun</code>.<ul>
+<li>These are scriplets which are run before and after installing the TSGL package, as well as after removing the TSGL package. The <code>pre</code> scriptlet checks the OpenGL version, while the <code>post</code> scriplet makes a symlink to the correct OpenGL library (if one doesn't already exist). The <code>postun</code> scriplet removes the symlink and the generic Makefile directory. Each scriplet <em>MUST</em> exit with 0 (to show that it executed successfully).</li>
+</ul>
+</li>
+<li><code>install</code> section.<ul>
+<li>We have a make install section in our master Makefile for the TSGL library, but we ran into some problems when attempting to use it for the install section. (In particular, "permission denied" problems). So, we decided to install each file manually.</li>
+<li>We had to create <code>/usr/lib64</code>, <code>/usr/include</code>, and <code>home/GENERIC_MAKEFILE</code> directories whenever we simulated a build of the package. This is because they are not there by default whenever you simulate a build. You must include <code>$RPM_BUILD_ROOT</code> in the directory path. See <a href="http://stackoverflow.com/questions/8084796/what-actually-is-rpm-build-root">http://stackoverflow.com/questions/8084796/what-actually-is-rpm-build-root</a> for reasons why.</li>
+</ul>
+</li>
+<li><code>global debug_package %{nil}</code><ul>
+<li>Whenever an RPM package is created, debuginfo packages are also created (see <a href="https://fedoraproject.org/wiki/Packaging:Debuginfo#Useless_or_incomplete_debuginfo_packages_due_to_other_reasons">https://fedoraproject.org/wiki/Packaging:Debuginfo#Useless_or_incomplete_debuginfo_packages_due_to_other_reasons</a>). We do NOT need those for TSGL, and so as a result, they are not built. This causes errors in the build process, and so we needed to define a global macro which told our build repos to not make debuginfo packages.</li>
+</ul>
+</li>
+<li><code>files</code> section<ul>
+<li>The <code>license</code> macro specifies the license for the software and separates it from documentation files. See <a href="https://fedoraproject.org/wiki/Changes/Use_license_macro_in_RPMs_for_packages_in_Cloud_Image">https://fedoraproject.org/wiki/Changes/Use_license_macro_in_RPMs_for_packages_in_Cloud_Image</a></li>
+<li>The <code>*</code> after the directories says that whatever the binary package put into those directories belongs to it. This is an easy way to specify what files belong to the binary package without having to know what files are installed by it.</li>
+</ul>
+</li>
+</ul>
+<p>This makes the TSGL SPEC file a bit more complicated than your run of the mill SPEC file.</p>
+<p>If anything needs changing, please make your changes to this version of the SPEC file.</p>
+<p>That includes new library dependencies that have not been added, new version number, etc.</p>
+<p>Save your changes in a file named "tsgl.spec", and place that file in the SPECS directory inside of the rpmbuild/ directory.</p>
+<p>That concludes this section! </p>
+<hr/>
+ <h2>| Building the RPM | </h2>
+<p>The heart of the RPM package isn't the only thing you need.</p>
+<p>You've got most of what you need to create an RPM, but you're missing a key ingredient.</p>
+<p>Can you think of what it is?</p>
+<p>Hint: there's code involved.</p>
+<p>The upstream tarball.</p>
+<p>You need that in order to build an RPM.</p>
+<p>Why? Think about it.</p>
+<p>The upstream tarball contains the source code needed in order to build your application/library... You need to build your application/library before installing it onto a user's machine... Because you can't create the TSGL .so and .a files out of thin air.... You can only create them through compilation... Which involves the TSGL source code...</p>
+<p>See where we're going with this?</p>
+<p>To create the upstream tarball, first make sure that you have the most recent version of the TSGL source code.</p>
+<p>You can get this either by downloading the zip file from our GitHub repo, or by cloning the repo with this command:</p>
+<p>``` </p>
+<pre class="fragment">git clone https://www.github.com/Calvin-CS/TSGL.git
+</pre><p>```</p>
+<p>If you've already done this, and have an edited version of the code, use that.</p>
+<p>Make sure that you know the version number associated with it. This is usually found in the SPEC file, so whatever version you put in the SPEC file, make sure that that's the version you use!</p>
+<p>Now, create a directory named "tsgl-&lt;version-number&gt;", replacing &lt;version-number&gt; with the version number that TSGL is currently.</p>
+<p>Copy all files from your TSGL source code directory over to th.</p>
+<p>After that, type:</p>
+<p>``` </p>
+<pre class="fragment">tar xczf tsgl-&lt;version-number&gt;.tar.gz tsgl-&lt;version-number&gt;
+</pre><p>``` This will create your upstream tarball.</p>
+<p>Usually, upstream tarballs go into the SOURCE directory that's in your rpmbuild directory. Place the newly created upstream tarball inside of that directory.</p>
+<p>Now, the moment of truth.</p>
+<p>Go into the SPECS folder, and type this command:</p>
+<p>``` </p>
+<pre class="fragment">rpmbuild -ba tsgl.spec
+</pre><p>```</p>
+<p>That concludes the building of RPM packages! </p>
+<hr/>
+ <h2>| MISC | </h2>
+<p>If you need anymore help, or something is unclear, please see these links:</p>
+<p><a href="https://fedoraproject.org/wiki/How_to_create_an_RPM_package#Getting_ready_to_package_a_particular_program">https://fedoraproject.org/wiki/How_to_create_an_RPM_package#Getting_ready_to_package_a_particular_program</a></p>
+<p><a href="http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html">http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html</a></p>
+<p><a href="http://www.rpm.org/max-rpm/ch-rpm-build.html">http://www.rpm.org/max-rpm/ch-rpm-build.html</a></p>
+<p><a href="https://fedoraproject.org/wiki/Packaging:Scriptlets">https://fedoraproject.org/wiki/Packaging:Scriptlets</a></p>
+<p><a href="https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/Packagers_Guide/sect-Packagers_Guide-Creating_a_Basic_Spec_File.html">https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/Packagers_Guide/sect-Packagers_Guide-Creating_a_Basic_Spec_File.html</a></p>
+<p><a href="http://www.tldp.org/HOWTO/RPM-HOWTO/build.html">http://www.tldp.org/HOWTO/RPM-HOWTO/build.html</a></p>
+<p>If you find anymore links, or want to update this document, please change the "Last updated:" date above and make your changes. (This will help future students down the road!) </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 21 2016 09:38:58 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 21 2016 10:06:34 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
