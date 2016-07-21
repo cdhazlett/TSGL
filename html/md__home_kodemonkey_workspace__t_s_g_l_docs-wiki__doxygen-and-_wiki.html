@@ -84,16 +84,32 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>***BIG NOTE:*** You ***NEED*** doxygen 1.8.6 in order to update the documentation correctly. Previous versions will cause a ***LOT*** of problems.</p>
 <p>In order to provide an API and extensive documentation for the TSGL library, we rely on a tool known as <a href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a>.</p>
 <p>We also use the <a href="https://github.com/Calvin-CS/TSGL/wiki">Wiki</a> pages to provide important information about the TSGL library (Debian and RPM packages, FAQs, etc...).</p>
-<p>If you need to update our <a href="http://calvin-cs.github.io/TSGL/html/annotated.html">Doxygen</a> pages (you've added a new class, found a typo and fixed it, etc...), or need to update the <a href="https://github.com/Calvin-CS/TSGL/wiki">Wiki</a>, follow this process (via terminal or command-line):</p>
+<p>If you take a look at our <a href="http://calvin-cs.github.io/TSGL/html/pages.html">Doxygen</a> pages, you'll notice that our Wiki pages also show up as well as the documentation for the TSGL code.</p>
+<p>Which means, in order to keep these two up-to-date, whenever you make a change to the Wiki pages, you'll have to also update the Doxygen pages.</p>
+<p>If you only added new documentation to the TSGL source code, then you do ***NOT*** have to update the Wiki pages.</p>
+<p>We provide two different processes for each situation. Follow the one that matches closely to your situation.</p>
+<h2>Updating the Doxygen pages only</h2>
 <p>1). Navigate into the TSGL root directory (where the Makefile is).</p>
-<p>2). ***IF*** you are updating the Wiki pages, make sure any changes are saved and made ***BEFORE*** continuing.</p>
+<p>2). Type "make cleandocs".</p>
+<p>3). cd into the docs/ directory.</p>
+<p>4). Type "rm -r html".</p>
+<p>5). cd back out of the docs/ directory (cd ../).</p>
+<p>6). Type "make docs".</p>
+<p>7). cd into the docs/ directory again.</p>
+<p>8). Type "git add --all" .</p>
+<p>9). Do a "git commit -m "" " inside of the docs/ directory.</p>
+<p>10). Type "git push origin gh-pages" . This should push the new Doxygen pages to our gh-pages branch (where our documentation ***SHOULD*** reside).</p>
+<p>11). cd back out of the docs/ directory (cd ../).</p>
+<p>12). Type "git add ." .</p>
+<p>13). Do a "git commit -m "" ".</p>
+<p>14). Type "git push origin master". This should update the docs/ submodule inside of our main GitHub branch.</p>
+<h2>Updating the Wiki and Doxygen pages</h2>
+<p>1). Make any changes to the Wiki pages and save them.</p>
+<p>2). Navigate into the TSGL root directory (where the Makefile is).</p>
 <p>3). Type "git submodule update --remote". This should cause the docs-wiki/ submodule to update (and docs/ if it has been updated recently).</p>
 <p>4). Type "git add ." . This should add the docs-wiki/ submodule (and possibly the docs/ submodule if it has been updated recently).</p>
 <p>5). Do a "git commit -m "" ".</p>
-<p>6). Type "git push origin master" . This should push the changes to the main GitHub branch. </p>
-<hr/>
-<p> ***IF*** you are only updating the Wiki pages, and not the Doxygen pages, you should stop here.</p>
-<h2>Otherwise, please continue on to the next steps. </h2>
+<p>6). Type "git push origin master" . This should push the changes to the main GitHub branch.</p>
 <p>7). Type "make cleandocs".</p>
 <p>8). cd into the docs/ directory.</p>
 <p>9). Type "rm -r html".</p>
@@ -106,12 +122,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>16). cd back out of the docs/ directory (cd ../).</p>
 <p>17). Type "git add ." .</p>
 <p>18). Do a "git commit -m "" ".</p>
-<p>19). Type "git push origin master". This should update the docs/ submodule inside of our main GitHub branch.</p>
-<p>That's it! </p>
+<p>19). Type "git push origin master". This should update the docs/ submodule inside of our main GitHub branch. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 21 2016 09:28:44 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 21 2016 09:38:58 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

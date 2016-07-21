@@ -8,11 +8,49 @@ In order to provide an A\-P\-I and extensive documentation for the T\-S\-G\-L li
 
 We also use the \href{https://github.com/Calvin-CS/TSGL/wiki}{\tt Wiki} pages to provide important information about the T\-S\-G\-L library (Debian and R\-P\-M packages, F\-A\-Qs, etc...).
 
-If you need to update our \href{http://calvin-cs.github.io/TSGL/html/annotated.html}{\tt Doxygen} pages (you've added a new class, found a typo and fixed it, etc...), or need to update the \href{https://github.com/Calvin-CS/TSGL/wiki}{\tt Wiki}, follow this process (via terminal or command-\/line)\-:
+If you take a look at our \href{http://calvin-cs.github.io/TSGL/html/pages.html}{\tt Doxygen} pages, you'll notice that our Wiki pages also show up as well as the documentation for the T\-S\-G\-L code.
+
+Which means, in order to keep these two up-\/to-\/date, whenever you make a change to the Wiki pages, you'll have to also update the Doxygen pages.
+
+If you only added new documentation to the T\-S\-G\-L source code, then you do $\ast$$\ast$$\ast$\-N\-O\-T$\ast$$\ast$$\ast$ have to update the Wiki pages.
+
+We provide two different processes for each situation. Follow the one that matches closely to your situation.
+
+\subsection*{Updating the Doxygen pages only}
 
 1). Navigate into the T\-S\-G\-L root directory (where the Makefile is).
 
-2). $\ast$$\ast$$\ast$\-I\-F$\ast$$\ast$$\ast$ you are updating the Wiki pages, make sure any changes are saved and made $\ast$$\ast$$\ast$\-B\-E\-F\-O\-R\-E$\ast$$\ast$$\ast$ continuing.
+2). Type \char`\"{}make cleandocs\char`\"{}.
+
+3). cd into the docs/ directory.
+
+4). Type \char`\"{}rm -\/r html\char`\"{}.
+
+5). cd back out of the docs/ directory (cd ../).
+
+6). Type \char`\"{}make docs\char`\"{}.
+
+7). cd into the docs/ directory again.
+
+8). Type \char`\"{}git add -\/-\/all\char`\"{} .
+
+9). Do a \char`\"{}git commit -\/m \char`\"{}\char`\"{} \char`\"{} inside of the docs/ directory.
+
+10). Type \char`\"{}git push origin gh-\/pages\char`\"{} . This should push the new Doxygen pages to our gh-\/pages branch (where our documentation $\ast$$\ast$$\ast$\-S\-H\-O\-U\-L\-D$\ast$$\ast$$\ast$ reside).
+
+11). cd back out of the docs/ directory (cd ../).
+
+12). Type \char`\"{}git add .\char`\"{} .
+
+13). Do a \char`\"{}git commit -\/m \char`\"{}\char`\"{} \char`\"{}.
+
+14). Type \char`\"{}git push origin master\char`\"{}. This should update the docs/ submodule inside of our main Git\-Hub branch.
+
+\subsection*{Updating the Wiki and Doxygen pages}
+
+1). Make any changes to the Wiki pages and save them.
+
+2). Navigate into the T\-S\-G\-L root directory (where the Makefile is).
 
 3). Type \char`\"{}git submodule update -\/-\/remote\char`\"{}. This should cause the docs-\/wiki/ submodule to update (and docs/ if it has been updated recently).
 
@@ -20,11 +58,7 @@ If you need to update our \href{http://calvin-cs.github.io/TSGL/html/annotated.h
 
 5). Do a \char`\"{}git commit -\/m \char`\"{}\char`\"{} \char`\"{}.
 
-6). Type \char`\"{}git push origin master\char`\"{} . This should push the changes to the main Git\-Hub branch. 
-
- $\ast$$\ast$$\ast$\-I\-F$\ast$$\ast$$\ast$ you are only updating the Wiki pages, and not the Doxygen pages, you should stop here.
-
-\subsection*{Otherwise, please continue on to the next steps. }
+6). Type \char`\"{}git push origin master\char`\"{} . This should push the changes to the main Git\-Hub branch.
 
 7). Type \char`\"{}make cleandocs\char`\"{}.
 
@@ -50,6 +84,4 @@ If you need to update our \href{http://calvin-cs.github.io/TSGL/html/annotated.h
 
 18). Do a \char`\"{}git commit -\/m \char`\"{}\char`\"{} \char`\"{}.
 
-19). Type \char`\"{}git push origin master\char`\"{}. This should update the docs/ submodule inside of our main Git\-Hub branch.
-
-That's it! 
+19). Type \char`\"{}git push origin master\char`\"{}. This should update the docs/ submodule inside of our main Git\-Hub branch. 
