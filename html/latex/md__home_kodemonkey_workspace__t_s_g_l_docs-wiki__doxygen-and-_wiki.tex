@@ -1,0 +1,55 @@
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This process is for people who have cloned the repository on Linux/\-Mac. Windows users may use \href{https://git-scm.com/download/win}{\tt Git Bash}, though that has not been tested.
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ Before updating the Doxygen, please see the \href{https://github.com/Calvin-CS/TSGL/blob/master/READMEMISC.txt}{\tt R\-E\-A\-D\-M\-E\-M\-I\-S\-C.\-txt} file. {\bfseries You will not be able to update the Doxygen correctly if you fail to read \href{https://github.com/Calvin-CS/TSGL/blob/master/READMEMISC.txt}{\tt R\-E\-A\-D\-M\-E\-M\-I\-S\-C.\-txt} first!}
+
+$\ast$$\ast$$\ast$\-B\-I\-G N\-O\-T\-E\-:$\ast$$\ast$$\ast$ You $\ast$$\ast$$\ast$\-N\-E\-E\-D$\ast$$\ast$$\ast$ doxygen 1.\-8.\-6 in order to update the documentation correctly. Previous versions will cause a $\ast$$\ast$$\ast$\-L\-O\-T$\ast$$\ast$$\ast$ of problems.
+
+In order to provide an A\-P\-I and extensive documentation for the T\-S\-G\-L library, we rely on a tool known as \href{http://www.stack.nl/~dimitri/doxygen/}{\tt Doxygen}.
+
+We also use the \href{https://github.com/Calvin-CS/TSGL/wiki}{\tt Wiki} pages to provide important information about the T\-S\-G\-L library (Debian and R\-P\-M packages, F\-A\-Qs, etc...).
+
+If you need to update our \href{http://calvin-cs.github.io/TSGL/html/annotated.html}{\tt Doxygen} pages (you've added a new class, found a typo and fixed it, etc...), or need to update the \href{https://github.com/Calvin-CS/TSGL/wiki}{\tt Wiki}, follow this process (via terminal or command-\/line)\-:
+
+1). Navigate into the T\-S\-G\-L root directory (where the Makefile is).
+
+2). $\ast$$\ast$$\ast$\-I\-F$\ast$$\ast$$\ast$ you are updating the Wiki pages, make sure any changes are saved and made $\ast$$\ast$$\ast$\-B\-E\-F\-O\-R\-E$\ast$$\ast$$\ast$ continuing.
+
+3). Type \char`\"{}git submodule update -\/-\/remote\char`\"{}. This should cause the docs-\/wiki/ submodule to update (and docs/ if it has been updated recently).
+
+4). Type \char`\"{}git add .\char`\"{} . This should add the docs-\/wiki/ submodule (and possibly the docs/ submodule if it has been updated recently).
+
+5). Do a \char`\"{}git commit -\/m \char`\"{}\char`\"{} \char`\"{}.
+
+6). Type \char`\"{}git push origin master\char`\"{} . This should push the changes to the main Git\-Hub branch. 
+
+ $\ast$$\ast$$\ast$\-I\-F$\ast$$\ast$$\ast$ you are only updating the Wiki pages, and not the Doxygen pages, you should stop here.
+
+\subsection*{Otherwise, please continue on to the next steps. }
+
+7). Type \char`\"{}make cleandocs\char`\"{}.
+
+8). cd into the docs/ directory.
+
+9). Type \char`\"{}rm -\/r html\char`\"{}.
+
+10). cd back out of the docs/ directory (cd ../).
+
+11). Type \char`\"{}make docs\char`\"{}.
+
+12). cd into the docs/ directory again.
+
+13). Type \char`\"{}git add -\/-\/all\char`\"{} .
+
+14). Do a \char`\"{}git commit -\/m \char`\"{}\char`\"{} \char`\"{} inside of the docs/ directory.
+
+15). Type \char`\"{}git push origin gh-\/pages\char`\"{} . This should push the new Doxygen pages to our gh-\/pages branch (where our documentation $\ast$$\ast$$\ast$\-S\-H\-O\-U\-L\-D$\ast$$\ast$$\ast$ reside).
+
+16). cd back out of the docs/ directory (cd ../).
+
+17). Type \char`\"{}git add .\char`\"{} .
+
+18). Do a \char`\"{}git commit -\/m \char`\"{}\char`\"{} \char`\"{}.
+
+19). Type \char`\"{}git push origin master\char`\"{}. This should update the docs/ submodule inside of our main Git\-Hub branch.
+
+That's it! 

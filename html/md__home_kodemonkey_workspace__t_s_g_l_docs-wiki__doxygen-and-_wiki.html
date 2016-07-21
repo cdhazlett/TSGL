@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>TSGL: Updating-the-Wiki</title>
+<title>TSGL: Doxygen-and-Wiki</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -76,14 +76,42 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Updating-the-Wiki </div>  </div>
+<div class="title">Doxygen-and-Wiki </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***WORK IN PROGRESS*** </p>
+<div class="textblock"><p>***NOTE:*** This process is for people who have cloned the repository on Linux/Mac. Windows users may use <a href="https://git-scm.com/download/win">Git Bash</a>, though that has not been tested.</p>
+<p>***NOTE:*** Before updating the Doxygen, please see the <a href="https://github.com/Calvin-CS/TSGL/blob/master/READMEMISC.txt">READMEMISC.txt</a> file. <b>You will not be able to update the Doxygen correctly if you fail to read <a href="https://github.com/Calvin-CS/TSGL/blob/master/READMEMISC.txt">READMEMISC.txt</a> first!</b></p>
+<p>***BIG NOTE:*** You ***NEED*** doxygen 1.8.6 in order to update the documentation correctly. Previous versions will cause a ***LOT*** of problems.</p>
+<p>In order to provide an API and extensive documentation for the TSGL library, we rely on a tool known as <a href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a>.</p>
+<p>We also use the <a href="https://github.com/Calvin-CS/TSGL/wiki">Wiki</a> pages to provide important information about the TSGL library (Debian and RPM packages, FAQs, etc...).</p>
+<p>If you need to update our <a href="http://calvin-cs.github.io/TSGL/html/annotated.html">Doxygen</a> pages (you've added a new class, found a typo and fixed it, etc...), or need to update the <a href="https://github.com/Calvin-CS/TSGL/wiki">Wiki</a>, follow this process (via terminal or command-line):</p>
+<p>1). Navigate into the TSGL root directory (where the Makefile is).</p>
+<p>2). ***IF*** you are updating the Wiki pages, make sure any changes are saved and made ***BEFORE*** continuing.</p>
+<p>3). Type "git submodule update --remote". This should cause the docs-wiki/ submodule to update (and docs/ if it has been updated recently).</p>
+<p>4). Type "git add ." . This should add the docs-wiki/ submodule (and possibly the docs/ submodule if it has been updated recently).</p>
+<p>5). Do a "git commit -m "" ".</p>
+<p>6). Type "git push origin master" . This should push the changes to the main GitHub branch. </p>
+<hr/>
+<p> ***IF*** you are only updating the Wiki pages, and not the Doxygen pages, you should stop here.</p>
+<h2>Otherwise, please continue on to the next steps. </h2>
+<p>7). Type "make cleandocs".</p>
+<p>8). cd into the docs/ directory.</p>
+<p>9). Type "rm -r html".</p>
+<p>10). cd back out of the docs/ directory (cd ../).</p>
+<p>11). Type "make docs".</p>
+<p>12). cd into the docs/ directory again.</p>
+<p>13). Type "git add --all" .</p>
+<p>14). Do a "git commit -m "" " inside of the docs/ directory.</p>
+<p>15). Type "git push origin gh-pages" . This should push the new Doxygen pages to our gh-pages branch (where our documentation ***SHOULD*** reside).</p>
+<p>16). cd back out of the docs/ directory (cd ../).</p>
+<p>17). Type "git add ." .</p>
+<p>18). Do a "git commit -m "" ".</p>
+<p>19). Type "git push origin master". This should update the docs/ submodule inside of our main GitHub branch.</p>
+<p>That's it! </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Thu Jul 21 2016 09:07:39 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Thu Jul 21 2016 09:28:44 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
