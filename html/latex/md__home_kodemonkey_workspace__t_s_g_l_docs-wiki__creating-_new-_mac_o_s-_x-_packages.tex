@@ -1,1 +1,171 @@
-$\ast$$\ast$$\ast$\-C\-O\-M\-I\-N\-G S\-O\-O\-N!$\ast$$\ast$$\ast$ 
+
+
+ \subsection*{$\vert$ C\-R\-E\-A\-T\-I\-N\-G A N\-E\-W M\-A\-C O\-S X I\-N\-S\-T\-A\-L\-L\-E\-R P\-A\-C\-K\-A\-G\-E (Last updated\-: 07/22/16) $\vert$ }
+
+$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S!!!"$\ast$$\ast$$\ast$
+
+
+\begin{DoxyItemize}
+\item Need to put .dmg file into Git\-Hub repo.
+\item Need to finalize this page.
+\end{DoxyItemize}
+
+You do have to be on a Mac, however.
+
+If you cannot procure a Mac with O\-S X 10.\-5 or greater (or a V\-M with O\-S X 10.\-5 or greater on it), $\ast$$\ast$$\ast$please stop reading and go get a Mac$\ast$$\ast$$\ast$.
+
+Otherwise, please continue. 
+
+ \subsection*{$\vert$ Packages $\vert$ }
+
+When we first started to create the Mac O\-S X Installer package, we used a tool called \char`\"{}\-Packages\char`\"{}.
+
+This made the process of creating a Mac O\-S X binary installer much easier and less tedious.
+
+You have to download it from this \href{http://s.sudre.free.fr/Software/Packages/about.html}{\tt link}.
+
+The download will be a .dmg file. Move it to your Desktop.
+
+Now, mount it. (Double-\/click on it). You should see a Volume appear on your Desktop with the name, \char`\"{}\-Packages \#.\#.\#\char`\"{}. Double-\/click on it.
+
+Now, double-\/click on the \char`\"{}\-Install Packages.\-pkg\char`\"{} file.
+
+Follow the installation process, and you should have the Packages tool installed. 
+
+ \subsection*{$\vert$ Creating the T\-S\-G\-L Installer $\vert$ }
+
+After installing Packages, open up the application.
+
+A screen should pop-\/up with the title, \char`\"{}\-New Project\char`\"{}.
+
+This is where you choose what project you'd like to make.
+
+We used the \char`\"{}\-Distribution\char`\"{} template, so go ahead and click on that option.
+
+Click \char`\"{}\-Next\char`\"{}.
+
+The project name will be \char`\"{}\-Install\-T\-S\-G\-L\char`\"{}, and the project directory will be \char`\"{}$\sim$/\-Desktop\char`\"{}.
+
+A screen should appear showing you the project details.
+
+In here, you can edit the settings for the project, how the Installer looks, and more.
+
+On the left, you'll see a section named \char`\"{}\-P\-A\-C\-K\-A\-G\-E\-S\char`\"{}.
+
+At the moment, there's only one package in it\-: Install\-T\-S\-G\-L.
+
+We're going to rename it to just \char`\"{}\-T\-S\-G\-L\char`\"{}.
+
+Double-\/click on it, and when the text appears highlighted, type \char`\"{}\-T\-S\-G\-L\char`\"{} and hit E\-N\-T\-E\-R.
+
+Now, take a look at the \char`\"{}\-Settings\char`\"{} page.
+
+This contains the settings that you can edit for this package.
+
+If you take a look at the text box next to the \char`\"{}\-Identifier\-: \char`\"{} label, you can see that the Identifier for the package still has \char`\"{}\-Install\-T\-S\-G\-L\char`\"{} at the end.
+
+We're going to change the \char`\"{}\-Install\-T\-S\-G\-L\char`\"{} part to say \char`\"{}\-T\-S\-G\-L\char`\"{}.
+
+Click on the text box next to the \char`\"{}\-Identifier\-: \char`\"{} label, and delete the \char`\"{}\-Install\-T\-S\-G\-L\char`\"{} part. Replace it with \char`\"{}\-T\-S\-G\-L\char`\"{} and hit E\-N\-T\-E\-R.
+
+We can now leave the \char`\"{}\-Settings\char`\"{} page as it is.
+
+On the left, click on \char`\"{}\-Project\char`\"{}.
+
+You'll be taken back to the \char`\"{}\-Settings\char`\"{} page for the Installer.
+
+Leave the \char`\"{}\-Settings\char`\"{} page as is, and click on the \char`\"{}\-Presentation\char`\"{} tab.
+
+In here, you'll be able to customize the text for the Introduction, Read Me, and License screens.
+
+To do so, we must first create the text files that will hold the customized screen text.
+
+Create three new text files\-: intro.\-txt, R\-E\-A\-D\-M\-E.\-txt, and license.\-txt.
+
+We'll edit intro.\-txt first. 
+
+ \subsection*{$\vert$ intro.\-txt $\vert$ }
+
+This is the first thing that a user will see when they double-\/click on the Installer package.
+
+Here's the introduction that we used\-:
+
+``` Hello! Thank you for choosing to install T\-S\-G\-L on your Mac.
+
+The installation process should take about 22-\/45 minutes.
+
+```
+
+Copy and paste this into your intro.\-txt file and make any changes.
+
+Save and close it when you are satisfied. 
+
+ \subsection*{$\vert$ R\-E\-A\-D\-M\-E.\-txt $\vert$ }
+
+This is the next thing that a user will see when they continue with the installation process.
+
+Essentially, we specified what dependencies would be installed and with which package manager.
+
+``` \begin{DoxyVerb}The following dependencies will be installed on your Mac using Homebrew:
+
+    - doxygen
+    - gcc49 <--- (Takes the longest to install with Homebrew)
+    - freetype
+    - glew
+    - glfw3
+
+By continuing, you agree to having these components on your Mac for TSGL. 
+\end{DoxyVerb}
+
+
+```
+
+Copy the above text and paste it into your R\-E\-A\-D\-M\-E.\-txt file.
+
+Make any changes as you see fit, then save and close the file. 
+
+ \subsection*{$\vert$ license.\-txt $\vert$ }
+
+This is the last thing a user will see before selecting a destination, choosing installation type, and installing T\-S\-G\-L on their Mac.
+
+We took the opportunity to use the license associated with T\-S\-G\-L (G\-P\-Lv3).
+
+This file is actually inside of the T\-S\-G\-L source code folder.
+
+Simply open up the T\-S\-G\-L source code folder (the clone or downloaded zip file), open up \char`\"{}license\char`\"{}, and copy the text inside of it. Paste that text inside of \char`\"{}license.\-txt\char`\"{}.
+
+Save and close the file. 
+
+ \subsection*{$\vert$ Homestretch $\vert$ }
+
+Now that we have those three text files made, it's time to integrate them into the Installer.
+
+Back in Packages, make sure that you are in the Project details (click on \char`\"{}\-Project\char`\"{} on the left side of the window), and on the \char`\"{}\-Presentation\char`\"{} page (click on the \char`\"{}\-Presentation\char`\"{} tab).
+
+In the drop down box on the right, make sure that it says \char`\"{}\-Introduction\char`\"{}.
+
+Then, click the big plus (+) button underneath the \char`\"{}\-Custom Introduction\char`\"{} table.
+
+One of the table slots inside of the \char`\"{}\-Custom Introduction\char`\"{} table should be filled in and highlighted.
+
+Click on the section that has the \char`\"{}-\/\char`\"{} in it, and click \char`\"{}\-Choose\char`\"{} from the drop down menu.
+
+Double-\/click on the intro.\-txt file that we made earlier.
+
+Now the text inside of the Introduction Installer page should change to the text inside of intro.\-txt.
+
+
+
+ \subsection*{$\vert$ Building the Installer $\vert$ }
+
+
+
+ \subsection*{$\vert$ Wrapping it up in a .dmg file $\vert$ }
+
+That concludes this page!
+
+
+
+ \subsection*{$\vert$ M\-I\-S\-C $\vert$ }
+
+For more help with the Packages tool, please see this website\-: \href{http://s.sudre.free.fr/Software/documentation/Packages/en/index.html}{\tt http\-://s.\-sudre.\-free.\-fr/\-Software/documentation/\-Packages/en/index.\-html} 
