@@ -82,27 +82,28 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="textblock"><p>***WORK IN PROGRESS!!!***</p>
 <h3>Introduction</h3>
 <p>There are two main ways that you can install TSGL: via a binary package (recommended), or directly from source.</p>
-<p>In essence, the binary packages depend on a laundry list of libraries (which are installed along with the package itself). The same is true when you install from source.</p>
-<p>However, the three main library dependencies are:</p>
+<p>In essence, the binary packages depend on a laundry list of dependencies. The same is true when you install from source.</p>
+<p>However, the three main dependencies are:</p>
 <ul>
 <li><a href="https://www.freetype.org/download.html">FreeType</a></li>
 <li><a href="https://www.glfw.org/download.html">GLFW</a></li>
 <li><a href="https://downloads.sourceforge.net/project/glew/glew/1.12.0/glew-1.12.0.zip">GLEW</a></li>
 </ul>
+<p>These, along with the other dependencies (doxygen, development header files, ...), are installed along with TSGL regardless of which method you choose.</p>
 <p>When installing TSGL using a binary package, the following is true:</p>
 <ul>
 <li>Debian/Ubuntu:<ul>
 <li>The Debian packages install libfreetype6 and libfreetype6-dev. This resolves the FreeType dependency.</li>
-<li>The Debian package for Ubuntu 14.04 installs libglew1.10 and libglew-dev, while the Debian package for Ubuntu 16.04 installs libglew-dev. This resolves the GLEW dependency.</li>
+<li>The Debian packages install libglew-dev. This resolves the GLEW dependency.</li>
 <li>A packaged version of the GLFW library is installed along with the TSGL Debian packages. This resolves the GLFW dependency.</li>
-<li>An OpenGL version check occurs before the packages are installed in order to see if the version is sufficient (&gt;= 3.2). If the version is not sufficient, the packages will not be installed. Should this happen, you can update your graphics drivers by typing the following command: 'sudo ubuntu-drivers autoinstall'. If that does not work, there are plenty of online tutorials which should help you.</li>
+<li>An OpenGL version check occurs before the packages are installed in order to see if the version is sufficient (&gt;= 3.0). If the version is not sufficient, the packages will not be installed. Should this happen, you can update your graphics drivers by typing the following command: <code>sudo ubuntu-drivers autoinstall</code>. If that does not work, there are plenty of online tutorials which should help you.</li>
 </ul>
 </li>
 <li>Fedora/RPM:<ul>
 <li>The RPM package installs freetype and freetype-devel. This resolves the FreeType dependency.</li>
 <li>The RPM package installs glew and glew-devel. This resolves the GLEW dependency.</li>
 <li>A packaged version of the GLFW library (named glfwTSGL) is also installed along with TSGL. This resolves the GLFW dependency.</li>
-<li>As with the Debian packages, an OpenGL version check occurs before the RPM packages are installed. If the version is less than 3.2, the packages are not installed. Should this happen, there are many online tutorials which will help you to update your graphics drivers (and the OpenGL version).</li>
+<li>As with the Debian packages, an OpenGL version check occurs before the RPM package is installed. If the version is less than 3.0, the package is not installed. Should this happen, there are many online tutorials which will help you to update your graphics drivers (and the OpenGL version).</li>
 </ul>
 </li>
 </ul>
@@ -126,7 +127,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 </li>
 <li>MacOS X<ul>
-<li>[[MacOS X]]</li>
+<li><a href="https://github.com/Calvin-CS/TSGL/wiki/MacOS-X">MacOS X</a></li>
 </ul>
 </li>
 </ul>
@@ -134,7 +135,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Jul 22 2016 16:41:30 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Jul 26 2016 09:22:27 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

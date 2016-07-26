@@ -4,9 +4,9 @@ $\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S!!!$\ast$$\ast$$\ast$
 
 There are two main ways that you can install T\-S\-G\-L\-: via a binary package (recommended), or directly from source.
 
-In essence, the binary packages depend on a laundry list of libraries (which are installed along with the package itself). The same is true when you install from source.
+In essence, the binary packages depend on a laundry list of dependencies. The same is true when you install from source.
 
-However, the three main library dependencies are\-:
+However, the three main dependencies are\-:
 
 
 \begin{DoxyItemize}
@@ -15,6 +15,8 @@ However, the three main library dependencies are\-:
 \item \href{https://downloads.sourceforge.net/project/glew/glew/1.12.0/glew-1.12.0.zip}{\tt G\-L\-E\-W}
 \end{DoxyItemize}
 
+These, along with the other dependencies (doxygen, development header files, ...), are installed along with T\-S\-G\-L regardless of which method you choose.
+
 When installing T\-S\-G\-L using a binary package, the following is true\-:
 
 
@@ -22,16 +24,16 @@ When installing T\-S\-G\-L using a binary package, the following is true\-:
 \item Debian/\-Ubuntu\-:
 \begin{DoxyItemize}
 \item The Debian packages install libfreetype6 and libfreetype6-\/dev. This resolves the Free\-Type dependency.
-\item The Debian package for Ubuntu 14.\-04 installs libglew1.\-10 and libglew-\/dev, while the Debian package for Ubuntu 16.\-04 installs libglew-\/dev. This resolves the G\-L\-E\-W dependency.
+\item The Debian packages install libglew-\/dev. This resolves the G\-L\-E\-W dependency.
 \item A packaged version of the G\-L\-F\-W library is installed along with the T\-S\-G\-L Debian packages. This resolves the G\-L\-F\-W dependency.
-\item An Open\-G\-L version check occurs before the packages are installed in order to see if the version is sufficient ($>$= 3.\-2). If the version is not sufficient, the packages will not be installed. Should this happen, you can update your graphics drivers by typing the following command\-: 'sudo ubuntu-\/drivers autoinstall'. If that does not work, there are plenty of online tutorials which should help you.
+\item An Open\-G\-L version check occurs before the packages are installed in order to see if the version is sufficient ($>$= 3.\-0). If the version is not sufficient, the packages will not be installed. Should this happen, you can update your graphics drivers by typing the following command\-: {\ttfamily sudo ubuntu-\/drivers autoinstall}. If that does not work, there are plenty of online tutorials which should help you.
 \end{DoxyItemize}
 \item Fedora/\-R\-P\-M\-:
 \begin{DoxyItemize}
 \item The R\-P\-M package installs freetype and freetype-\/devel. This resolves the Free\-Type dependency.
 \item The R\-P\-M package installs glew and glew-\/devel. This resolves the G\-L\-E\-W dependency.
 \item A packaged version of the G\-L\-F\-W library (named glfw\-T\-S\-G\-L) is also installed along with T\-S\-G\-L. This resolves the G\-L\-F\-W dependency.
-\item As with the Debian packages, an Open\-G\-L version check occurs before the R\-P\-M packages are installed. If the version is less than 3.\-2, the packages are not installed. Should this happen, there are many online tutorials which will help you to update your graphics drivers (and the Open\-G\-L version).
+\item As with the Debian packages, an Open\-G\-L version check occurs before the R\-P\-M package is installed. If the version is less than 3.\-0, the package is not installed. Should this happen, there are many online tutorials which will help you to update your graphics drivers (and the Open\-G\-L version).
 \end{DoxyItemize}
 \end{DoxyItemize}
 
@@ -62,7 +64,7 @@ Please see the respective page for you O\-S\-:
 \end{DoxyItemize}
 \item Mac\-O\-S X
 \begin{DoxyItemize}
-\item \mbox{[}\mbox{[}Mac\-O\-S X\mbox{]}\mbox{]}
+\item \href{https://github.com/Calvin-CS/TSGL/wiki/MacOS-X}{\tt Mac\-O\-S X}
 \end{DoxyItemize}
 \end{DoxyItemize}
 
