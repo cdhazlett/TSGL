@@ -1,8 +1,8 @@
 $\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S!!!$\ast$$\ast$$\ast$ 
 
- \subsection*{$\vert$ C\-R\-E\-A\-T\-I\-N\-G N\-E\-W R\-P\-M P\-A\-C\-K\-A\-G\-E\-S F\-O\-R R\-E\-D H\-A\-T (F\-E\-D\-O\-R\-A) (Last updated\-: 07/20/16) $\vert$ }
+ \subsection*{$\vert$ C\-R\-E\-A\-T\-I\-N\-G N\-E\-W R\-P\-M P\-A\-C\-K\-A\-G\-E\-S F\-O\-R R\-E\-D H\-A\-T (F\-E\-D\-O\-R\-A) (Last updated\-: 08/05/16) $\vert$ }
 
-$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This document guides you in the process of creating R\-P\-M packages by hand. The package creation process has already been automated, so you do not need to follow this document if the automation process is working fine. If, however, the automation process has failed and you need to make an R\-P\-M package by hand, please continue to read the document. D\-O N\-O\-T A\-T\-T\-E\-M\-P\-T T\-O C\-R\-E\-A\-T\-E A\-N R\-P\-M P\-A\-C\-K\-A\-G\-E B\-Y H\-A\-N\-D I\-F T\-H\-E A\-U\-T\-O\-M\-A\-T\-I\-O\-N P\-R\-O\-C\-E\-S\-S I\-S S\-T\-I\-L\-L F\-U\-N\-C\-T\-I\-O\-N\-A\-L!!!
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This document guides you in the process of creating R\-P\-M packages by hand. The package creation process has already been automated, so you do not need to follow this document if the automation process is working fine. If, however, the automation process has failed and you need to make an R\-P\-M package by hand, please continue to read the document. $\ast$$\ast$$\ast$\-D\-O N\-O\-T A\-T\-T\-E\-M\-P\-T T\-O C\-R\-E\-A\-T\-E A\-N R\-P\-M P\-A\-C\-K\-A\-G\-E B\-Y H\-A\-N\-D I\-F T\-H\-E A\-U\-T\-O\-M\-A\-T\-I\-O\-N P\-R\-O\-C\-E\-S\-S I\-S S\-T\-I\-L\-L F\-U\-N\-C\-T\-I\-O\-N\-A\-L!!!$\ast$$\ast$$\ast$
 
 $\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This document attempts to guide you in the process of R\-P\-M package creation. Given that, package creation can be a long and complex process. If there's something that we missed, or perhaps have misleading information, please edit this page accordingly!
 
@@ -28,19 +28,31 @@ Okay, first we need to set you up so that you can build and test R\-P\-M package
 
 Open up a terminal, and type the following\-:
 
+```
+
 sudo dnf install fedora-\/packager rpmdevtools
 
-(For Fedora 23 and lower, use yum instead of dnf).
+```
 
-This should set you up with the necessary tools. Once they are all installed, make sure that you are in your home/ directory. Then, type\-:
+(For Fedora 23 and lower, use {\ttfamily yum} instead of {\ttfamily dnf}).
+
+This should set you up with the necessary tools. Once they are all installed, make sure that you are in your home directory. Then, type\-:
 
 ``` rpmdev-\/setuptree
 
-``` (If you get a permission denied error, use sudo).
+{\ttfamily  (If you get a permission denied error, use}sudo```).
 
-What this command does is setup all of the directories that will be used as we create R\-P\-M packages. If you do a quick 'ls', you will see that a new directory named \char`\"{}rpmbuild\char`\"{} has been created. cd into it, and do a quick 'ls'. You should see the following directories\-:
+What this command does is setup all of the directories that will be used as we create R\-P\-M packages. If you do a quick {\ttfamily ls}, you will see that a new directory named {\ttfamily rpmbuild} has been created. {\ttfamily cd} into it, and do a quick {\ttfamily ls}. You should see the following directories\-:
 
-B\-U\-I\-L\-D -\/ where your application/library is unpacked and compiled. R\-P\-M\-S -\/ where the binary R\-P\-M\-S are located (what gets installed on a user's machine). S\-O\-U\-R\-C\-E\-S -\/ where the source code for the application/library should be when you create an R\-P\-M (e.\-g. the upstream tarball, patch files, etc). S\-P\-E\-C\-S -\/ where S\-P\-E\-C files should go (more on those later). S\-R\-P\-M\-S -\/ where the source R\-P\-M\-S are located (s\-R\-P\-Ms are files that contain the upstream tarball and patch files for your application/library).
+{\ttfamily B\-U\-I\-L\-D} -\/ where your application/library is unpacked and compiled.
+
+{\ttfamily R\-P\-M\-S} -\/ where the binary R\-P\-M\-S are located (what gets installed on a user's machine).
+
+{\ttfamily S\-O\-U\-R\-C\-E\-S} -\/ where the source code for the application/library should be when you create an R\-P\-M (e.\-g. the upstream tarball, patch files, etc).
+
+{\ttfamily S\-P\-E\-C\-S} -\/ where S\-P\-E\-C files should go (more on those later).
+
+{\ttfamily S\-R\-P\-M\-S} -\/ where the source R\-P\-M\-S are located (s\-R\-P\-Ms are files that contain the upstream tarball and patch files for your application/library).
 
 Each one of these directories will be utilized in the creation of R\-P\-M packages.
 
@@ -258,7 +270,7 @@ Here's the extra stuff that we have\-:
 \item {\ttfamily install} section.
 \begin{DoxyItemize}
 \item We have a make install section in our master Makefile for the T\-S\-G\-L library, but we ran into some problems when attempting to use it for the install section. (In particular, \char`\"{}permission denied\char`\"{} problems). So, we decided to install each file manually.
-\item We had to create {\ttfamily /usr/lib64}, {\ttfamily /usr/include}, and {\ttfamily home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E} directories whenever we simulated a build of the package. This is because they are not there by default whenever you simulate a build. You must include {\ttfamily \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T} in the directory path. See \href{http://stackoverflow.com/questions/8084796/what-actually-is-rpm-build-root}{\tt http\-://stackoverflow.\-com/questions/8084796/what-\/actually-\/is-\/rpm-\/build-\/root} for reasons why.
+\item We had to create {\ttfamily /usr/lib64}, {\ttfamily /usr/include}, and {\ttfamily /usr/include/\-T\-S\-G\-L\-\_\-\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E} directories whenever we simulated a build of the package. This is because they are not there by default whenever you simulate a build. You must include {\ttfamily \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T} in the directory path. See \href{http://stackoverflow.com/questions/8084796/what-actually-is-rpm-build-root}{\tt http\-://stackoverflow.\-com/questions/8084796/what-\/actually-\/is-\/rpm-\/build-\/root} for reasons why.
 \end{DoxyItemize}
 \item {\ttfamily global debug\-\_\-package \%\{nil\}}
 \begin{DoxyItemize}
@@ -277,7 +289,7 @@ If anything needs changing, please make your changes to this version of the S\-P
 
 That includes new library dependencies that have not been added, new version number, etc.
 
-Save your changes in a file named \char`\"{}tsgl.\-spec\char`\"{}, and place that file in the S\-P\-E\-C\-S directory inside of the rpmbuild/ directory.
+Save your changes in a file named {\ttfamily tsgl.\-spec}, and place that file in the {\ttfamily S\-P\-E\-C\-S directory} inside of the {\ttfamily rpmbuild} directory.
 
 That concludes this section! 
 
@@ -315,7 +327,7 @@ If you've already done this, and have an edited version of the code, use that.
 
 Make sure that you know the version number associated with it. This is usually found in the S\-P\-E\-C file, so whatever version you put in the S\-P\-E\-C file, make sure that that's the version you use!
 
-Now, create a directory named \char`\"{}tsgl-\/$<$version-\/number$>$\char`\"{}, replacing $<$version-\/number$>$ with the version number that T\-S\-G\-L is currently.
+Now, create a directory named {\ttfamily tsgl-\/$<$version-\/number$>$}, replacing {\ttfamily $<$version-\/number$>$} with the version number that T\-S\-G\-L is currently.
 
 Copy all files from your T\-S\-G\-L source code directory over to th.
 
@@ -327,11 +339,11 @@ After that, type\-:
 
 ``` This will create your upstream tarball.
 
-Usually, upstream tarballs go into the S\-O\-U\-R\-C\-E directory that's in your rpmbuild directory. Place the newly created upstream tarball inside of that directory.
+Usually, upstream tarballs go into the {\ttfamily S\-O\-U\-R\-C\-E} directory that's in your {\ttfamily rpmbuild} directory. Place the newly created upstream tarball inside of that directory.
 
 Now, the moment of truth.
 
-Go into the S\-P\-E\-C\-S folder, and type this command\-:
+Go into the {\ttfamily S\-P\-E\-C\-S} folder, and type this command\-:
 
 ``` \begin{DoxyVerb}rpmbuild -ba tsgl.spec
 \end{DoxyVerb}
