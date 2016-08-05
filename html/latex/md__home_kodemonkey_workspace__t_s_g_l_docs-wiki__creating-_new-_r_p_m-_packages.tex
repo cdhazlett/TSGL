@@ -205,45 +205,27 @@ You can see why by looking at an old T\-S\-G\-L S\-P\-E\-C file below\-:
 
 \section*{specfile for package T\-S\-G\-L}
 
-Summary\-: A Thread-\/\-Safe Graphics Library
-
-Name\-: tsgl
-
-Version\-: 1.\-0
-
-Release\-: 1\%\{?dist\}
-
-Group\-: Development/\-Libraries/\-Other
-
-License\-: G\-P\-Lv3
-
-U\-R\-L\-:https\-://github.com/\-Calvin-\/\-C\-S/\-T\-S\-G\-L
-
-Source\-: tsgl-\/1.\-1.\-tar.\-gz
-
-Build\-Requires\-: glfw\-T\-S\-G\-L, lib\-X11-\/devel lib\-Xrandr-\/devel lib\-Xinerama-\/devel lib\-Xcursor-\/devel mesa-\/lib\-G\-L\-U-\/devel lib\-Xmu-\/devel lib\-Xi-\/devel lib\-G\-L-\/devel glew-\/devel freetype-\/devel doxygen
-
-Requires\-: glfw\-T\-S\-G\-L, freetype, glew
+Summary\-: A Thread-\/\-Safe Graphics Library Name\-: tsgl Version\-: 1.\-1 Release\-: 1\%\{?dist\} Group\-: Development/\-Libraries/\-Other License\-: G\-P\-Lv3 U\-R\-L\-:https\-://github.com/\-Calvin-\/\-C\-S/\-T\-S\-G\-L Source\-: tsgl-\/1.\-1.\-tar.\-gz \#\-This tag tells rpm which packages need to be on the system to build T\-S\-G\-L (like Build-\/\-Depends) Build\-Requires\-: glfw\-T\-S\-G\-L, lib\-X11-\/devel lib\-Xrandr-\/devel lib\-Xinerama-\/devel lib\-Xcursor-\/devel mesa-\/lib\-G\-L\-U-\/devel lib\-Xmu-\/devel lib\-Xi-\/devel lib\-G\-L-\/devel glew-\/devel freetype-\/devel doxygen \#\-This tag tells rpm which packages need to be on the system (like Depends) Requires\-: glfw\-T\-S\-G\-L, freetype, glew
 
 \#https\-://fedoraproject.org/wiki/\-Packaging\-:Debuginfo\-::\-Useless\-\_\-or\-\_\-incomplete\-\_\-debuginfo\-\_\-packages\-\_\-due\-\_\-to\-\_\-other\-\_\-reasons \#\-It is not necessary to generate debug packages global debug\-\_\-package \%\{nil\}
 
 description A Thread-\/\-Safe Graphics Library which draws 2\-D graphics in parallel.
 
-\#\-This is the preinstall step. \#\-Check the Open\-G\-L version. pre if \mbox{[} \$1 -\/gt 1 \mbox{]} ; then G\-L\-Vers\-Info=\$(glxinfo $\vert$ grep Open\-G\-L) G\-L\-Vers\-String=\$(echo \char`\"{}\$\-G\-L\-Vers\-Info\char`\"{} $\vert$ grep \char`\"{}\-Open G\-L version string\-: \char`\"{}) G\-L\-Vers\-Num=\$(echo \char`\"{}\-G\-L\-Vers\-String\char`\"{} $\vert$ sed 's/\mbox{[}$^\wedge$0-\/9.\mbox{]}$\ast$(\mbox{[}0-\/9.\mbox{]}$\ast$).$\ast$/\textbackslash{}1/') if \mbox{[} \char`\"{}\$\-G\-L\-Vers\-Num\char`\"{} $<$ \char`\"{}3.\-2\char`\"{} \mbox{]} ; then exit 1 fi exit 0 fi
-
 \#\-This is the preparation step. \#\-Simply use the setup macro. prep setup
 
 \#\-This is the build step. \#\-Use the master Makefile to make the library. build make
 
-\#http\-://www.tldp.\-org/\-H\-O\-W\-T\-O/\-R\-P\-M-\/\-H\-O\-W\-T\-O/build.html \#\-This is the install step. \#\-Create any directories (lib64, T\-S\-G\-L, G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E). \#\-Install the files into those directories (install is like cp, but you can set file \#permissions on the fly). install mkdir -\/p \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/lib64 mkdir -\/p \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/include/\-T\-S\-G\-L mkdir -\/p \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E
+\#http\-://www.tldp.\-org/\-H\-O\-W\-T\-O/\-R\-P\-M-\/\-H\-O\-W\-T\-O/build.html \#\-This is the install step. \#\-Create any directories (lib64, T\-S\-G\-L, G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E). \#\-Install the files into those directories (install is like cp, but you can set file \#permissions on the fly). install mkdir -\/p \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/lib64 mkdir -\/p \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/include/\-T\-S\-G\-L mkdir -\/p \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/include/\-T\-S\-G\-L\-\_\-\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E
 
-install -\/m 0644 lib/libtsgl.\-a \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/lib64/ install -\/m 0755 lib/libtsgl.\-so \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/lib64/ install -\/m 0777 generic\-Makefile/\-Makefile \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E/ install -\/t \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/include/\-T\-S\-G\-L src/\-T\-S\-G\-L/$\ast$.h
+install -\/m 0644 lib/libtsgl.\-a \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/lib64/ install -\/m 0755 lib/libtsgl.\-so \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/lib64/ install -\/m 0777 generic\-Makefile/\-Makefile \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/include/\-T\-S\-G\-L\-\_\-\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E/ install -\/t \$\-R\-P\-M\-\_\-\-B\-U\-I\-L\-D\-\_\-\-R\-O\-O\-T/usr/include/\-T\-S\-G\-L src/\-T\-S\-G\-L/$\ast$.h
 
 \#\-This is the postinstall step. \#\-Create a symlink to the Open\-G\-L library. post ln -\/sfn /usr/lib64/lib\-G\-L.so.\-1 /usr/lib64/lib\-G\-L.so exit 0
 
-\#\-This is the postuninstall step. \#\-Remove the symlink created in the postinstall step. \#\-Also, remove the G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E directory. postun unlink /usr/lib64/lib\-G\-L.so rm -\/rf /home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E exit 0
+\#\-This is the postuninstall step. \#\-Remove the symlink created in the postinstall step. postun unlink /usr/lib64/lib\-G\-L.so exit 0
 
-\#\-These files belong to the tsgl package. \#\-The license file, libtsgl.\-so, libtsgl.\-a, and the Makefile. files license license /usr/lib64/$\ast$ /usr/include/$\ast$ /home/\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E/$\ast$
+\#\-These files belong to the tsgl package. \#\-The license file, libtsgl.\-so, libtsgl.\-a, and the Makefile. files license license /usr/lib64/$\ast$ /usr/include/$\ast$
+
+\#https\-://docs.fedoraproject.\-org/en-\/\-U\-S/\-Fedora\-\_\-\-Draft\-\_\-\-Documentation/0.1/html/\-Packagers\-\_\-\-Guide/sect-\/\-Packagers\-\_\-\-Guide-\/\-Creating\-\_\-a\-\_\-\-Basic\-\_\-\-Spec\-\_\-\-File.\-html \section*{$\ast$ date Packager's Name $<$packager's-\/email$>$ version-\/revision}
 
 \section*{-\/ Summary of changes}
 
@@ -263,9 +245,9 @@ Here's the extra stuff that we have\-:
 
 
 \begin{DoxyItemize}
-\item {\ttfamily pre}, {\ttfamily post}, {\ttfamily postun}.
+\item {\ttfamily post}, {\ttfamily postun}.
 \begin{DoxyItemize}
-\item These are scriplets which are run before and after installing the T\-S\-G\-L package, as well as after removing the T\-S\-G\-L package. The {\ttfamily pre} scriptlet checks the Open\-G\-L version, while the {\ttfamily post} scriplet makes a symlink to the correct Open\-G\-L library (if one doesn't already exist). The {\ttfamily postun} scriplet removes the symlink and the generic Makefile directory. Each scriplet {\itshape M\-U\-S\-T} exit with 0 (to show that it executed successfully).
+\item These are scriplets which are run before and after installing the T\-S\-G\-L package, as well as after removing the T\-S\-G\-L package. The {\ttfamily post} scriplet makes a symlink to the correct Open\-G\-L library (if one doesn't already exist). The {\ttfamily postun} scriplet removes the symlink and the generic Makefile directory. Each scriplet {\itshape M\-U\-S\-T} exit with 0 (to show that it executed successfully).
 \end{DoxyItemize}
 \item {\ttfamily install} section.
 \begin{DoxyItemize}

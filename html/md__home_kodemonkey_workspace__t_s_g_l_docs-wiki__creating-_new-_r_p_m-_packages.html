@@ -190,26 +190,18 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>You can see why by looking at an old TSGL SPEC file below:</p>
 <p>```</p>
 <h1>specfile for package TSGL</h1>
-<p>Summary: A Thread-Safe Graphics Library</p>
-<p>Name: tsgl</p>
-<p>Version: 1.0</p>
-<p>Release: 1%{?dist}</p>
-<p>Group: Development/Libraries/Other</p>
-<p>License: GPLv3</p>
-<p>URL:https://github.com/Calvin-CS/TSGL</p>
-<p>Source: tsgl-1.1.tar.gz</p>
-<p>BuildRequires: glfwTSGL, libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel mesa-libGLU-devel libXmu-devel libXi-devel libGL-devel glew-devel freetype-devel doxygen</p>
-<p>Requires: glfwTSGL, freetype, glew</p>
+<p>Summary: A Thread-Safe Graphics Library Name: tsgl Version: 1.1 Release: 1%{?dist} Group: Development/Libraries/Other License: GPLv3 URL:https://github.com/Calvin-CS/TSGL Source: tsgl-1.1.tar.gz #This tag tells rpm which packages need to be on the system to build TSGL (like Build-Depends) BuildRequires: glfwTSGL, libX11-devel libXrandr-devel libXinerama-devel libXcursor-devel mesa-libGLU-devel libXmu-devel libXi-devel libGL-devel glew-devel freetype-devel doxygen #This tag tells rpm which packages need to be on the system (like Depends) Requires: glfwTSGL, freetype, glew</p>
 <p>#https://fedoraproject.org/wiki/Packaging:Debuginfo::Useless_or_incomplete_debuginfo_packages_due_to_other_reasons #It is not necessary to generate debug packages global debug_package %{nil}</p>
 <p>description A Thread-Safe Graphics Library which draws 2D graphics in parallel.</p>
-<p>#This is the preinstall step. #Check the OpenGL version. pre if [ $1 -gt 1 ] ; then GLVersInfo=$(glxinfo | grep OpenGL) GLVersString=$(echo "$GLVersInfo" | grep "Open GL version string: ") GLVersNum=$(echo "GLVersString" | sed 's/[^0-9.]*([0-9.]*).*/\1/') if [ "$GLVersNum" &lt; "3.2" ] ; then exit 1 fi exit 0 fi</p>
 <p>#This is the preparation step. #Simply use the setup macro. prep setup</p>
 <p>#This is the build step. #Use the master Makefile to make the library. build make</p>
-<p>#http://www.tldp.org/HOWTO/RPM-HOWTO/build.html #This is the install step. #Create any directories (lib64, TSGL, GENERIC_MAKEFILE). #Install the files into those directories (install is like cp, but you can set file #permissions on the fly). install mkdir -p $RPM_BUILD_ROOT/usr/lib64 mkdir -p $RPM_BUILD_ROOT/usr/include/TSGL mkdir -p $RPM_BUILD_ROOT/home/GENERIC_MAKEFILE</p>
-<p>install -m 0644 lib/libtsgl.a $RPM_BUILD_ROOT/usr/lib64/ install -m 0755 lib/libtsgl.so $RPM_BUILD_ROOT/usr/lib64/ install -m 0777 genericMakefile/Makefile $RPM_BUILD_ROOT/home/GENERIC_MAKEFILE/ install -t $RPM_BUILD_ROOT/usr/include/TSGL src/TSGL/*.h</p>
+<p>#http://www.tldp.org/HOWTO/RPM-HOWTO/build.html #This is the install step. #Create any directories (lib64, TSGL, GENERIC_MAKEFILE). #Install the files into those directories (install is like cp, but you can set file #permissions on the fly). install mkdir -p $RPM_BUILD_ROOT/usr/lib64 mkdir -p $RPM_BUILD_ROOT/usr/include/TSGL mkdir -p $RPM_BUILD_ROOT/usr/include/TSGL_GENERIC_MAKEFILE</p>
+<p>install -m 0644 lib/libtsgl.a $RPM_BUILD_ROOT/usr/lib64/ install -m 0755 lib/libtsgl.so $RPM_BUILD_ROOT/usr/lib64/ install -m 0777 genericMakefile/Makefile $RPM_BUILD_ROOT/usr/include/TSGL_GENERIC_MAKEFILE/ install -t $RPM_BUILD_ROOT/usr/include/TSGL src/TSGL/*.h</p>
 <p>#This is the postinstall step. #Create a symlink to the OpenGL library. post ln -sfn /usr/lib64/libGL.so.1 /usr/lib64/libGL.so exit 0</p>
-<p>#This is the postuninstall step. #Remove the symlink created in the postinstall step. #Also, remove the GENERIC_MAKEFILE directory. postun unlink /usr/lib64/libGL.so rm -rf /home/GENERIC_MAKEFILE exit 0</p>
-<p>#These files belong to the tsgl package. #The license file, libtsgl.so, libtsgl.a, and the Makefile. files license license /usr/lib64/* /usr/include/* /home/GENERIC_MAKEFILE/*</p>
+<p>#This is the postuninstall step. #Remove the symlink created in the postinstall step. postun unlink /usr/lib64/libGL.so exit 0</p>
+<p>#These files belong to the tsgl package. #The license file, libtsgl.so, libtsgl.a, and the Makefile. files license license /usr/lib64/* /usr/include/*</p>
+<p>#https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/Packagers_Guide/sect-Packagers_Guide-Creating_a_Basic_Spec_File.html </p>
+<h1>* date Packager's Name &lt;packager's-email&gt; version-revision</h1>
 <h1>- Summary of changes</h1>
 <p>changelog</p>
 <ul>
@@ -222,8 +214,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>As you can see, we have the 7 sections, but we also have a lot more than that.</p>
 <p>Here's the extra stuff that we have:</p>
 <ul>
-<li><code>pre</code>, <code>post</code>, <code>postun</code>.<ul>
-<li>These are scriplets which are run before and after installing the TSGL package, as well as after removing the TSGL package. The <code>pre</code> scriptlet checks the OpenGL version, while the <code>post</code> scriplet makes a symlink to the correct OpenGL library (if one doesn't already exist). The <code>postun</code> scriplet removes the symlink and the generic Makefile directory. Each scriplet <em>MUST</em> exit with 0 (to show that it executed successfully).</li>
+<li><code>post</code>, <code>postun</code>.<ul>
+<li>These are scriplets which are run before and after installing the TSGL package, as well as after removing the TSGL package. The <code>post</code> scriplet makes a symlink to the correct OpenGL library (if one doesn't already exist). The <code>postun</code> scriplet removes the symlink and the generic Makefile directory. Each scriplet <em>MUST</em> exit with 0 (to show that it executed successfully).</li>
 </ul>
 </li>
 <li><code>install</code> section.<ul>
@@ -290,7 +282,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 5 2016 14:15:07 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 5 2016 14:23:35 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
