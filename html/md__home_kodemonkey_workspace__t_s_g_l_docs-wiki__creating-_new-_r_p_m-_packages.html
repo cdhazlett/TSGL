@@ -79,8 +79,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Creating-New-RPM-Packages </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***WORK IN PROGRESS!!!*** </p>
-<hr/>
+<div class="textblock"><hr/>
  <h2>| CREATING NEW RPM PACKAGES FOR RED HAT (FEDORA) (Last updated: 08/05/16) | </h2>
 <p>***NOTE:*** This document guides you in the process of creating RPM packages by hand. The package creation process has already been automated, so you do not need to follow this document if the automation process is working fine. If, however, the automation process has failed and you need to make an RPM package by hand, please continue to read the document. ***DO NOT ATTEMPT TO CREATE AN RPM PACKAGE BY HAND IF THE AUTOMATION PROCESS IS STILL FUNCTIONAL!!!***</p>
 <p>***NOTE:*** This document attempts to guide you in the process of RPM package creation. Given that, package creation can be a long and complex process. If there's something that we missed, or perhaps have misleading information, please edit this page accordingly!</p>
@@ -268,10 +267,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>``` </p>
 <pre class="fragment">rpmbuild -ba tsgl.spec
 </pre><p>```</p>
+<p>You should see a bunch of output text. If you see <code>exit 0</code> at the end of all of that, then the build was successful!</p>
+<p>The RPM package should be located in <code>RPMS</code> and the source RPM should be located in <code>SRPMS</code>.</p>
 <p>That concludes the building of RPM packages! </p>
 <hr/>
  <h2>| MISC | </h2>
-<p>If you need anymore help, or something is unclear, please see these links:</p>
+<p>If you need anymore help, or something is unclear, or you have run across an error, please see these links:</p>
 <p><a href="https://fedoraproject.org/wiki/How_to_create_an_RPM_package#Getting_ready_to_package_a_particular_program">https://fedoraproject.org/wiki/How_to_create_an_RPM_package#Getting_ready_to_package_a_particular_program</a></p>
 <p><a href="http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html">http://www.rpm.org/max-rpm/s1-rpm-build-creating-spec-file.html</a></p>
 <p><a href="http://www.rpm.org/max-rpm/ch-rpm-build.html">http://www.rpm.org/max-rpm/ch-rpm-build.html</a></p>
@@ -282,7 +283,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 5 2016 14:23:35 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 5 2016 16:14:33 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
