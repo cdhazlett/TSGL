@@ -1,6 +1,6 @@
-$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S!!!$\ast$$\ast$$\ast$
-
 $\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This page is for Ubuntu/\-Debian users. If you are a Fedora/\-Red\-Hat user, please see the \mbox{[}\mbox{[}R\-P\-M\mbox{]}\mbox{]} section!
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ Please make S\-U\-R\-E that you have Open\-G\-L 3.\-0 or greater on your machine.
 
 As of Summer 2016, an aptitude/debian package has been made for T\-S\-G\-L for ease of installation. Packages have been made for the following Ubuntu distros\-:
 \begin{DoxyItemize}
@@ -12,13 +12,14 @@ If you have one of those distros, you can use apt-\/get to install the T\-S\-G\-
 
 Follow these steps in order to get T\-S\-G\-L on your machine\-:
 
-1). Type 'sudo add-\/apt-\/repository ppa\-:threadsafegraphics/tsgl-\/dev'.
-\begin{DoxyItemize}
-\item When prompted, hit E\-N\-T\-E\-R.
-\end{DoxyItemize}
+1). Type {\ttfamily sudo add-\/apt-\/repository ppa\-:tsgl-\/test/tsgl-\/dev}. When prompted, hit {\ttfamily E\-N\-T\-E\-R}.
 
-2). Type 'sudo apt-\/get update'.
+2). Type {\ttfamily sudo apt-\/get update}.
 
-3). Type 'sudo apt-\/get install tsgl'.
+3). Type {\ttfamily sudo apt-\/get install tsgl}.
 
-T\-S\-G\-L will be installed along with a packaged version of the G\-L\-F\-W library. The generic Makefile for creating programs (as seen in the tutorials, i.\-e. \mbox{[}\mbox{[}Building Programs\mbox{]}\mbox{]}) is located in the G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E directory under /home/. Go into that directory, and copy over the Makefile into your project directory in order to start building applications that use T\-S\-G\-L. (See the tutorials for how to do so). 
+T\-S\-G\-L will be installed along with a packaged version of the G\-L\-F\-W library.
+
+The generic {\ttfamily Makefile} for creating programs (as seen in the tutorials, i.\-e. \mbox{[}\mbox{[}Building Programs\mbox{]}\mbox{]}) is located in the {\ttfamily T\-S\-G\-L\-\_\-\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E} directory under {\ttfamily /usr/include/}.
+
+Go into that directory, and copy over the {\ttfamily Makefile} into your project directory in order to start building applications that use T\-S\-G\-L. 
