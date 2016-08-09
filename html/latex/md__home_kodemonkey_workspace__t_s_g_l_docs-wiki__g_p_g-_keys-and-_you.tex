@@ -1,0 +1,84 @@
+$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S$\ast$$\ast$$\ast$
+
+As a security measure, Launchpad has you sign Debian packages with a G\-P\-G key.
+
+Think of this as a stamp of approval that says, \char`\"{}this package does not contain malware\char`\"{}.
+
+Also, if the package is tampered with while you are uploading it, the G\-P\-G key will reflect this. This will result in the package being rejected, since it was tampered with.
+
+A G\-P\-G key has two parts\-: a public key that you can distribute freely to others, and a private key that you should N\-E\-V\-E\-R distribute.
+
+In order to generate those parts, you need to use the {\ttfamily gpg} program via a terminal. (There's a G\-U\-I version that you can use called {\ttfamily seahorse}, but that process has never been tested).
+
+Open up a terminal, and let's get started.
+
+1). Type\-: \begin{DoxyVerb}```sudo apt-get install haveged```
+
+This daemon will help generate random bytes, used in the process of making a GPG key. 
+\end{DoxyVerb}
+
+
+2). Type\-: \begin{DoxyVerb}```gpg --gen-key```
+
+You should now have the ```gpg``` program up and running. Something like this will show up:
+\end{DoxyVerb}
+
+
+``` \begin{DoxyVerb}Please select what kind of key you want:
+(1) DSA and Elgamal (default)
+(2) DSA (sign only)
+(5) RSA (sign only)
+
+Your selection? 
+\end{DoxyVerb}
+
+
+``` \begin{DoxyVerb}Type ```1```, then hit ```ENTER```.
+\end{DoxyVerb}
+
+
+3). Next prompt\-:
+
+``` \begin{DoxyVerb}DSA keypair will have 1024 bits.
+ELG-E keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048)
+\end{DoxyVerb}
+
+
+{\ttfamily  Type}2048{\ttfamily , and hit}E\-N\-T\-E\-R```.
+
+4). Type {\ttfamily 0} for the next prompt, and hit {\ttfamily E\-N\-T\-E\-R}.
+
+5). Type {\ttfamily yes} for the next prompt, and hit {\ttfamily E\-N\-T\-E\-R}.
+
+6). Use your name and email for the Real Name and Email portion.
+
+7). You will now be asked for a passphrase. Make this something easy for you to remember, but hard for others to guess. Keep this passphrase in mind, because you'll need it whenever you sign Debian packages with this new key.
+
+8). Your key will now be generated.
+
+Now that your key is generated, it's time to send it to the Ubuntu keyserver.
+
+First, copy the {\ttfamily $<$key-\/id$>$} part of the text that was generated after your key was generated\-:
+
+```
+
+gpg\-: key $<$key-\/id$>$ marked as ultimately trusted. public and secret key created and signed.
+
+(more stuff here...)
+
+```
+
+Once you have the {\ttfamily $<$key-\/id$>$} copied, type\-:
+
+```
+
+gpg --send-\/keys --keyserver keyserver.\-ubuntu.\-com $<$key-\/id$>$
+
+```
+
+(Replacing {\ttfamily $<$key-\/id$>$} with the key id that you copied).
+
+Wait 10 minutes or so, then go to the U\-R\-L that's in the \char`\"{}\-Info\-For\-P\-P\-A.\-txt\char`\"{} file.
+
+\href{http://ubuntuforums.org/showthread.php?t=680292}{\tt http\-://ubuntuforums.\-org/showthread.\-php?t=680292} 

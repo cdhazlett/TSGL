@@ -1,10 +1,15 @@
 $\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S!!!$\ast$$\ast$$\ast$ 
 
- \subsection*{$\vert$ H\-O\-W T\-O C\-R\-E\-A\-T\-E N\-E\-W T\-S\-G\-L D\-E\-B\-I\-A\-N P\-A\-C\-K\-A\-G\-E\-S F\-O\-R U\-B\-U\-N\-T\-U (Last updated\-: 07/21/16) $\vert$ }
+ \subsection*{$\vert$ H\-O\-W T\-O C\-R\-E\-A\-T\-E N\-E\-W T\-S\-G\-L D\-E\-B\-I\-A\-N P\-A\-C\-K\-A\-G\-E\-S F\-O\-R U\-B\-U\-N\-T\-U (Last updated\-: 08/09/16) $\vert$ }
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ {\itshape Before} reading this page, please make sure that you have read the following pages\-: \begin{DoxyVerb}* GPG Keys and you
+* PPA and our TSGL team
+\end{DoxyVerb}
+
 
 (Example of making the same package for a different distro\-: tsgl (1.\-1-\/1$\sim$$<$distro-\/name$>$) $<$distro-\/name$>$
 
-$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This document guides you in the process of creating Debian packages by hand. The package creation process has already been automated, so you do not need to follow this document if the automation process is working fine. If, however, the automation process has failed and you need to make an R\-P\-M package by hand, please continue to read the document. D\-O N\-O\-T A\-T\-T\-E\-M\-P\-T T\-O C\-R\-E\-A\-T\-E A D\-E\-B\-I\-A\-N P\-A\-C\-K\-A\-G\-E B\-Y H\-A\-N\-D I\-F T\-H\-E A\-U\-T\-O\-M\-A\-T\-I\-O\-N P\-R\-O\-C\-E\-S\-S I\-S S\-T\-I\-L\-L F\-U\-N\-C\-T\-I\-O\-N\-A\-L!!!
+If you are creating a new T\-S\-G\-L package for a new distro, see $\ast$$\ast$$\ast$\-N\-E\-W P\-A\-G\-E C\-O\-M\-I\-N\-G S\-O\-O\-N$\ast$$\ast$$\ast$
 
 $\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This document attempts to guide you in the process of Debian package creation. Given that, package creation can be a long and complex process. If there's something that we missed, or perhaps have misleading information, please edit this page accordingly!
 
@@ -34,11 +39,11 @@ There are three components to a Debian package\-:
 
 1). Upstream tarball -\/ the original source code for the library/application. This comes from developers \char`\"{}upstream\char`\"{}, which means that they are the original authors of the code.
 
-2). Source package -\/ has all of the necessary files needed to compile/build the software. Includes\-: the upstream tarball with .tar.\-gz ending, a description file (.dsc), and a tarball with any changes made to the upstream source code and all files created for the debian package (usually has a .debian.\-tar.\-gz or .diff.\-gz ending).
+2). Source package -\/ has all of the necessary files needed to compile/build the software. Includes\-: the upstream tarball with {\ttfamily .tar.\-gz} ending, a description file ({\ttfamily .dsc}), and a tarball with any changes made to the upstream source code and all files created for the Debian package (usually has a {\ttfamily .debian.\-tar.\-gz} or {\ttfamily .diff.\-gz} ending).
 
 3). Binary packages -\/ what actually get installed on a user's system.
 
-You usually have to get the upstream tarball from some developers who are working on a piece of software. (You type {\ttfamily sudo apt-\/get source $<$package-\/name$>$} in order to fetch it).
+You usually have to get the upstream tarball from some developers who are working on a piece of software. (You type {\ttfamily apt-\/get source $<$package-\/name$>$} in order to fetch it).
 
 In this case, however, the upstream tarball will be created by you.
 
@@ -46,19 +51,27 @@ Therefore, there is no need to get an upstream tarball. You'll create one yourse
 
 Follow these steps\-:
 
-1). Create a new folder and call it \char`\"{}tsgl-\/$\ast$$\ast$$\ast$version-\/number$\ast$$\ast$$\ast$\char`\"{}, replacing $\ast$$\ast$$\ast$version-\/number$\ast$$\ast$$\ast$ with whatever version T\-S\-G\-L is currently.
+1). Create a new folder and call it {\ttfamily tsgl-\/$<$version-\/number$>$}, replacing {\ttfamily $<$version-\/number$>$} with whatever version T\-S\-G\-L is currently.
 
-(If you've made changes to the library recently, bump up the middle number of the version number by one. i.\-e. 1.\-1.\-1 -\/$>$ 1.\-2.\-1). (If not, make no changes to the version number).
+(If you've made minor changes, like new features or improvements, bump up the middle number by 1.
 
-2). Go to wherever you have the T\-S\-G\-L folder (which you can get using git if you don't have it\-: git clone \href{https://www.github.com/Calvin-CS/TSGL.git}{\tt https\-://www.\-github.\-com/\-Calvin-\/\-C\-S/\-T\-S\-G\-L.\-git}).
+e.\-g. 1.\-1.\-1 -\/$>$ 1.\-2.\-1.
 
-3). Take A\-L\-L of the files in the T\-S\-G\-L folder, and copy them over to the tsgl-\/$\ast$$\ast$$\ast$version-\/number$\ast$$\ast$$\ast$ folder.
+If you've added a bug fix, bump up the third number by one (or add 1 if there is no third number).
+
+e.\-g. 1.\-3 -\/$>$ 1.\-3.\-1 O\-R 1.\-1.\-1 -\/$>$ 1.\-1.\-2
+
+If you've made only improvements to the documentation, make no changes to the version number.)
+
+2). Go to wherever you have the T\-S\-G\-L folder (which you can get using git if you don't have it; {\ttfamily git clone \href{https://www.github.com/Calvin-CS/TSGL.git}{\tt https\-://www.\-github.\-com/\-Calvin-\/\-C\-S/\-T\-S\-G\-L.\-git}}).
+
+3). Take {\itshape A\-L\-L} of the files in the T\-S\-G\-L folder, and copy them over to the {\ttfamily tsgl-\/$<$version-\/number$>$} folder.
 
 Okay, now we'll create the actual upstream tarball.
 
-1). Open up a terminal, and go to the place where the tsgl-\/$\ast$$\ast$$\ast$version-\/number$\ast$$\ast$$\ast$ folder is located.
+1). Open up a terminal, and go to the place where the {\ttfamily tsgl-\/$<$version-\/number$>$} folder is located.
 
-2). Type
+2). Type\-:
 
 ``` \begin{DoxyVerb}tar czvf tsgl-<version-number>.tar.gz tsgl-<version-number>
 \end{DoxyVerb}
@@ -74,7 +87,9 @@ Okay, now we'll create the actual upstream tarball.
 
 ```
 
-Congrats! You created the upstream tarball, and have taken your first step in making a Debian package. 
+Congrats! You created the upstream tarball, and have taken your first step in making a Debian package.
+
+Now, let's take a closer look at the intricacies of debian package creation. 
 
  \subsection*{$\vert$ Creating Debian packages\-: files, files, and more files $\vert$ }
 
@@ -86,23 +101,22 @@ You know how you have to prepare a turkey before actually cooking it?
 
 The process is somewhat similar when creating a Debian package.
 
-Go into the tsgl-\/$\ast$$\ast$$\ast$version-\/number$\ast$$\ast$$\ast$ folder after creating the upstream tarball. Create a folder named {\ttfamily debian}.
+Go into the {\ttfamily tsgl-\/$<$version-\/number$>$} folder after creating the upstream tarball. Create a folder named {\ttfamily debian}.
 
-This one folder, {\ttfamily debian}, will store all of the necessary files needed in order to create a {\ttfamily debian} package.
+This one folder, {\ttfamily debian}, will store all of the necessary files needed in order to create a Debian package.
 
 And quite a lot of files we need....
 
 
 \begin{DoxyItemize}
-\item changelog
-\item control
-\item rules
-\item compat
-\item tsgl.\-install
-\item copyright
-\item source/format
-\item preinst
-\item postinst
+\item {\ttfamily changelog}
+\item {\ttfamily control}
+\item {\ttfamily rules}
+\item {\ttfamily compat}
+\item {\ttfamily tsgl.\-install}
+\item {\ttfamily copyright}
+\item {\ttfamily source/format}
+\item {\ttfamily postinst}
 \end{DoxyItemize}
 
 There are more, but these will suffice.
@@ -113,9 +127,9 @@ Like we said, a bit more complicated than R\-P\-M package creation.
 
 Let's get started with the {\ttfamily changelog} file. 
 
- \subsection*{$\vert$ changelog file $\vert$ }
+ \subsection*{$\vert$ {\ttfamily changelog} file $\vert$ }
 
-This file essentially explains what has been changed in the Debian package. Ranging from a minor change to the control file (explained shortly), or a full scale rework of the entire package, you have to explain what you changed in this file.
+This file essentially explains what has been changed in the Debian package. Ranging from a minor change to the {\ttfamily control} file (explained shortly), or a full scale rework of the entire package, you have to explain what you changed in this file.
 
 Don't worry, you don't have to explain $\ast$$\ast$$\ast$\-E\-V\-E\-R\-Y$\ast$$\ast$$\ast$ little detail. You only have to summarize your changes.
 
@@ -123,13 +137,13 @@ This file is also $\ast$$\ast$$\ast$\-E\-X\-T\-R\-E\-M\-E\-L\-Y$\ast$$\ast$$\ast
 
 Since you're creating a brand new package, we assume that the only thing that has been changed is the T\-S\-G\-L source code.
 
-To create the {\ttfamily changelog} file, be in the tsgl-\/$\ast$$\ast$$\ast$version-\/number$\ast$$\ast$$\ast$ directory, and type this command\-:
+To create the {\ttfamily changelog} file, be in the {\ttfamily tsgl-\/$<$version-\/number$>$} directory, and type this command\-:
 
 ``` \begin{DoxyVerb}dch --create -v <version-number> --package tsgl
 \end{DoxyVerb}
 
 
-{\ttfamily  (If dch isn't installed, type}sudo apt-\/get install devscripts``` and repeat this step).
+{\ttfamily  (If}dch{\ttfamily isn't installed, type}sudo apt-\/get install devscripts``` and repeat this step).
 
 You'll be asked to pick an editor. Pick whichever one is the easiest one to use.
 
@@ -137,7 +151,7 @@ Now, you should see something like this\-:
 
 ```
 
-tsgl ($<$version-\/number-\/debnumber$>$) U\-N\-R\-E\-L\-E\-A\-S\-E\-D; urgency=medium
+tsgl ($<$version-\/number$>$-\/$<$debnumber$>$) U\-N\-R\-E\-L\-E\-A\-S\-E\-D; urgency=medium
 
 
 \begin{DoxyItemize}
@@ -152,10 +166,12 @@ Let's break it down\-:
 
 
 \begin{DoxyItemize}
-\item {\ttfamily tsgl ($<$version-\/number-\/debnumber$>$)} specifies the name of the package and the current version number. The {\ttfamily debnumber} tells us what version is the D\-E\-B\-I\-A\-N package. You can create multiple versions of the same package, without changing the source code of the package software. Usually this is when a new dependency needs to be added, or a new file needs to be added to the {\ttfamily debian} folder. In this case, since we are creating it, set this number to 1.
+\item {\ttfamily tsgl ($<$version-\/number$>$-\/$<$debnumber$>$)} specifies the name of the package and the current version number. The {\ttfamily $<$debnumber$>$} tells us what version is the D\-E\-B\-I\-A\-N package. You can create multiple versions of the same package, without changing the source code of the package software. Usually this is when a new dependency needs to be added, or a new file needs to be added to the {\ttfamily debian} folder. In this case, since we are creating it, set this number to 1.
 \end{DoxyItemize}
 
-If this were an already created package, and we didn't make any changes to the T\-S\-G\-L source code, but made changes to the {\ttfamily debian} files, we would have to add 1 to the {\ttfamily debnumber}
+If this were an already created package, and we didn't make any changes to the T\-S\-G\-L source code, but made changes to the {\ttfamily debian} files, we would have to add 1 to the {\ttfamily $<$debnumber$>$}
+
+E.\-g. tsgl (1.\-1.\-2-\/1) -\/$>$ tsgl (1.\-1.\-2-\/$\ast$$\ast$$\ast$2$\ast$$\ast$$\ast$)
 
 
 \begin{DoxyItemize}
@@ -165,8 +181,6 @@ If this were an already created package, and we didn't make any changes to the T
 {\ttfamily trusty} is for {\ttfamily Ubuntu 14.\-04}, {\ttfamily xenial} is for {\ttfamily Ubuntu 16.\-04}.
 
 If you are creating a new T\-S\-G\-L package for either one of those distros, replace {\ttfamily U\-N\-R\-E\-L\-E\-A\-S\-E\-D} with the distro name.
-
-If you are creating a new T\-S\-G\-L package for a new distro, $\ast$$\ast$$\ast$\-N\-E\-W P\-A\-G\-E C\-O\-M\-I\-N\-G S\-O\-O\-N$\ast$$\ast$$\ast$
 
 
 \begin{DoxyItemize}
@@ -193,11 +207,13 @@ tsgl (1.\-0-\/1) trusty; urgency=medium
 
 ```
 
-Save the changes and close the file. 
+Save the changes and close the file.
 
- \subsection*{$\vert$ control file $\vert$ }
+Next, let's take a look at the {\ttfamily control} file. 
 
-This file tells apt-\/get how to manage the package.
+ \subsection*{$\vert$ {\ttfamily control} file $\vert$ }
+
+This file tells {\ttfamily apt-\/get} how to manage the package.
 
 It's also a real workhorse of a file.
 
@@ -205,7 +221,7 @@ Here's the general format\-:
 
 ```
 
-1 Source\-: tsgl 2 Maintainer\-: Chris Dilley \href{mailto:codemonkey941@gmail.com}{\tt codemonkey941@gmail.\-com} 3 Section\-: libs 4 Priority\-: optional 5 Standards-\/\-Version\-: 3.\-9.\-5 6 Build-\/\-Depends\-: debhelper ($>$= 9), glfw, doxygen, libglew-\/dev, libglew1.\-10, libfreetype6-\/dev, libfreetype6, libxrandr-\/dev, libxi-\/dev, 7 x11proto-\/xf86vidmode-\/dev, libglu1-\/mesa-\/dev 8 9 Package\-: tsgl 10 Architecture\-: amd64 11 Depends\-: \$\{shlibs\-:Depends\}, \$\{misc\-:Depends\}, glfw, libfreetype6, libfreetype6-\/dev, libglew1.\-10, libglew-\/dev, libxrandr-\/dev, doxygen, devscripts, build-\/essential 12 Description\-: A Thread-\/\-Safe Graphics Library.
+1 Source\-: 2 Maintainer\-: 3 Section\-: 4 Priority\-: 5 Standards-\/\-Version\-: 6 Build-\/\-Depends\-: 7 8 Package\-: 9 Architecture\-: 10 Depends\-: 11 Description\-:
 
 (Line numbers added)
 
@@ -221,7 +237,7 @@ Let's break them down\-:
 \begin{DoxyItemize}
 \item {\ttfamily Source} specifies the name of the source package.
 \item {\ttfamily Maintainer} specifies the person who is keeping track of the package in terms of updates, tweaks, etc.
-\item {\ttfamily Section} species the section of the distribution that the source package goes into (in this case, libs).
+\item {\ttfamily Section} species the section of the distribution that the source package goes into (libs, for example).
 \item {\ttfamily Priority} specifies the importance of this package.
 \item {\ttfamily Standards-\/\-Version} specifies the Debian standards for packaging that we are following.
 \item {\ttfamily Build-\/\-Depends} specifies what libraries need to be present in order to build our library.
@@ -237,23 +253,33 @@ Let's break them down\-:
 \item {\ttfamily Description} specifies a short summary of what the package is.
 \end{DoxyItemize}
 
-At the time of this writing, this was the control file for the {\ttfamily trusty} T\-S\-G\-L debian package.
+At the time of this writing, this was the {\ttfamily control} file for the {\ttfamily trusty} T\-S\-G\-L debian package\-:
+
+```
+
+1 Source\-: tsgl 2 Maintainer\-: Chris Dilley \href{mailto:codemonkey941@gmail.com}{\tt codemonkey941@gmail.\-com} 3 Section\-: libs 4 Priority\-: optional 5 Standards-\/\-Version\-: 3.\-9.\-5 6 Build-\/\-Depends\-: debhelper ($>$= 9), glfw, doxygen, libglew-\/dev, libfreetype6-\/dev, libfreetype6, libxrandr-\/dev, libxi-\/dev, x11proto-\/xf86vidmode-\/dev, libglu1-\/mesa-\/dev 7 8 Package\-: tsgl 9 Architecture\-: amd64 10 Depends\-: \$\{shlibs\-:Depends\}, \$\{misc\-:Depends\}, glfw, libfreetype6, libfreetype6-\/dev, libglew-\/dev, libxrandr-\/dev, doxygen, devscripts, build-\/essential 11 Description\-: A Thread-\/\-Safe Graphics Library.
+
+```
+
+(Line numbers added)
 
 The one for the {\ttfamily xenial} package is the same.
 
-If nothing has changed (no new dependencies have been added...), simply copy and paste it into the new control file. Change the {\ttfamily Maintainer} field to your name and email.
+If nothing has changed (no new dependencies have been added...), simply copy and paste it into the new {\ttfamily control} file.
+
+Change the {\ttfamily Maintainer} field to your name and email.
 
 Save the changes and close the file. 
 
- \subsection*{$\vert$ compat file $\vert$ }
+ \subsection*{$\vert$ {\ttfamily compat} file $\vert$ }
 
-This is the easiest file to make. Create the file, and type \char`\"{}9\char`\"{}. Save the changes and don't touch the file again.
+This is the easiest file to make. Create the file, and type {\ttfamily 9}. Save the changes and don't touch the file again.
 
-Essentially, all this file does is tell the packaging tools to use debhelper version 9.
+Essentially, all this file does is tell the packaging tools to use {\ttfamily debhelper} version 9.
 
-This means, \char`\"{}\-Use the tools which help build Debian packages from version 9.\char`\"{} 
+This means, \char`\"{}\-Use the tools which help build Debian packages from toolset version 9.\char`\"{} 
 
- \subsection*{$\vert$ rules file $\vert$ }
+ \subsection*{$\vert$ {\ttfamily rules} file $\vert$ }
 
 This file tells the build system how to make the binary package (in this case, the one that will be built in our ppa after we upload the source package).
 
@@ -271,29 +297,29 @@ It then publishes the upstream tarball, source package, and binary packages so t
 
 You can upload binaries, though it is N\-O\-T recommended.
 
-At any rate, this is what the rules files looks like for both the trusty and xenial packages\-:
+At any rate, this is what the {\ttfamily rules} files looks like for both the {\ttfamily trusty} and {\ttfamily xenial} packages\-:
 
 
 
- \subsection*{$\vert$ tsgl.\-install file $\vert$ }
+ \subsection*{$\vert$ {\ttfamily tsgl.\-install} file $\vert$ }
 
 This file explains where files need to go when the package is being installed.
 
 Whenever something is installed on a user's system, certain files need to go to certain places.
 
-An example would be an executable. Normally, you put executables inside of a user's /usr/bin when it is being installed.
+An example would be an executable. Normally, you put executables inside of a user's {\ttfamily /usr/bin} or {\ttfamily /usr/local/bin} directory when it is being installed.
 
 This file specifies where certain files go on a user's system.
 
-In our case, we need to put the libtsgl.\-so (and libtsgl.\-a file if created) into /usr/lib/, the .h files from src/\-T\-S\-G\-L into /usr/include/\-T\-S\-G\-L/, and the generic Makefile into /usr/include/\-T\-S\-G\-L\-M\-A\-K\-E/ (so users can create programs with T\-S\-G\-L with ease).
+In our case, we need to put the {\ttfamily libtsgl.\-so} and {\ttfamily libtsgl.\-a} files into {\ttfamily /usr/lib/}, the {\ttfamily .h} header files from {\ttfamily src/\-T\-S\-G\-L} into {\ttfamily /usr/include/\-T\-S\-G\-L/}, and the generic {\ttfamily Makefile} into {\ttfamily /usr/include/\-T\-S\-G\-L\-\_\-\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E/} (so users can create programs with T\-S\-G\-L with ease).
 
 
 
- \subsection*{$\vert$ source/format $\vert$ }
+ \subsection*{$\vert$ {\ttfamily source/format} file $\vert$ }
 
 
 
- \subsection*{$\vert$ copyright $\vert$ }
+ \subsection*{$\vert$ {\ttfamily copyright} file $\vert$ }
 
 This file is used to store licensing information and legal stuff associated with your software.
 
@@ -301,51 +327,25 @@ In much the same way as inventors patent their products in order to protect them
 
 \char`\"{}\-Protection\char`\"{} means not having your ideas stolen, etc.
 
-It's essentially a way of telling everyone, \char`\"{}\-This software is availible for use, but with some restrictions.\char`\"{}
+It's essentially a way of telling everyone, \char`\"{}\-This software is available for use, but with some restrictions.\char`\"{}
 
 In the case of T\-S\-G\-L, we use the G\-P\-L v3 license.
 
 This is located in the T\-S\-G\-L main folder, in a file called, \char`\"{}license\char`\"{}.
 
-Simply open that file up, copy the contents, and paste them into the copyright file. 
+Simply open that file up, copy the contents, and paste them into the {\ttfamily copyright} file.
 
- \subsection*{$\vert$ preinst $\vert$ }
+Save the changes and close the file. 
 
-This file is usually a shell/bash script that is executed $\ast$$\ast$$\ast$before$\ast$$\ast$$\ast$ the installation of the package.
-
-You can do all sorts of things with this file, ranging from checking library versions, to making sure that everything is in place for installing your package.
-
-In the case of T\-S\-G\-L, we use this file to check the Open\-G\-L version.
-
-It {\itshape M\-U\-S\-T} be 3.\-0 or greater, because T\-S\-G\-L relies on functions that were implemented in Open\-G\-L 3.\-0 and greater.
-
-To check the Open\-G\-L version, one method that we used was\-:
-
-```
-
-\#!/bin/sh
-
-vers\-Info=\$(glxinfo $\vert$ grep Open\-G\-L)
-
-\#http\-://stackoverflow.com/questions/18147884/shell-\/variable-\/in-\/a-\/grep-\/regex \#\-Get the Open\-G\-L version string check=\char`\"{}\-Open\-G\-L version string\-: \char`\"{} vers\-String=\$(echo \char`\"{}\$vers\-Info\char`\"{} $\vert$ grep \char`\"{}\$check\char`\"{})
-
-\#http\-://stackoverflow.com/questions/7516455/sed-\/extract-\/version-\/number-\/from-\/string-\/only-\/version-\/without-\/other-\/numbers \#http\-://superuser.com/questions/363865/how-\/to-\/extract-\/a-\/version-\/number-\/using-\/sed \#\-Extract the version number vers\-Num=\$(echo \char`\"{}\$vers\-String\char`\"{} $\vert$ sed 's/\mbox{[}$^\wedge$0-\/9.\mbox{]}$\ast$(\mbox{[}0-\/9.\mbox{]}$\ast$).$\ast$/\textbackslash{}1/')
-
-\#http\-://tldp.org/\-L\-D\-P/abs/html/comparison-\/ops.\-html \#\-Check if the Open\-G\-L version number is 3.\-0 or greater. if \mbox{[}\mbox{[} \char`\"{}\$vers\-Num\char`\"{} $<$ \char`\"{}3.\-0\char`\"{} \mbox{]}\mbox{]} then exit 1 fi
-
-```
-
-Simply copy and paste the code above into the preinst file, save and then close it. 
-
- \subsection*{$\vert$ postinst $\vert$ }
+ \subsection*{$\vert$ {\ttfamily postinst} file $\vert$ }
 
 This file is usually a shell/bash script that is executed $\ast$$\ast$$\ast$after$\ast$$\ast$$\ast$ the installation of the package.
 
 Whew, that was a lot of files!
 
-Let's move onto the easiest part of Debian package creation\-: actually creating one! 
+Let's move onto the easiest part of Debian package creation\-: actually building one! 
 
- \subsection*{$\vert$ Creating Debian packages\-: debuild is your friend $\vert$ }
+ \subsection*{$\vert$ Creating Debian packages\-: {\ttfamily debuild} is your friend $\vert$ }
 
 So, you have created all of the files in the debian folder.
 
@@ -355,14 +355,15 @@ You'll also have to sign the package (so Debian knows that you made the package)
 
 How do we do all that?
 
-debuild.
+With the {\ttfamily debuild} command.
 
-debuild creates our Debian package and files needed in order to upload said package.
+The {\ttfamily debuild} command creates our Debian package and files needed in order to upload said package.
 
-Simply type\-: \begin{DoxyVerb}cd ../
-debuild -S -rfakeroot -k<key-id> (replacing <key-id> with the key ID located in key.txt). 
-\end{DoxyVerb}
+Simply type this command either inside of the {\ttfamily debian} directory or {\ttfamily tsgl-\/$<$version-\/number$>$} directory\-:
 
+``` debuild -\/\-S -\/rfakeroot -\/k$<$key-\/id$>$
+
+``` (replacing $<$key-\/id$>$ with the key I\-D located in key.\-txt).
 
 and debuild takes care of the rest!
 
