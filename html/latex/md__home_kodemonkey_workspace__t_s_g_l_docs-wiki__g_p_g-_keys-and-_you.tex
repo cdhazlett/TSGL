@@ -1,6 +1,12 @@
-$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S$\ast$$\ast$$\ast$
 
-As a security measure, Launchpad has you sign Debian packages with a G\-P\-G key.
+
+ \subsection*{$\vert$ G\-P\-G K\-E\-Y\-S F\-O\-R S\-I\-G\-N\-I\-N\-G D\-E\-B\-I\-A\-N P\-A\-C\-K\-A\-G\-E\-S (Last updated\-: 08/09/16) $\vert$ }
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This document attempts to guide you in the process of creating a G\-P\-G key. If there's something that we have missed, or perhaps have misleading information, please edit this page accordingly!
+
+Before you can begin the process of creating a Debian package, you {\itshape N\-E\-E\-D} to have a G\-P\-G key. This is so that you can sign Debian packages and upload them to our P\-P\-A (see \mbox{[}\mbox{[}P\-P\-A and our T\-S\-G\-L team\mbox{]}\mbox{]}).
+
+This is a security measure; Launchpad has you sign Debian packages with a G\-P\-G key.
 
 Think of this as a stamp of approval that says, \char`\"{}this package does not contain malware\char`\"{}.
 
@@ -12,17 +18,25 @@ In order to generate those parts, you need to use the {\ttfamily gpg} program vi
 
 Open up a terminal, and let's get started.
 
-1). Type\-: \begin{DoxyVerb}```sudo apt-get install haveged```
+1). Type\-:
 
-This daemon will help generate random bytes, used in the process of making a GPG key. 
+``` \begin{DoxyVerb}sudo apt-get install haveged
 \end{DoxyVerb}
 
 
-2). Type\-: \begin{DoxyVerb}```gpg --gen-key```
+```
 
-You should now have the ```gpg``` program up and running. Something like this will show up:
-\end{DoxyVerb}
+This daemon will help generate random bytes, used in the process of making a G\-P\-G key.
 
+2). Type\-:
+
+```
+
+gpg --gen-\/key
+
+```
+
+You should now have the {\ttfamily gpg} program up and running. Something like this will show up\-:
 
 ``` \begin{DoxyVerb}Please select what kind of key you want:
 (1) DSA and Elgamal (default)
@@ -33,9 +47,9 @@ Your selection?
 \end{DoxyVerb}
 
 
-``` \begin{DoxyVerb}Type ```1```, then hit ```ENTER```.
-\end{DoxyVerb}
+```
 
+Type {\ttfamily 1}, then hit {\ttfamily E\-N\-T\-E\-R}.
 
 3). Next prompt\-:
 
@@ -45,13 +59,15 @@ What keysize do you want? (2048)
 \end{DoxyVerb}
 
 
-{\ttfamily  Type}2048{\ttfamily , and hit}E\-N\-T\-E\-R```.
+```
+
+Type {\ttfamily 2048}, and hit {\ttfamily E\-N\-T\-E\-R}.
 
 4). Type {\ttfamily 0} for the next prompt, and hit {\ttfamily E\-N\-T\-E\-R}.
 
 5). Type {\ttfamily yes} for the next prompt, and hit {\ttfamily E\-N\-T\-E\-R}.
 
-6). Use your name and email for the Real Name and Email portion.
+6). Use your name and email for the {\ttfamily Real Name} and {\ttfamily Email} portion.
 
 7). You will now be asked for a passphrase. Make this something easy for you to remember, but hard for others to guess. Keep this passphrase in mind, because you'll need it whenever you sign Debian packages with this new key.
 
@@ -61,24 +77,55 @@ Now that your key is generated, it's time to send it to the Ubuntu keyserver.
 
 First, copy the {\ttfamily $<$key-\/id$>$} part of the text that was generated after your key was generated\-:
 
-```
-
-gpg\-: key $<$key-\/id$>$ marked as ultimately trusted. public and secret key created and signed.
+``` \begin{DoxyVerb}gpg: key <key-id> marked as ultimately trusted.
+public and secret key created and signed. 
 
 (more stuff here...)
+\end{DoxyVerb}
+
 
 ```
 
 Once you have the {\ttfamily $<$key-\/id$>$} copied, type\-:
 
-```
+``` \begin{DoxyVerb}gpg --send-keys --keyserver keyserver.ubuntu.com <key-id>
+\end{DoxyVerb}
 
-gpg --send-\/keys --keyserver keyserver.\-ubuntu.\-com $<$key-\/id$>$
 
 ```
 
 (Replacing {\ttfamily $<$key-\/id$>$} with the key id that you copied).
 
-Wait 10 minutes or so, then go to the U\-R\-L that's in the \char`\"{}\-Info\-For\-P\-P\-A.\-txt\char`\"{} file.
+After waiting for 10 minutes or so, type\-:
 
-\href{http://ubuntuforums.org/showthread.php?t=680292}{\tt http\-://ubuntuforums.\-org/showthread.\-php?t=680292} 
+``` \begin{DoxyVerb}gpg --list-keys
+\end{DoxyVerb}
+
+
+```
+
+You should see something like this\-:
+
+``` \begin{DoxyVerb}pub   #####/******** 2016-06-20
+uid                  Real Name <Email@Email.com>
+sub   #####/******** 2016-06-20
+\end{DoxyVerb}
+
+
+```
+
+The {\ttfamily $\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$} in the {\ttfamily sub} line is what you will use as your {\ttfamily $<$key-\/id$>$} when signing packages. You can also use the {\ttfamily $\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$} in the {\ttfamily pub} line, but {\itshape P\-L\-E\-A\-S\-E} be consistent!
+
+You should now be ready to sign Debian packages!
+
+If you haven't already, please see the \mbox{[}\mbox{[}P\-P\-A and our T\-S\-G\-L team\mbox{]}\mbox{]} page.
+
+You may also want to take a look at the \mbox{[}\mbox{[}Saving G\-P\-G keys\mbox{]}\mbox{]} page, if you haven't already.
+
+Otherwise, feel free to continue with the \mbox{[}\mbox{[}Creating New Deb Packages\mbox{]}\mbox{]} page. 
+
+ \subsection*{$\vert$ M\-I\-S\-C $\vert$ }
+
+For more information, please see this \href{http://ubuntuforums.org/showthread.php?t=680292}{\tt website}.
+
+$\ast$$\ast$$\ast$\-P\-L\-E\-A\-S\-E$\ast$$\ast$$\ast$ update this document if you come across new links, or if there's missing/false information. 

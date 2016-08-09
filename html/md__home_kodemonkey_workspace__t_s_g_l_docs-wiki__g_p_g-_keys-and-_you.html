@@ -79,58 +79,83 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">GPG-Keys-and-You </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***WORK IN PROGRESS***</p>
-<p>As a security measure, Launchpad has you sign Debian packages with a GPG key.</p>
+<div class="textblock"><hr/>
+ <h2>| GPG KEYS FOR SIGNING DEBIAN PACKAGES (Last updated: 08/09/16) | </h2>
+<p>***NOTE:*** This document attempts to guide you in the process of creating a GPG key. If there's something that we have missed, or perhaps have misleading information, please edit this page accordingly!</p>
+<p>Before you can begin the process of creating a Debian package, you <em>NEED</em> to have a GPG key. This is so that you can sign Debian packages and upload them to our PPA (see [[PPA and our TSGL team]]).</p>
+<p>This is a security measure; Launchpad has you sign Debian packages with a GPG key.</p>
 <p>Think of this as a stamp of approval that says, "this package does not contain malware".</p>
 <p>Also, if the package is tampered with while you are uploading it, the GPG key will reflect this. This will result in the package being rejected, since it was tampered with.</p>
 <p>A GPG key has two parts: a public key that you can distribute freely to others, and a private key that you should NEVER distribute.</p>
 <p>In order to generate those parts, you need to use the <code>gpg</code> program via a terminal. (There's a GUI version that you can use called <code>seahorse</code>, but that process has never been tested).</p>
 <p>Open up a terminal, and let's get started.</p>
-<p>1). Type: </p>
-<pre class="fragment">```sudo apt-get install haveged```
-
-This daemon will help generate random bytes, used in the process of making a GPG key. 
-</pre><p>2). Type: </p>
-<pre class="fragment">```gpg --gen-key```
-
-You should now have the ```gpg``` program up and running. Something like this will show up:
-</pre><p>``` </p>
+<p>1). Type:</p>
+<p>``` </p>
+<pre class="fragment">sudo apt-get install haveged
+</pre><p>```</p>
+<p>This daemon will help generate random bytes, used in the process of making a GPG key.</p>
+<p>2). Type:</p>
+<p>```</p>
+<p>gpg &ndash;gen-key</p>
+<p>```</p>
+<p>You should now have the <code>gpg</code> program up and running. Something like this will show up:</p>
+<p>``` </p>
 <pre class="fragment">Please select what kind of key you want:
 (1) DSA and Elgamal (default)
 (2) DSA (sign only)
 (5) RSA (sign only)
 
 Your selection? 
-</pre><p>``` </p>
-<pre class="fragment">Type ```1```, then hit ```ENTER```.
-</pre><p>3). Next prompt:</p>
+</pre><p>```</p>
+<p>Type <code>1</code>, then hit <code>ENTER</code>.</p>
+<p>3). Next prompt:</p>
 <p>``` </p>
 <pre class="fragment">DSA keypair will have 1024 bits.
 ELG-E keys may be between 1024 and 4096 bits long.
 What keysize do you want? (2048)
-</pre><p><code> Type</code>2048<code>, and hit</code>ENTER```.</p>
+</pre><p>```</p>
+<p>Type <code>2048</code>, and hit <code>ENTER</code>.</p>
 <p>4). Type <code>0</code> for the next prompt, and hit <code>ENTER</code>.</p>
 <p>5). Type <code>yes</code> for the next prompt, and hit <code>ENTER</code>.</p>
-<p>6). Use your name and email for the Real Name and Email portion.</p>
+<p>6). Use your name and email for the <code>Real Name</code> and <code>Email</code> portion.</p>
 <p>7). You will now be asked for a passphrase. Make this something easy for you to remember, but hard for others to guess. Keep this passphrase in mind, because you'll need it whenever you sign Debian packages with this new key.</p>
 <p>8). Your key will now be generated.</p>
 <p>Now that your key is generated, it's time to send it to the Ubuntu keyserver.</p>
 <p>First, copy the <code>&lt;key-id&gt;</code> part of the text that was generated after your key was generated:</p>
-<p>```</p>
-<p>gpg: key &lt;key-id&gt; marked as ultimately trusted. public and secret key created and signed.</p>
-<p>(more stuff here...)</p>
-<p>```</p>
+<p>``` </p>
+<pre class="fragment">gpg: key &lt;key-id&gt; marked as ultimately trusted.
+public and secret key created and signed. 
+
+(more stuff here...)
+</pre><p>```</p>
 <p>Once you have the <code>&lt;key-id&gt;</code> copied, type:</p>
-<p>```</p>
-<p>gpg &ndash;send-keys &ndash;keyserver keyserver.ubuntu.com &lt;key-id&gt;</p>
-<p>```</p>
+<p>``` </p>
+<pre class="fragment">gpg --send-keys --keyserver keyserver.ubuntu.com &lt;key-id&gt;
+</pre><p>```</p>
 <p>(Replacing <code>&lt;key-id&gt;</code> with the key id that you copied).</p>
-<p>Wait 10 minutes or so, then go to the URL that's in the "InfoForPPA.txt" file.</p>
-<p><a href="http://ubuntuforums.org/showthread.php?t=680292">http://ubuntuforums.org/showthread.php?t=680292</a> </p>
+<p>After waiting for 10 minutes or so, type:</p>
+<p>``` </p>
+<pre class="fragment">gpg --list-keys
+</pre><p>```</p>
+<p>You should see something like this:</p>
+<p>``` </p>
+<pre class="fragment">pub   #####/******** 2016-06-20
+uid                  Real Name &lt;Email@Email.com&gt;
+sub   #####/******** 2016-06-20
+</pre><p>```</p>
+<p>The <code>*********</code> in the <code>sub</code> line is what you will use as your <code>&lt;key-id&gt;</code> when signing packages. You can also use the <code>*********</code> in the <code>pub</code> line, but <em>PLEASE</em> be consistent!</p>
+<p>You should now be ready to sign Debian packages!</p>
+<p>If you haven't already, please see the [[PPA and our TSGL team]] page.</p>
+<p>You may also want to take a look at the [[Saving GPG keys]] page, if you haven't already.</p>
+<p>Otherwise, feel free to continue with the [[Creating New Deb Packages]] page. </p>
+<hr/>
+ <h2>| MISC | </h2>
+<p>For more information, please see this <a href="http://ubuntuforums.org/showthread.php?t=680292">website</a>.</p>
+<p>***PLEASE*** update this document if you come across new links, or if there's missing/false information. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2016 12:33:14 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2016 13:26:46 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
