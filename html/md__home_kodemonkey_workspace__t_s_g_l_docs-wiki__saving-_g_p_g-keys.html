@@ -79,11 +79,60 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Saving-GPG-keys </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***WORK IN PROGRESS*** </p>
+<div class="textblock"><hr/>
+ <h2>| IMPORTING AND EXPORTING GPG KEYS (Last updated: 08/09/16) | </h2>
+<p>Imagine yourself chugging along, building Debian packages, when all of a sudden, your computer crashes.</p>
+<p>All of your data, lost!</p>
+<p>Especially...your GPG keys!</p>
+<p>Okay, your GPG keys may be the last thing on your mind when your computer crashes. But, without them, you can't sign Debian packages.</p>
+<p>"Ha, Right!" You say. "I remember my key ID! I can just use that when I use ```debuild```!" (See [[Creating New Deb Packages]] for more info on <code>debuild</code>).</p>
+<p>No. It doesn't work that way. You need both the public and private GPG key on the system in order to have the luxury of using just the key ID.</p>
+<p>"Well...I can get my key back from the keyserver on Ubuntu!"</p>
+<p>Sorry, we tried to do that. No luck.</p>
+<p>"Are you saying that I have to create a new GPG key?"</p>
+<p>That's only the tip of it.</p>
+<p>Not only do you have to create a new GPG key, you'll also have to:</p>
+<ul>
+<li>revoke your old key</li>
+<li>send the new key to the Ubuntu keyserver</li>
+<li>wait 10 minutes</li>
+<li>and memorize a brand new key ID.</li>
+</ul>
+<p>Here's <a href="http://askubuntu.com/questions/191767/is-it-possible-to-recover-a-secret-key-from-a-gpg-public-key">why</a>.</p>
+<p>Unless you exported your key beforehand, you are out of luck.</p>
+<p>This guide will help you make backups of your keys so that you can avoid a scenario like this. (And will also remind you to make backups of your data! Especially your Debian package data!!) </p>
+<hr/>
+ <h2>| Exporting keys | </h2>
+<p>Type:</p>
+<p>``` </p>
+<pre class="fragment">gpg --export &lt;key-id&gt; &gt; public.key
+gpg --export-secret-key &lt;key-id&gt; &gt; private.key
+</pre><p>```</p>
+<p>Replacing <code>&lt;key-id&gt;</code> with the one associated with your GPG key (see [[GPG keys and You]]).</p>
+<p>Move the <code>.key</code> files to a secure place (e.g. Google Drive, USB drive...)</p>
+<p>That should keep your GPG keys safe. </p>
+<hr/>
+ <h2>| Importing keys | </h2>
+<p>In the event of a computer crash, hard drive malfunction, or some other unfortunate occurrence, follow this process to get your GPG keys back (assuming you exported them beforehand!!!).</p>
+<p>1). Find the <code>.key</code> files that you exported.</p>
+<p>2). Put them on the system you wish to import the keys on.</p>
+<p>3). Type:</p>
+<p>``` </p>
+<pre class="fragment">gpg --import public.key
+gpg --allow-secret-key-import --import private.key
+</pre><p>```</p>
+<p>4). Type:</p>
+<p>``` </p>
+<pre class="fragment">sudo add-apt-repository &lt;ppa-link&gt; 
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys &lt;key-id&gt; 
+sudo apt-get update 
+</pre><p>```</p>
+<p>Replacing <code>&lt;ppa-link&gt;</code> with <code>ppa:tsgl-test/tsgl-dev</code>, and replacing <code>&lt;key-id&gt;</code> with the one associated with your GPG key (see [[GPG keys and You]]).</p>
+<p>This is so that you can send and receive packages to the PPA repo (assuming that you are allowed to; see [[PPA and our TSGL team]]). </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2016 13:26:46 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2016 13:44:12 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

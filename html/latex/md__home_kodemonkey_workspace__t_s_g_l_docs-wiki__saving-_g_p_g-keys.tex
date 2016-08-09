@@ -1,1 +1,87 @@
-$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S$\ast$$\ast$$\ast$ 
+
+
+ \subsection*{$\vert$ I\-M\-P\-O\-R\-T\-I\-N\-G A\-N\-D E\-X\-P\-O\-R\-T\-I\-N\-G G\-P\-G K\-E\-Y\-S (Last updated\-: 08/09/16) $\vert$ }
+
+Imagine yourself chugging along, building Debian packages, when all of a sudden, your computer crashes.
+
+All of your data, lost!
+
+Especially...your G\-P\-G keys!
+
+Okay, your G\-P\-G keys may be the last thing on your mind when your computer crashes. But, without them, you can't sign Debian packages.
+
+\char`\"{}\-Ha, Right!\char`\"{} You say. \char`\"{}\-I remember my key I\-D! I can just use that when I use ```debuild```!\char`\"{} (See \mbox{[}\mbox{[}Creating New Deb Packages\mbox{]}\mbox{]} for more info on {\ttfamily debuild}).
+
+No. It doesn't work that way. You need both the public and private G\-P\-G key on the system in order to have the luxury of using just the key I\-D.
+
+\char`\"{}\-Well...\-I can get my key back from the keyserver on Ubuntu!\char`\"{}
+
+Sorry, we tried to do that. No luck.
+
+\char`\"{}\-Are you saying that I have to create a new G\-P\-G key?\char`\"{}
+
+That's only the tip of it.
+
+Not only do you have to create a new G\-P\-G key, you'll also have to\-:
+
+
+\begin{DoxyItemize}
+\item revoke your old key
+\item send the new key to the Ubuntu keyserver
+\item wait 10 minutes
+\item and memorize a brand new key I\-D.
+\end{DoxyItemize}
+
+Here's \href{http://askubuntu.com/questions/191767/is-it-possible-to-recover-a-secret-key-from-a-gpg-public-key}{\tt why}.
+
+Unless you exported your key beforehand, you are out of luck.
+
+This guide will help you make backups of your keys so that you can avoid a scenario like this. (And will also remind you to make backups of your data! Especially your Debian package data!!) 
+
+ \subsection*{$\vert$ Exporting keys $\vert$ }
+
+Type\-:
+
+``` \begin{DoxyVerb}gpg --export <key-id> > public.key
+gpg --export-secret-key <key-id> > private.key
+\end{DoxyVerb}
+
+
+```
+
+Replacing {\ttfamily $<$key-\/id$>$} with the one associated with your G\-P\-G key (see \mbox{[}\mbox{[}G\-P\-G keys and You\mbox{]}\mbox{]}).
+
+Move the {\ttfamily .key} files to a secure place (e.\-g. Google Drive, U\-S\-B drive...)
+
+That should keep your G\-P\-G keys safe. 
+
+ \subsection*{$\vert$ Importing keys $\vert$ }
+
+In the event of a computer crash, hard drive malfunction, or some other unfortunate occurrence, follow this process to get your G\-P\-G keys back (assuming you exported them beforehand!!!).
+
+1). Find the {\ttfamily .key} files that you exported.
+
+2). Put them on the system you wish to import the keys on.
+
+3). Type\-:
+
+``` \begin{DoxyVerb}gpg --import public.key
+gpg --allow-secret-key-import --import private.key
+\end{DoxyVerb}
+
+
+```
+
+4). Type\-:
+
+``` \begin{DoxyVerb}sudo add-apt-repository <ppa-link> 
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys <key-id> 
+sudo apt-get update 
+\end{DoxyVerb}
+
+
+```
+
+Replacing {\ttfamily $<$ppa-\/link$>$} with {\ttfamily ppa\-:tsgl-\/test/tsgl-\/dev}, and replacing {\ttfamily $<$key-\/id$>$} with the one associated with your G\-P\-G key (see \mbox{[}\mbox{[}G\-P\-G keys and You\mbox{]}\mbox{]}).
+
+This is so that you can send and receive packages to the P\-P\-A repo (assuming that you are allowed to; see \mbox{[}\mbox{[}P\-P\-A and our T\-S\-G\-L team\mbox{]}\mbox{]}). 
