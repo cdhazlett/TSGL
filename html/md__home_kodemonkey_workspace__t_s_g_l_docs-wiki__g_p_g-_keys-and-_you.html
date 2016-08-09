@@ -144,6 +144,17 @@ uid                  Real Name &lt;Email@Email.com&gt;
 sub   #####/******** 2016-06-20
 </pre><p>```</p>
 <p>The <code>*********</code> in the <code>sub</code> line is what you will use as your <code>&lt;key-id&gt;</code> when signing packages. You can also use the <code>*********</code> in the <code>pub</code> line, but <em>PLEASE</em> be consistent!</p>
+<p>To get the GPG key fingerprint (which is what you'll need if you haven't seen our [[PPA and our TSGL team]] page!), type:</p>
+<p>``` </p>
+<pre class="fragment">gpg --fingerprint
+</pre><p>```</p>
+<p>You should see something like this:</p>
+<p>``` </p>
+<pre class="fragment">pub   #####/******** 2016-06-02
+      Key fingerprint = **** **** **** **** ****  **** **** **** **** ****
+uid                  Real Name &lt;Email@Email.com&gt;
+sub   #####/******** 2016-06-02
+</pre><p><code> The</code>Key fingerprint = **** **** **** **** **** **** **** **** **** **** ``` is your fingerprint.</p>
 <p>You should now be ready to sign Debian packages!</p>
 <p>If you haven't already, please see the [[PPA and our TSGL team]] page.</p>
 <p>You may also want to take a look at the [[Saving GPG keys]] page, if you haven't already.</p>
@@ -155,7 +166,7 @@ sub   #####/******** 2016-06-20
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2016 13:44:12 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2016 14:29:44 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

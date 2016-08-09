@@ -116,6 +116,25 @@ sub   #####/******** 2016-06-20
 
 The {\ttfamily $\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$} in the {\ttfamily sub} line is what you will use as your {\ttfamily $<$key-\/id$>$} when signing packages. You can also use the {\ttfamily $\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$$\ast$} in the {\ttfamily pub} line, but {\itshape P\-L\-E\-A\-S\-E} be consistent!
 
+To get the G\-P\-G key fingerprint (which is what you'll need if you haven't seen our \mbox{[}\mbox{[}P\-P\-A and our T\-S\-G\-L team\mbox{]}\mbox{]} page!), type\-:
+
+``` \begin{DoxyVerb}gpg --fingerprint
+\end{DoxyVerb}
+
+
+```
+
+You should see something like this\-:
+
+``` \begin{DoxyVerb}pub   #####/******** 2016-06-02
+      Key fingerprint = **** **** **** **** ****  **** **** **** **** ****
+uid                  Real Name <Email@Email.com>
+sub   #####/******** 2016-06-02
+\end{DoxyVerb}
+
+
+{\ttfamily  The}Key fingerprint = $\ast$$\ast$$\ast$$\ast$ $\ast$$\ast$$\ast$$\ast$ $\ast$$\ast$$\ast$$\ast$ $\ast$$\ast$$\ast$$\ast$ $\ast$$\ast$$\ast$$\ast$ $\ast$$\ast$$\ast$$\ast$ $\ast$$\ast$$\ast$$\ast$ $\ast$$\ast$$\ast$$\ast$ $\ast$$\ast$$\ast$$\ast$ $\ast$$\ast$$\ast$$\ast$ ``` is your fingerprint.
+
 You should now be ready to sign Debian packages!
 
 If you haven't already, please see the \mbox{[}\mbox{[}P\-P\-A and our T\-S\-G\-L team\mbox{]}\mbox{]} page.
