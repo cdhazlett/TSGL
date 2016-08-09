@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.8.6"/>
-<title>TSGL: Installing-TSGL</title>
+<title>TSGL: Introduction</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -76,48 +76,41 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div><!-- top -->
 <div class="header">
   <div class="headertitle">
-<div class="title">Installing-TSGL </div>  </div>
+<div class="title">Introduction </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***WORK IN PROGRESS!!!***</p>
-<h3>Introduction</h3>
-<p>There are two main ways that you can install TSGL: via a binary package (recommended), or directly from source.</p>
-<p>In essence, the binary packages depend on a laundry list of dependencies. The same is true when you install from source.</p>
+<div class="textblock"><p>As of summer 2016, there are two main ways that you can install TSGL:</p>
+<ul>
+<li>via a binary package ***(recommended)***.</li>
+<li>directly from source.</li>
+</ul>
+<p>In essence, the binary packages depend on a laundry list of dependencies.</p>
+<p>The same is true when you install from source.</p>
 <p>However, the three main dependencies are:</p>
 <ul>
 <li><a href="https://www.freetype.org/download.html">FreeType</a></li>
 <li><a href="https://www.glfw.org/download.html">GLFW</a></li>
 <li><a href="https://downloads.sourceforge.net/project/glew/glew/1.12.0/glew-1.12.0.zip">GLEW</a></li>
 </ul>
-<p>These, along with the other dependencies (doxygen, development header files, ...), are installed along with TSGL regardless of which method you choose.</p>
-<p>When installing TSGL using a binary package, the following is true:</p>
+<p>These, along with the other dependencies (<code>doxygen</code>, development header files, ...), are installed along with TSGL regardless of which method you choose.</p>
+<p>When installing TSGL using a binary package on Ubuntu &amp; Fedora, the following is true:</p>
 <ul>
 <li>Debian/Ubuntu:<ul>
-<li>The Debian packages install libfreetype6 and libfreetype6-dev. This resolves the FreeType dependency.</li>
-<li>The Debian packages install libglew-dev. This resolves the GLEW dependency.</li>
-<li>A packaged version of the GLFW library is installed along with the TSGL Debian packages. This resolves the GLFW dependency.</li>
-<li>An OpenGL version check occurs before the packages are installed in order to see if the version is sufficient (&gt;= 3.0). If the version is not sufficient, the packages will not be installed. Should this happen, you can update your graphics drivers by typing the following command: <code>sudo ubuntu-drivers autoinstall</code>. If that does not work, there are plenty of online tutorials which should help you.</li>
+<li>The Debian packages install <code>libfreetype6</code> and <code>libfreetype6-dev</code>. This resolves the FreeType dependency.</li>
+<li>The Debian packages install <code>libglew-dev</code>. This resolves the GLEW dependency.</li>
+<li>A packaged version of the <code>GLFW</code> library is installed along with the TSGL Debian packages. This resolves the GLFW dependency.</li>
+<li>Please be sure to have ***at least OpenGL 3.0 or greater*** on your machine. You can update your graphics drivers by typing the following command: <code>sudo ubuntu-drivers autoinstall</code>. If that does not work, there are plenty of online tutorials which should help you.</li>
 </ul>
 </li>
 <li>Fedora/RPM:<ul>
-<li>The RPM package installs freetype and freetype-devel. This resolves the FreeType dependency.</li>
-<li>The RPM package installs glew and glew-devel. This resolves the GLEW dependency.</li>
-<li>A packaged version of the GLFW library (named glfwTSGL) is also installed along with TSGL. This resolves the GLFW dependency.</li>
-<li>As with the Debian packages, an OpenGL version check occurs before the RPM package is installed. If the version is less than 3.0, the package is not installed. Should this happen, there are many online tutorials which will help you to update your graphics drivers (and the OpenGL version).</li>
+<li>The RPM package installs <code>freetype</code> and <code>freetype-devel</code>. This resolves the FreeType dependency.</li>
+<li>The RPM package installs <code>glew</code> and <code>glew-devel</code>. This resolves the GLEW dependency.</li>
+<li>A packaged version of the <code>GLFW</code> library (named <code>glfwTSGL</code>) is also installed along with TSGL. This resolves the GLFW dependency.</li>
+<li>As with the Debian packages, please be sure to have ***at least OpenGL 3.0 or greater*** on your machine!</li>
 </ul>
 </li>
 </ul>
-<p>As for installing from source, the following is true:</p>
-<ul>
-<li>Debian/Ubuntu:<ul>
-<li></li>
-</ul>
-</li>
-<li>Fedora/RPM:<ul>
-<li></li>
-</ul>
-</li>
-</ul>
+<p>Given this, let's take a closer look at the ways you can install TSGL.</p>
 <h3>Install TSGL From Binary Package</h3>
 <p>Please see the respective page for you OS:</p>
 <ul>
@@ -130,12 +123,24 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li><a href="https://github.com/Calvin-CS/TSGL/wiki/MacOS-X">MacOS X</a></li>
 </ul>
 </li>
+<li><a href="https://github.com/Calvin-CS/TSGL/blob/master/readMeWindows.txt">Windows</a></li>
 </ul>
 <h3>Install TSGL From Source</h3>
+<p>Use the appropriate script for your OS:</p>
+<ul>
+<li>Linux<ul>
+<li>Ubuntu: <a href="https://github.com/Calvin-CS/TSGL/blob/master/install-ubuntu.sh">install-ubuntu.sh</a></li>
+<li>Fedora: <a href="https://github.com/Calvin-CS/TSGL/blob/master/install-fedora.sh">install-fedora.sh</a></li>
+<li>CentOS: <a href="https://github.com/Calvin-CS/TSGL/blob/master/install-centos.sh">install-centos.sh</a></li>
+</ul>
+</li>
+<li>MacOS: <a href="https://github.com/Calvin-CS/TSGL/blob/master/install-mac">install-mac</a></li>
+</ul>
+<p>(There are currently ***NO*** source install scripts for Windows). </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Fri Aug 5 2016 16:59:53 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Tue Aug 9 2016 10:48:52 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
