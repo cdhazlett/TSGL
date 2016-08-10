@@ -79,16 +79,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">PPA-and-our-TSGL-team </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>***WORK IN PROGRESS*** </p>
-<hr/>
- <h2>| INFORMATION ABOUT OUR PPA AND CONTRIBUTING TO THE TSGL DEBIAN PACKAGE (Last updated: 08/09/16) | </h2>
+<div class="textblock"><hr/>
+ <h2>| INFORMATION ABOUT OUR PPA AND CONTRIBUTING TO THE TSGL DEBIAN PACKAGE (Last updated: 08/10/16) | </h2>
 <p>As of summer 2016, we currently have a PPA (Personal Package Archive) on <a href="https://launchpad.net/">Launchpad</a> for our TSGL Debian packages.</p>
 <p>You can visit our PPA by clicking <a href="https://launchpad.net/~tsgl-test/+archive/ubuntu/tsgl-dev">here</a>.</p>
 <p>We also have a moderated team which allows us to add users, like you, so that the Debian package can be updated by others.</p>
 <p>You will, however, need a Launchpad account in order to be added to our team. </p>
 <hr/>
  <h2>| Launchpad account | </h2>
-<p>***NOTE:*** If you have already created a Launchpad account, feel free to skip this section.</p>
+<p>***NOTE:*** If you have already created a Launchpad account, feel free to skip this section and move onto the next.</p>
 <p>Follow the process as described <a href="https://login.launchpad.net/+new_account">here</a> in order to create an account.</p>
 <p>Once you create your account (and have validated your email), log into <a href="https://launchpad.net/">Launchpad</a>. </p>
 <hr/>
@@ -98,13 +97,68 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>On your profile page, you should see <code>Signed Ubuntu Code of Conduct:</code> somewhere. If you have created a new account, it should say <code>No</code>.</p>
 <p>In order to sign packages, upload them to PPAs, create your own PPAs, etcetera you'll have to sign that Code of Conduct.</p>
 <p><a href="https://launchpad.net/codeofconduct">Follow this process in order to sign the Ubuntu Code of Conduct</a>.</p>
-<p>***NOTE:*** See [[GPG keys and You]] on how to create a GPG key and get its fingerprint for step 1. </p>
+<p>***NOTE:*** See [[GPG keys and You]] on how to create a GPG key and get its fingerprint for step 1. ***NOTE:*** If you see something like this when you try to import your GPG key using its fingerprint:</p>
+<p>```</p>
+<p>Launchpad could not import your OpenPGP key Did you enter your complete fingerprint correctly? (Help with fingerprints) Is your key in the Ubuntu keyserver yet? You may have to wait between ten minutes (if you pushed directly to the Ubuntu key server) and one hour (if you pushed your key to another server). (Help with publishing keys)</p>
+<p>```</p>
+<p>And you've followed the process as outlined in [[GPG keys and You]], wait 10 minutes for your key to get into the Ubuntu keyserver.</p>
+<p>***NOTE:*** After you import your GPG key, you will be sent an email in order to validate the key.</p>
+<p>The contents will look something like:</p>
+<p>``` </p>
+<pre class="fragment">-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+&lt;Encrypted message here&gt;
+
+-----END PGP MESSAGE-----
+</pre><p>```</p>
+<p>You will have to decode that message in order to validate your key.</p>
+<p>To do so easily, copy the encrypted message (from <code>-----BEGIN PGP MESSAGE-----</code> to <code>-----END PGP MESSAGE-----</code> (***including those two lines***) ), open up a text editor, and paste the message into a text file. Save the file as <code>encKey.txt</code>, and open up a terminal.</p>
+<p>Go to the spot where you have <code>encKey.txt</code>, and type the following command:</p>
+<p>``` </p>
+<pre class="fragment">gpg -d encKey.txt
+</pre><p>```</p>
+<p>You will be prompted for the passphrase associated with your GPG key.</p>
+<p>After you type your password in, you should see the decrypted message in your terminal. In particular, something like this at the end:</p>
+<p>``` </p>
+<pre class="fragment">Please go here to finish adding the key to your Launchpad account:
+
+&lt;URL-link&gt;
+</pre><p>```</p>
+<p>Copy the &lt;URL-link&gt; and paste it into a web browser. You should be taken to a page which says that you'd like to confirm your GPG key. Click "Continue", and you should be taken back to your profile page with a notification that says:</p>
+<p>``` </p>
+<pre class="fragment">The key #####/******** was successfully validated.
+</pre><p>```</p>
+<p>Congrats! You validated your GPG key and completed step 1.</p>
+<p>***NOTE:*** If you happen to have multiple GPG keys, use the following command in order to sign the Ubuntu Code of Conduct with <em>YOUR</em> key:</p>
+<p>``` </p>
+<pre class="fragment">gpg --clearsign -u0x&lt;your-key-id&gt; UbuntuCodeofConduct-2.0.txt 
+</pre><p>```</p>
+<p>Replacing <code>&lt;your-key-id&gt;</code> with the key id associated with your name and email. </p>
 <hr/>
  <h2>| Contributing to the TSGL Debian package | </h2>
+<p>Now that you've created a Launchpad account and have signed the Ubuntu Code of Conduct, it's time to be added to our team.</p>
+<p>Our team is known as <code>tsgl-team</code> on Launchpad, which you can view <a href="https://launchpad.net/~tsgl-test">here</a>.</p>
+<p>To join our team, you can click on the <code>+ Join the team</code> link, which is found on our profile page.</p>
+<p>Once you do this, you'll be given this message:</p>
+<p>``` </p>
+<pre class="fragment">Are you sure you want to join this team?
+
+Since this is a moderated team, one of its administrators will have to approve your membership before you actually become a member. 
+</pre><p>```</p>
+<p>Click "Join", and you'll be taken back to our profile page.</p>
+<p>We will be notified of your request to join, and will accept it when we can!</p>
+<p>Once you have been accepted, you will be able to contribute to our Debian package!</p>
+<p>To get started, you can take a look at our [[Creating new Deb Packages]] page. </p>
+<hr/>
+ <h2>| MISC | </h2>
+<p>Found something misleading? Perhaps we made an error? Check out the links below in order to receive more help!</p>
+<p><a href="http://lists.gnupg.org/pipermail/gnupg-users/2004-May/022471.html">http://lists.gnupg.org/pipermail/gnupg-users/2004-May/022471.html</a></p>
+<p>***PLEASE*** update this document if you come across new links, or if there's missing/false information. </p>
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2016 15:45:15 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Aug 10 2016 11:29:51 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

@@ -53,9 +53,8 @@ Type {\ttfamily 1}, then hit {\ttfamily E\-N\-T\-E\-R}.
 
 3). Next prompt\-:
 
-``` \begin{DoxyVerb}DSA keypair will have 1024 bits.
-ELG-E keys may be between 1024 and 4096 bits long.
-What keysize do you want? (2048)
+``` \begin{DoxyVerb}RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048) 
 \end{DoxyVerb}
 
 
@@ -63,15 +62,47 @@ What keysize do you want? (2048)
 
 Type {\ttfamily 2048}, and hit {\ttfamily E\-N\-T\-E\-R}.
 
-4). Type {\ttfamily 0} for the next prompt, and hit {\ttfamily E\-N\-T\-E\-R}.
+4). Next prompt\-:
 
-5). Type {\ttfamily yes} for the next prompt, and hit {\ttfamily E\-N\-T\-E\-R}.
+``` \begin{DoxyVerb}Please specify how long the key should be valid.
+         0 = key does not expire
+      <n>  = key expires in n days
+      <n>w = key expires in n weeks
+      <n>m = key expires in n months
+      <n>y = key expires in n years
+Key is valid for? (0) 
+\end{DoxyVerb}
 
-6). Use your name and email for the {\ttfamily Real Name} and {\ttfamily Email} portion.
 
-7). You will now be asked for a passphrase. Make this something easy for you to remember, but hard for others to guess. Keep this passphrase in mind, because you'll need it whenever you sign Debian packages with this new key.
+```
 
-8). Your key will now be generated.
+Type{\ttfamily 0}, and hit {\ttfamily E\-N\-T\-E\-R}. Type {\ttfamily y} afterwards and hit {\ttfamily E\-N\-T\-E\-R}.
+
+5). Next prompt\-:
+
+``` You need a user I\-D to identify your key; the software constructs the user I\-D from the Real Name, Comment and Email Address in this form\-: \char`\"{}\-Heinrich Heine (\-Der Dichter) $<$heinrichh@duesseldorf.\-de$>$\char`\"{}
+
+Real name\-:
+
+```
+
+Use your name and email for the {\ttfamily Real name\-:} and {\ttfamily Email address\-:} portion. For the {\ttfamily Comment\-:}{\ttfamily part, you can just press}{\ttfamily E\-N\-T\-E\-R}`.
+
+Once you have done that, you should be shown this\-:
+
+```
+
+You selected this U\-S\-E\-R-\/\-I\-D\-: \char`\"{}\-Real name (\-Comment) $<$\-Email address$>$\char`\"{}
+
+Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit?
+
+```
+
+Make any changes, then type {\ttfamily O} to move on.
+
+6). You will now be asked for a passphrase. Make this something easy for you to remember, but hard for others to guess. Keep this passphrase in mind, because you'll need it whenever you sign Debian packages with this new key.
+
+7). Your key will now be generated.
 
 Now that your key is generated, it's time to send it to the Ubuntu keyserver.
 
@@ -96,7 +127,7 @@ Once you have the {\ttfamily $<$key-\/id$>$} copied, type\-:
 
 (Replacing {\ttfamily $<$key-\/id$>$} with the key id that you copied).
 
-After waiting for 10 minutes or so, type\-:
+Now, type\-:
 
 ``` \begin{DoxyVerb}gpg --list-keys
 \end{DoxyVerb}

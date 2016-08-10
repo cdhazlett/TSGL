@@ -1,6 +1,6 @@
-$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S$\ast$$\ast$$\ast$ 
 
- \subsection*{$\vert$ I\-N\-F\-O\-R\-M\-A\-T\-I\-O\-N A\-B\-O\-U\-T O\-U\-R P\-P\-A A\-N\-D C\-O\-N\-T\-R\-I\-B\-U\-T\-I\-N\-G T\-O T\-H\-E T\-S\-G\-L D\-E\-B\-I\-A\-N P\-A\-C\-K\-A\-G\-E (Last updated\-: 08/09/16) $\vert$ }
+
+ \subsection*{$\vert$ I\-N\-F\-O\-R\-M\-A\-T\-I\-O\-N A\-B\-O\-U\-T O\-U\-R P\-P\-A A\-N\-D C\-O\-N\-T\-R\-I\-B\-U\-T\-I\-N\-G T\-O T\-H\-E T\-S\-G\-L D\-E\-B\-I\-A\-N P\-A\-C\-K\-A\-G\-E (Last updated\-: 08/10/16) $\vert$ }
 
 As of summer 2016, we currently have a P\-P\-A (Personal Package Archive) on \href{https://launchpad.net/}{\tt Launchpad} for our T\-S\-G\-L Debian packages.
 
@@ -12,7 +12,7 @@ You will, however, need a Launchpad account in order to be added to our team.
 
  \subsection*{$\vert$ Launchpad account $\vert$ }
 
-$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ If you have already created a Launchpad account, feel free to skip this section.
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ If you have already created a Launchpad account, feel free to skip this section and move onto the next.
 
 Follow the process as described \href{https://login.launchpad.net/+new_account}{\tt here} in order to create an account.
 
@@ -30,6 +30,105 @@ In order to sign packages, upload them to P\-P\-As, create your own P\-P\-As, et
 
 \href{https://launchpad.net/codeofconduct}{\tt Follow this process in order to sign the Ubuntu Code of Conduct}.
 
-$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ See \mbox{[}\mbox{[}G\-P\-G keys and You\mbox{]}\mbox{]} on how to create a G\-P\-G key and get its fingerprint for step 1. 
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ See \mbox{[}\mbox{[}G\-P\-G keys and You\mbox{]}\mbox{]} on how to create a G\-P\-G key and get its fingerprint for step 1. $\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ If you see something like this when you try to import your G\-P\-G key using its fingerprint\-:
+
+```
+
+Launchpad could not import your Open\-P\-G\-P key Did you enter your complete fingerprint correctly? (Help with fingerprints) Is your key in the Ubuntu keyserver yet? You may have to wait between ten minutes (if you pushed directly to the Ubuntu key server) and one hour (if you pushed your key to another server). (Help with publishing keys)
+
+```
+
+And you've followed the process as outlined in \mbox{[}\mbox{[}G\-P\-G keys and You\mbox{]}\mbox{]}, wait 10 minutes for your key to get into the Ubuntu keyserver.
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ After you import your G\-P\-G key, you will be sent an email in order to validate the key.
+
+The contents will look something like\-:
+
+``` \begin{DoxyVerb}-----BEGIN PGP MESSAGE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+<Encrypted message here>
+
+-----END PGP MESSAGE-----
+\end{DoxyVerb}
+
+
+```
+
+You will have to decode that message in order to validate your key.
+
+To do so easily, copy the encrypted message (from {\ttfamily -\/-\/-\/-\/-\/\-B\-E\-G\-I\-N P\-G\-P M\-E\-S\-S\-A\-G\-E-\/-\/-\/-\/-\/} to {\ttfamily -\/-\/-\/-\/-\/\-E\-N\-D P\-G\-P M\-E\-S\-S\-A\-G\-E-\/-\/-\/-\/-\/} ($\ast$$\ast$$\ast$including those two lines$\ast$$\ast$$\ast$) ), open up a text editor, and paste the message into a text file. Save the file as {\ttfamily enc\-Key.\-txt}, and open up a terminal.
+
+Go to the spot where you have {\ttfamily enc\-Key.\-txt}, and type the following command\-:
+
+``` \begin{DoxyVerb}gpg -d encKey.txt
+\end{DoxyVerb}
+
+
+```
+
+You will be prompted for the passphrase associated with your G\-P\-G key.
+
+After you type your password in, you should see the decrypted message in your terminal. In particular, something like this at the end\-:
+
+``` \begin{DoxyVerb}Please go here to finish adding the key to your Launchpad account:
+
+<URL-link>
+\end{DoxyVerb}
+
+
+```
+
+Copy the $<$U\-R\-L-\/link$>$ and paste it into a web browser. You should be taken to a page which says that you'd like to confirm your G\-P\-G key. Click \char`\"{}\-Continue\char`\"{}, and you should be taken back to your profile page with a notification that says\-:
+
+``` \begin{DoxyVerb}The key #####/******** was successfully validated.
+\end{DoxyVerb}
+
+
+```
+
+Congrats! You validated your G\-P\-G key and completed step 1.
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ If you happen to have multiple G\-P\-G keys, use the following command in order to sign the Ubuntu Code of Conduct with {\itshape Y\-O\-U\-R} key\-:
+
+``` \begin{DoxyVerb}gpg --clearsign -u0x<your-key-id> UbuntuCodeofConduct-2.0.txt 
+\end{DoxyVerb}
+
+
+```
+
+Replacing {\ttfamily $<$your-\/key-\/id$>$} with the key id associated with your name and email. 
 
  \subsection*{$\vert$ Contributing to the T\-S\-G\-L Debian package $\vert$ }
+
+Now that you've created a Launchpad account and have signed the Ubuntu Code of Conduct, it's time to be added to our team.
+
+Our team is known as {\ttfamily tsgl-\/team} on Launchpad, which you can view \href{https://launchpad.net/~tsgl-test}{\tt here}.
+
+To join our team, you can click on the {\ttfamily + Join the team} link, which is found on our profile page.
+
+Once you do this, you'll be given this message\-:
+
+``` \begin{DoxyVerb}Are you sure you want to join this team?
+
+Since this is a moderated team, one of its administrators will have to approve your membership before you actually become a member. 
+\end{DoxyVerb}
+
+
+```
+
+Click \char`\"{}\-Join\char`\"{}, and you'll be taken back to our profile page.
+
+We will be notified of your request to join, and will accept it when we can!
+
+Once you have been accepted, you will be able to contribute to our Debian package!
+
+To get started, you can take a look at our \mbox{[}\mbox{[}Creating new Deb Packages\mbox{]}\mbox{]} page. 
+
+ \subsection*{$\vert$ M\-I\-S\-C $\vert$ }
+
+Found something misleading? Perhaps we made an error? Check out the links below in order to receive more help!
+
+\href{http://lists.gnupg.org/pipermail/gnupg-users/2004-May/022471.html}{\tt http\-://lists.\-gnupg.\-org/pipermail/gnupg-\/users/2004-\/\-May/022471.\-html}
+
+$\ast$$\ast$$\ast$\-P\-L\-E\-A\-S\-E$\ast$$\ast$$\ast$ update this document if you come across new links, or if there's missing/false information. 

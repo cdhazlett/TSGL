@@ -110,16 +110,34 @@ Your selection?
 <p>Type <code>1</code>, then hit <code>ENTER</code>.</p>
 <p>3). Next prompt:</p>
 <p>``` </p>
-<pre class="fragment">DSA keypair will have 1024 bits.
-ELG-E keys may be between 1024 and 4096 bits long.
-What keysize do you want? (2048)
+<pre class="fragment">RSA keys may be between 1024 and 4096 bits long.
+What keysize do you want? (2048) 
 </pre><p>```</p>
 <p>Type <code>2048</code>, and hit <code>ENTER</code>.</p>
-<p>4). Type <code>0</code> for the next prompt, and hit <code>ENTER</code>.</p>
-<p>5). Type <code>yes</code> for the next prompt, and hit <code>ENTER</code>.</p>
-<p>6). Use your name and email for the <code>Real Name</code> and <code>Email</code> portion.</p>
-<p>7). You will now be asked for a passphrase. Make this something easy for you to remember, but hard for others to guess. Keep this passphrase in mind, because you'll need it whenever you sign Debian packages with this new key.</p>
-<p>8). Your key will now be generated.</p>
+<p>4). Next prompt:</p>
+<p>``` </p>
+<pre class="fragment">Please specify how long the key should be valid.
+         0 = key does not expire
+      &lt;n&gt;  = key expires in n days
+      &lt;n&gt;w = key expires in n weeks
+      &lt;n&gt;m = key expires in n months
+      &lt;n&gt;y = key expires in n years
+Key is valid for? (0) 
+</pre><p>```</p>
+<p>Type<code>0</code>, and hit <code>ENTER</code>. Type <code>y</code> afterwards and hit <code>ENTER</code>.</p>
+<p>5). Next prompt:</p>
+<p>``` You need a user ID to identify your key; the software constructs the user ID from the Real Name, Comment and Email Address in this form: "Heinrich Heine (Der Dichter) &lt;heinrichh@duesseldorf.de&gt;"</p>
+<p>Real name:</p>
+<p>```</p>
+<p>Use your name and email for the <code>Real name:</code> and <code>Email address:</code> portion. For the <code>Comment:</code><code>part, you can just press</code><code>ENTER</code>`.</p>
+<p>Once you have done that, you should be shown this:</p>
+<p>```</p>
+<p>You selected this USER-ID: "Real name (Comment) &lt;Email address&gt;"</p>
+<p>Change (N)ame, (C)omment, (E)mail or (O)kay/(Q)uit?</p>
+<p>```</p>
+<p>Make any changes, then type <code>O</code> to move on.</p>
+<p>6). You will now be asked for a passphrase. Make this something easy for you to remember, but hard for others to guess. Keep this passphrase in mind, because you'll need it whenever you sign Debian packages with this new key.</p>
+<p>7). Your key will now be generated.</p>
 <p>Now that your key is generated, it's time to send it to the Ubuntu keyserver.</p>
 <p>First, copy the <code>&lt;key-id&gt;</code> part of the text that was generated after your key was generated:</p>
 <p>``` </p>
@@ -133,7 +151,7 @@ public and secret key created and signed.
 <pre class="fragment">gpg --send-keys --keyserver keyserver.ubuntu.com &lt;key-id&gt;
 </pre><p>```</p>
 <p>(Replacing <code>&lt;key-id&gt;</code> with the key id that you copied).</p>
-<p>After waiting for 10 minutes or so, type:</p>
+<p>Now, type:</p>
 <p>``` </p>
 <pre class="fragment">gpg --list-keys
 </pre><p>```</p>
@@ -166,7 +184,7 @@ sub   #####/******** 2016-06-02
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Tue Aug 9 2016 15:45:15 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Aug 10 2016 11:29:51 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
