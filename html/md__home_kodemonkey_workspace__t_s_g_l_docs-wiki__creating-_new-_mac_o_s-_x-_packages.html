@@ -83,59 +83,59 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
  <h2>| CREATING A NEW MAC OS X INSTALLER PACKAGE (Last updated: 07/22/16) | </h2>
 <p>***WORK IN PROGRESS!!!"***</p>
 <ul>
-<li>Need to put .dmg file into GitHub repo.</li>
 <li>Need to finalize this page.</li>
 </ul>
+<p>Creating a new .pkg Installer for Mac OS X isn't as difficult as RPM or Debian package creation.</p>
 <p>You do have to be on a Mac, however.</p>
-<p>If you cannot procure a Mac with OS X 10.5 or greater (or a VM with OS X 10.5 or greater on it), ***please stop reading and go get a Mac***.</p>
+<p>If you cannot procure a Mac with OS X 10.5 or greater (or a VM with OS X 10.5 or greater on it, <em>though this has not been tested</em>), ***please stop reading and go get a Mac***.</p>
 <p>Otherwise, please continue. </p>
 <hr/>
  <h2>| Packages | </h2>
-<p>When we first started to create the Mac OS X Installer package, we used a tool called "Packages".</p>
+<p>When we first started to create the Mac OS X Installer package, we used a tool called <code>Packages</code>.</p>
 <p>This made the process of creating a Mac OS X binary installer much easier and less tedious.</p>
 <p>You have to download it from this <a href="http://s.sudre.free.fr/Software/Packages/about.html">link</a>.</p>
-<p>The download will be a .dmg file. Move it to your Desktop.</p>
-<p>Now, mount it. (Double-click on it). You should see a Volume appear on your Desktop with the name, "Packages #.#.#". Double-click on it.</p>
-<p>Now, double-click on the "Install Packages.pkg" file.</p>
-<p>Follow the installation process, and you should have the Packages tool installed. </p>
+<p>The download will be a <code>.dmg</code> file. Move it to your <code>Desktop</code>.</p>
+<p>Now, mount it. (Double-click on it). You should see a Volume appear on your <code>Desktop</code> with the name, <code>Packages #.#.#</code>. Double-click on it.</p>
+<p>Now, double-click on the <code>Install Packages.pkg</code> file.</p>
+<p>Follow the installation process, and you should have the <code>Packages</code> tool installed. </p>
 <hr/>
  <h2>| Creating the TSGL Installer | </h2>
-<p>After installing Packages, open up the application.</p>
-<p>A screen should pop-up with the title, "New Project".</p>
+<p>After installing <code>Packages</code>, open up the application.</p>
+<p>A screen should pop-up with the title, <code>New Project</code>.</p>
 <p>This is where you choose what project you'd like to make.</p>
-<p>We used the "Distribution" template, so go ahead and click on that option.</p>
-<p>Click "Next".</p>
-<p>The project name will be "InstallTSGL", and the project directory will be "~/Desktop".</p>
+<p>We used the <code>Distribution</code> template, so go ahead and click on that option.</p>
+<p>Click <code>Next</code>.</p>
+<p>The project name will be <code>InstallTSGL</code>, and the project directory will be <code>~/Desktop</code>.</p>
 <p>A screen should appear showing you the project details.</p>
 <p>In here, you can edit the settings for the project, how the Installer looks, and more.</p>
-<p>On the left, you'll see a section named "PACKAGES".</p>
-<p>At the moment, there's only one package in it: InstallTSGL.</p>
-<p>We're going to rename it to just "TSGL".</p>
-<p>Double-click on it, and when the text appears highlighted, type "TSGL" and hit ENTER.</p>
-<p>Now, take a look at the "Settings" page.</p>
+<p>On the left, you'll see a section named <code>PACKAGES</code>.</p>
+<p>At the moment, there's only one package in it: <code>InstallTSGL</code>.</p>
+<p>We're going to rename it to just <code>TSGL</code>.</p>
+<p>Double-click on it, and when the text appears highlighted, type <code>TSGL</code> and hit <code>ENTER</code>.</p>
+<p>Now, take a look at the <code>Settings</code> page.</p>
 <p>This contains the settings that you can edit for this package.</p>
-<p>If you take a look at the text box next to the "Identifier: " label, you can see that the Identifier for the package still has "InstallTSGL" at the end.</p>
-<p>We're going to change the "InstallTSGL" part to say "TSGL".</p>
-<p>Click on the text box next to the "Identifier: " label, and delete the "InstallTSGL" part. Replace it with "TSGL" and hit ENTER.</p>
-<p>We can now leave the "Settings" page as it is.</p>
-<p>On the left, click on "Project".</p>
-<p>You'll be taken back to the "Settings" page for the Installer.</p>
-<p>Leave the "Settings" page as is, and click on the "Presentation" tab.</p>
-<p>In here, you'll be able to customize the text for the Introduction, Read Me, and License screens.</p>
+<p>If you take a look at the text box next to the <code>Identifier:</code> label, you can see that the Identifier for the package still has <code>InstallTSGL</code> at the end.</p>
+<p>We're going to change the <code>InstallTSGL</code> part to say <code>TSGL</code>.</p>
+<p>Click on the text box next to the <code>Identifier:</code> label, and delete the <code>InstallTSGL</code> part. Replace it with <code>TSGL</code> and hit <code>ENTER</code>.</p>
+<p>We can now leave the <code>Settings</code> page as it is.</p>
+<p>On the left, click on <code>Project</code>.</p>
+<p>You'll be taken back to the <code>Settings</code> page for the Installer.</p>
+<p>Leave the <code>Settings</code> page as is, and click on the <code>Presentation</code> tab.</p>
+<p>In here, you'll be able to customize the text for the <code>Introduction</code>, <code>Read Me</code>, and <code>License</code> screens.</p>
 <p>To do so, we must first create the text files that will hold the customized screen text.</p>
-<p>Create three new text files: intro.txt, README.txt, and license.txt.</p>
-<p>We'll edit intro.txt first. </p>
+<p>Create three new text files: <code>intro.txt</code>, <code>README.txt</code>, and <code>license.txt</code>.</p>
+<p>We'll edit <code>intro.txt</code> first. </p>
 <hr/>
- <h2>| intro.txt | </h2>
+ <h2>| <code>intro.txt</code> | </h2>
 <p>This is the first thing that a user will see when they double-click on the Installer package.</p>
 <p>Here's the introduction that we used:</p>
 <p>``` Hello! Thank you for choosing to install TSGL on your Mac.</p>
 <p>The installation process should take about 22-45 minutes.</p>
 <p>```</p>
-<p>Copy and paste this into your intro.txt file and make any changes.</p>
+<p>Copy and paste this into your <code>intro.txt</code> file and make any changes.</p>
 <p>Save and close it when you are satisfied. </p>
 <hr/>
- <h2>| README.txt | </h2>
+ <h2>| <code>README.txt</code> | </h2>
 <p>This is the next thing that a user will see when they continue with the installation process.</p>
 <p>Essentially, we specified what dependencies would be installed and with which package manager.</p>
 <p>``` </p>
@@ -149,25 +149,25 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 
 By continuing, you agree to having these components on your Mac for TSGL. 
 </pre><p>```</p>
-<p>Copy the above text and paste it into your README.txt file.</p>
+<p>Copy the above text and paste it into your <code>README.txt</code> file.</p>
 <p>Make any changes as you see fit, then save and close the file. </p>
 <hr/>
- <h2>| license.txt | </h2>
+ <h2>| <code>license.txt</code> | </h2>
 <p>This is the last thing a user will see before selecting a destination, choosing installation type, and installing TSGL on their Mac.</p>
 <p>We took the opportunity to use the license associated with TSGL (GPLv3).</p>
 <p>This file is actually inside of the TSGL source code folder.</p>
-<p>Simply open up the TSGL source code folder (the clone or downloaded zip file), open up "license", and copy the text inside of it. Paste that text inside of "license.txt".</p>
+<p>Simply open up the TSGL source code folder (the clone or downloaded zip file), open up <code>license</code>, and copy the text inside of it. Paste that text inside of <code>license.txt</code>.</p>
 <p>Save and close the file. </p>
 <hr/>
  <h2>| Homestretch | </h2>
 <p>Now that we have those three text files made, it's time to integrate them into the Installer.</p>
-<p>Back in Packages, make sure that you are in the Project details (click on "Project" on the left side of the window), and on the "Presentation" page (click on the "Presentation" tab).</p>
-<p>In the drop down box on the right, make sure that it says "Introduction".</p>
-<p>Then, click the big plus (+) button underneath the "Custom Introduction" table.</p>
-<p>One of the table slots inside of the "Custom Introduction" table should be filled in and highlighted.</p>
-<p>Click on the section that has the "-" in it, and click "Choose" from the drop down menu.</p>
-<p>Double-click on the intro.txt file that we made earlier.</p>
-<p>Now the text inside of the Introduction Installer page should change to the text inside of intro.txt.</p>
+<p>Back in <code>Packages</code>, make sure that you are in the <code>Project</code> details (click on <code>Project</code> on the left side of the window), and on the <code>Presentation</code> page (click on the <code>Presentation</code> tab).</p>
+<p>In the drop down box on the right, make sure that it says <code>Introduction</code>.</p>
+<p>Then, click the big plus (<code>+</code>) button underneath the <code>Custom Introduction</code> table.</p>
+<p>One of the table slots inside of the <code>Custom Introduction</code> table should be filled in and highlighted.</p>
+<p>Click on the section that has the <code>-</code> in it, and click <code>Choose</code> from the drop down menu.</p>
+<p>Double-click on the <code>intro.txt</code> file that we made earlier.</p>
+<p>Now the text inside of the <code>Introduction</code> Installer page should change to the text inside of <code>intro.txt</code>.</p>
 <hr/>
  <h2>| Building the Installer | </h2>
 <hr/>
@@ -179,7 +179,7 @@ By continuing, you agree to having these components on your Mac for TSGL.
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 10 2016 13:41:03 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Wed Aug 10 2016 16:05:45 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
