@@ -1,1 +1,23 @@
 $\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S$\ast$$\ast$$\ast$ 
+
+ \subsection*{$\vert$ U\-P\-D\-A\-T\-I\-N\-G M\-A\-C O\-S X P\-A\-C\-K\-A\-G\-E\-S (Last updated\-: 08/12/16) $\vert$ }
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This page does {\itshape N\-O\-T} teach you how to create a new Mac O\-S X package. It merely tells you how to update the one that we currently have. {\bfseries If you would like to learn how to create new Mac\-O\-S X packages, please see \mbox{[}\mbox{[}Creating New Mac\-O\-S X Packages\mbox{]}\mbox{]}}.
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ You {\itshape M\-U\-S\-T} be on a Mac (with O\-S X 10.\-5 or greater) to continue.
+
+To update the Mac O\-S X package for T\-S\-G\-L without having to use \href{http://s.sudre.free.fr/Software/Packages/about.html}{\tt Packages}, mount the {\ttfamily .dmg} file from our repo, open up a Terminal and follow these steps\-:
+
+1). {\ttfamily cd} into {\ttfamily /\-Volumes/\-T\-S\-G\-L}. 2). Do a quick {\ttfamily ls}. You should see the {\ttfamily Install\-T\-S\-G\-L.\-pkg} file. 3). Type\-:
+
+``` \begin{DoxyVerb}pkgutil --expand InstallTSGL.pkg workspace 
+\end{DoxyVerb}
+
+
+```
+
+This command will open up the {\ttfamily .pkg} file and store the contents inside of {\ttfamily workspace}.
+
+Do a quick {\ttfamily ls}. You should now see the {\ttfamily workspace} folder.
+
+4). {\ttfamily cd} into {\ttfamily workspace}. 

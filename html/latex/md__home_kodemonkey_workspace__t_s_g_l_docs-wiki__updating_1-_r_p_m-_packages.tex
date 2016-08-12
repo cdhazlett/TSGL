@@ -1,1 +1,25 @@
-$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S$\ast$$\ast$$\ast$ 
+
+
+ \subsection*{$\vert$ U\-P\-D\-A\-T\-I\-N\-G T\-S\-G\-L R\-P\-M P\-A\-C\-K\-A\-G\-E (Last update\-: 08/12/16) $\vert$ }
+
+$\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ This page does {\itshape N\-O\-T} teach you how to create a new R\-P\-M package. It merely tells you how to update the R\-P\-M package that we currently have. {\bfseries If you would like to know how to create a new R\-P\-M package, please see \mbox{[}\mbox{[}Creating New R\-P\-M Packages\mbox{]}\mbox{]}}.
+
+Take a look at the \href{https://github.com/Calvin-CS/TSGL/tree/master/Installers}{\tt Installers} folder located inside of our Git\-Hub repo.
+
+You'll see that there are two items\-:
+
+
+\begin{DoxyItemize}
+\item a {\ttfamily debian} folder,
+\item and the S\-P\-E\-C file for the T\-S\-G\-L R\-P\-M package.
+\end{DoxyItemize}
+
+The S\-P\-E\-C file is there because of how we automated the build of T\-S\-G\-L R\-P\-M packages using O\-B\-S.
+
+It gets extracted from the downloaded Git\-Hub zip file on O\-B\-S, and then used to make the R\-P\-M package.
+
+If you would like to update that file (perhaps a new dependency has been added, documentation, etc.), simply edit that file and make a Pull Request in order to merge the new changes.
+
+(Or do a git add-\/commit-\/push, if you are allowed to do so).
+
+The S\-P\-E\-C file changes and any changes to the source code will be integrated into the new R\-P\-M package. 
