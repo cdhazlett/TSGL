@@ -1,6 +1,6 @@
 $\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S!!!$\ast$$\ast$$\ast$ 
 
- \subsection*{$\vert$ H\-O\-W T\-O C\-R\-E\-A\-T\-E N\-E\-W T\-S\-G\-L D\-E\-B\-I\-A\-N P\-A\-C\-K\-A\-G\-E\-S F\-O\-R U\-B\-U\-N\-T\-U (Last updated\-: 08/09/16) $\vert$ }
+ \subsection*{$\vert$ H\-O\-W T\-O C\-R\-E\-A\-T\-E N\-E\-W T\-S\-G\-L D\-E\-B\-I\-A\-N P\-A\-C\-K\-A\-G\-E\-S F\-O\-R U\-B\-U\-N\-T\-U (Last updated\-: 08/11/16) $\vert$ }
 
 $\ast$$\ast$$\ast$\-N\-O\-T\-E\-:$\ast$$\ast$$\ast$ {\itshape Before} reading this page, please make sure that you have read the following pages\-:
 
@@ -152,16 +152,13 @@ You'll be asked to pick an editor. Pick whichever one is the easiest one to use.
 
 Now, you should see something like this\-:
 
-```
+``` \begin{DoxyVerb}tsgl (<version-number>-<debnumber>) UNRELEASED; urgency=medium
 
-tsgl ($<$version-\/number$>$-\/$<$debnumber$>$) U\-N\-R\-E\-L\-E\-A\-S\-E\-D; urgency=medium
+  * Initial release. (Closes: #XXXXXX)
 
+ -- kodemonkey <kodemonkey@kodemonkey-desktop>  Mon, 06 Jun 2016 15:56:57 -0400
+\end{DoxyVerb}
 
-\begin{DoxyItemize}
-\item Initial release. (Closes\-: \#\-X\-X\-X\-X\-X\-X)
-\end{DoxyItemize}
-
--- kodemonkey $<$kodemonkey-\/desktop$>$ Mon, 06 Jun 2016 15\-:56\-:57 -\/0400
 
 ```
 
@@ -193,20 +190,17 @@ If you are creating a new T\-S\-G\-L package for either one of those distros, re
 \item {\ttfamily -\/-\/ kodemonkey $<$kodemonkey@kodemonkey-\/desktop$>$ Mon, 06 Jun 2016 15\-:56\-:57 -\/0400} specifies the person who made the changes ({\ttfamily kodemonkey}), an email that you can contact them by ({\ttfamily kodemonkey@kodemonkey-\/desktop}), and the time and date that the changes were made.
 \end{DoxyItemize}
 
-You'll want to replace the name and email with your name and email.
+You'll want to replace the name and email with the Real Name and Email associated with your G\-P\-G key (see \mbox{[}\mbox{[}G\-P\-G keys and You\mbox{]}\mbox{]}).
 
 You should end up with a file like this after changes have been made\-:
 
-```
+``` \begin{DoxyVerb}tsgl (1.0-1) trusty; urgency=medium
 
-tsgl (1.\-0-\/1) trusty; urgency=medium
+  * Initial release.
 
+ -- Chris Dilley <codemonkey941@gmail.com>  Mon, 06 Jun 2016 15:56:57 -0400
+\end{DoxyVerb}
 
-\begin{DoxyItemize}
-\item Initial release.
-\end{DoxyItemize}
-
--- Chris Dilley \href{mailto:codemonkey941@gmail.com}{\tt codemonkey941@gmail.\-com} Mon, 06 Jun 2016 15\-:56\-:57 -\/0400
 
 ```
 
@@ -222,9 +216,19 @@ It's also a real workhorse of a file.
 
 Here's the general format\-:
 
-```
+``` \begin{DoxyVerb}1 Source:
+2 Maintainer:
+3 Section:
+4 Priority:
+5 Standards-Version:
+6 Build-Depends: 
+7
+8 Package:
+9 Architecture:
+10 Depends:
+11 Description:
+\end{DoxyVerb}
 
-1 Source\-: 2 Maintainer\-: 3 Section\-: 4 Priority\-: 5 Standards-\/\-Version\-: 6 Build-\/\-Depends\-: 7 8 Package\-: 9 Architecture\-: 10 Depends\-: 11 Description\-:
 
 (Line numbers added)
 
@@ -258,9 +262,19 @@ Let's break them down\-:
 
 At the time of this writing, this was the {\ttfamily control} file for the {\ttfamily trusty} T\-S\-G\-L debian package\-:
 
-```
+``` \begin{DoxyVerb}1 Source: tsgl
+2 Maintainer: Chris Dilley <codemonkey941@gmail.com>
+3 Section: libs
+4 Priority: optional
+5 Standards-Version: 3.9.5
+6 Build-Depends: debhelper (>= 9), glfw, doxygen, libglew-dev, libfreetype6-dev, libfreetype6, libxrandr-dev, libxi-dev, x11proto-xf86vidmode-dev, libglu1-mesa-dev
+7
+8  Package: tsgl
+9 Architecture: amd64
+10 Depends: ${shlibs:Depends}, ${misc:Depends}, glfw, libfreetype6, libfreetype6-dev, libglew-dev, libxrandr-dev, doxygen, devscripts, build-essential 
+11 Description: A Thread-Safe Graphics Library.
+\end{DoxyVerb}
 
-1 Source\-: tsgl 2 Maintainer\-: Chris Dilley \href{mailto:codemonkey941@gmail.com}{\tt codemonkey941@gmail.\-com} 3 Section\-: libs 4 Priority\-: optional 5 Standards-\/\-Version\-: 3.\-9.\-5 6 Build-\/\-Depends\-: debhelper ($>$= 9), glfw, doxygen, libglew-\/dev, libfreetype6-\/dev, libfreetype6, libxrandr-\/dev, libxi-\/dev, x11proto-\/xf86vidmode-\/dev, libglu1-\/mesa-\/dev 7 8 Package\-: tsgl 9 Architecture\-: amd64 10 Depends\-: \$\{shlibs\-:Depends\}, \$\{misc\-:Depends\}, glfw, libfreetype6, libfreetype6-\/dev, libglew-\/dev, libxrandr-\/dev, doxygen, devscripts, build-\/essential 11 Description\-: A Thread-\/\-Safe Graphics Library.
 
 ```
 
@@ -268,9 +282,9 @@ At the time of this writing, this was the {\ttfamily control} file for the {\ttf
 
 The one for the {\ttfamily xenial} package is the same.
 
-If nothing has changed (no new dependencies have been added...), simply copy and paste it into the new {\ttfamily control} file.
+If nothing has changed (no new dependencies have been added...), simply copy and paste it into the new {\ttfamily control} file. (Be sure to remove the added line numbers!)
 
-Change the {\ttfamily Maintainer} field to your name and email.
+Change the {\ttfamily Maintainer} field to the Real Name and Email associated with your G\-P\-G key (see \mbox{[}\mbox{[}G\-P\-G keys and You\mbox{]}\mbox{]}).
 
 Save the changes and close the file. 
 
@@ -284,7 +298,7 @@ This means, \char`\"{}\-Use the tools which help build Debian packages from tool
 
  \subsection*{$\vert$ {\ttfamily rules} file $\vert$ }
 
-This file tells the build system how to make the binary package (in this case, the one that will be built in our ppa after we upload the source package).
+This file tells the build system how to make the binary package (in this case, the one that will be built in our P\-P\-A after we upload the source package).
 
 As mentioned above, there are three components to a Debian package\-: upstream tarball, source package, and binary package.
 
@@ -302,7 +316,25 @@ You can upload binaries, though it is N\-O\-T recommended.
 
 At any rate, this is what the {\ttfamily rules} files looks like for both the {\ttfamily trusty} and {\ttfamily xenial} packages\-:
 
+```
 
+\#!/usr/bin/make -\/f
+
+\%\-: dh \$@
+
+override\-\_\-dh\-\_\-auto\-\_\-install\-: \#\-Do nothing.
+
+```
+
+The {\ttfamily override\-\_\-dh\-\_\-auto\-\_\-install\-:} section tells the build system to not perform an automatic dry install of T\-S\-G\-L. Originally, we had the build system do the automatic install (to test whether it would install correctly), but we kept getting {\ttfamily Permission denied} errors whenever it tried to install the {\ttfamily libtsgl.\-so} file.
+
+This is why we had to override the auto install and create a {\ttfamily tsgl.\-install} file that would install the files manually (see next section).
+
+The {\ttfamily \%\-:} tells the build system to use our {\ttfamily Makefile} in order to create T\-S\-G\-L.
+
+If no changes need to be made, copy and paste the code section into the {\ttfamily rules} file.
+
+Save the changes and close the file. 
 
  \subsection*{$\vert$ {\ttfamily tsgl.\-install} file $\vert$ }
 
@@ -316,7 +348,20 @@ This file specifies where certain files go on a user's system.
 
 In our case, we need to put the {\ttfamily libtsgl.\-so} and {\ttfamily libtsgl.\-a} files into {\ttfamily /usr/lib/}, the {\ttfamily .h} header files from {\ttfamily src/\-T\-S\-G\-L} into {\ttfamily /usr/include/\-T\-S\-G\-L/}, and the generic {\ttfamily Makefile} into {\ttfamily /usr/include/\-T\-S\-G\-L\-\_\-\-G\-E\-N\-E\-R\-I\-C\-\_\-\-M\-A\-K\-E\-F\-I\-L\-E/} (so users can create programs with T\-S\-G\-L with ease).
 
+Here is what the file looks like for both {\ttfamily trusty} and {\ttfamily xenial}\-:
 
+``` \begin{DoxyVerb}lib/libtsgl.a usr/lib
+lib/libtsgl.so usr/lib
+src/TSGL/*.h usr/include/TSGL
+genericMakefile/Makefile usr/include/TSGL_GENERIC_MAKEFILE/
+\end{DoxyVerb}
+
+
+```
+
+If no changes need to be made, simplu copy and paste it into {\ttfamily tsgl.\-install}.
+
+Save the changes and close the file. 
 
  \subsection*{$\vert$ {\ttfamily source/format} file $\vert$ }
 
@@ -343,6 +388,26 @@ Save the changes and close the file.
  \subsection*{$\vert$ {\ttfamily postinst} file $\vert$ }
 
 This file is usually a shell/bash script that is executed $\ast$$\ast$$\ast$after$\ast$$\ast$$\ast$ the installation of the package.
+
+You can do many things with this file.
+
+We use it to change file permissions on the generic Makefile.
+
+This is so that users can do whatever they wish to it.
+
+Here is what the file looks like for the {\ttfamily trusty} and {\ttfamily xenial} packages\-:
+
+``` \begin{DoxyVerb}#!/bin/sh
+
+sudo chmod 777 /usr/include/TSGL_GENERIC_MAKEFILE/Makefile
+\end{DoxyVerb}
+
+
+```
+
+If no changes need to be made, copy and paste it into the {\ttfamily postinst} file.
+
+Save the changes and close the file.
 
 Whew, that was a lot of files!
 

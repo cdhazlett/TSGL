@@ -81,7 +81,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="contents">
 <div class="textblock"><p>***WORK IN PROGRESS!!!*** </p>
 <hr/>
- <h2>| HOW TO CREATE NEW TSGL DEBIAN PACKAGES FOR UBUNTU (Last updated: 08/09/16) | </h2>
+ <h2>| HOW TO CREATE NEW TSGL DEBIAN PACKAGES FOR UBUNTU (Last updated: 08/11/16) | </h2>
 <p>***NOTE:*** <em>Before</em> reading this page, please make sure that you have read the following pages:</p>
 <ul>
 <li>[[GPG Keys and You]]</li>
@@ -165,13 +165,13 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </pre><p><code> (If</code>dch<code>isn't installed, type</code>sudo apt-get install devscripts``` and repeat this step).</p>
 <p>You'll be asked to pick an editor. Pick whichever one is the easiest one to use.</p>
 <p>Now, you should see something like this:</p>
-<p>```</p>
-<p>tsgl (&lt;version-number&gt;-&lt;debnumber&gt;) UNRELEASED; urgency=medium</p>
-<ul>
-<li>Initial release. (Closes: #XXXXXX)</li>
-</ul>
-<p>&ndash; kodemonkey &lt;kodemonkey-desktop&gt; Mon, 06 Jun 2016 15:56:57 -0400</p>
-<p>```</p>
+<p>``` </p>
+<pre class="fragment">tsgl (&lt;version-number&gt;-&lt;debnumber&gt;) UNRELEASED; urgency=medium
+
+  * Initial release. (Closes: #XXXXXX)
+
+ -- kodemonkey &lt;kodemonkey@kodemonkey-desktop&gt;  Mon, 06 Jun 2016 15:56:57 -0400
+</pre><p>```</p>
 <p>Let's break it down:</p>
 <ul>
 <li><code>tsgl (&lt;version-number&gt;-&lt;debnumber&gt;)</code> specifies the name of the package and the current version number. The <code>&lt;debnumber&gt;</code> tells us what version is the DEBIAN package. You can create multiple versions of the same package, without changing the source code of the package software. Usually this is when a new dependency needs to be added, or a new file needs to be added to the <code>debian</code> folder. In this case, since we are creating it, set this number to 1.</li>
@@ -189,15 +189,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li>Remove the <code>(Closes: #XXXXXX)</code> as that is for bug fixes.</li>
 <li><code>-- kodemonkey &lt;kodemonkey@kodemonkey-desktop&gt; Mon, 06 Jun 2016 15:56:57 -0400</code> specifies the person who made the changes (<code>kodemonkey</code>), an email that you can contact them by (<code>kodemonkey@kodemonkey-desktop</code>), and the time and date that the changes were made.</li>
 </ul>
-<p>You'll want to replace the name and email with your name and email.</p>
+<p>You'll want to replace the name and email with the Real Name and Email associated with your GPG key (see [[GPG keys and You]]).</p>
 <p>You should end up with a file like this after changes have been made:</p>
-<p>```</p>
-<p>tsgl (1.0-1) trusty; urgency=medium</p>
-<ul>
-<li>Initial release.</li>
-</ul>
-<p>&ndash; Chris Dilley <a href="#" onclick="location.href='mai'+'lto:'+'cod'+'em'+'onk'+'ey'+'941'+'@g'+'mai'+'l.'+'com'; return false;">codem<span style="display: none;">.nosp@m.</span>onke<span style="display: none;">.nosp@m.</span>y941@<span style="display: none;">.nosp@m.</span>gmai<span style="display: none;">.nosp@m.</span>l.com</a> Mon, 06 Jun 2016 15:56:57 -0400</p>
-<p>```</p>
+<p>``` </p>
+<pre class="fragment">tsgl (1.0-1) trusty; urgency=medium
+
+  * Initial release.
+
+ -- Chris Dilley &lt;codemonkey941@gmail.com&gt;  Mon, 06 Jun 2016 15:56:57 -0400
+</pre><p>```</p>
 <p>Save the changes and close the file.</p>
 <p>Next, let's take a look at the <code>control</code> file. </p>
 <hr/>
@@ -205,9 +205,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>This file tells <code>apt-get</code> how to manage the package.</p>
 <p>It's also a real workhorse of a file.</p>
 <p>Here's the general format:</p>
-<p>```</p>
-<p>1 Source: 2 Maintainer: 3 Section: 4 Priority: 5 Standards-Version: 6 Build-Depends: 7 8 Package: 9 Architecture: 10 Depends: 11 Description:</p>
-<p>(Line numbers added)</p>
+<p>``` </p>
+<pre class="fragment">1 Source:
+2 Maintainer:
+3 Section:
+4 Priority:
+5 Standards-Version:
+6 Build-Depends: 
+7
+8 Package:
+9 Architecture:
+10 Depends:
+11 Description:
+</pre><p>(Line numbers added)</p>
 <p>```</p>
 <p>As you can see, there are two sections. Lines 1-7 specify information for the source package, while lines 9-12 specify information for the binary package.</p>
 <p>Let's break them down:</p>
@@ -228,13 +238,23 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li><code>Description</code> specifies a short summary of what the package is.</li>
 </ul>
 <p>At the time of this writing, this was the <code>control</code> file for the <code>trusty</code> TSGL debian package:</p>
-<p>```</p>
-<p>1 Source: tsgl 2 Maintainer: Chris Dilley <a href="#" onclick="location.href='mai'+'lto:'+'cod'+'em'+'onk'+'ey'+'941'+'@g'+'mai'+'l.'+'com'; return false;">codem<span style="display: none;">.nosp@m.</span>onke<span style="display: none;">.nosp@m.</span>y941@<span style="display: none;">.nosp@m.</span>gmai<span style="display: none;">.nosp@m.</span>l.com</a> 3 Section: libs 4 Priority: optional 5 Standards-Version: 3.9.5 6 Build-Depends: debhelper (&gt;= 9), glfw, doxygen, libglew-dev, libfreetype6-dev, libfreetype6, libxrandr-dev, libxi-dev, x11proto-xf86vidmode-dev, libglu1-mesa-dev 7 8 Package: tsgl 9 Architecture: amd64 10 Depends: ${shlibs:Depends}, ${misc:Depends}, glfw, libfreetype6, libfreetype6-dev, libglew-dev, libxrandr-dev, doxygen, devscripts, build-essential 11 Description: A Thread-Safe Graphics Library.</p>
-<p>```</p>
+<p>``` </p>
+<pre class="fragment">1 Source: tsgl
+2 Maintainer: Chris Dilley &lt;codemonkey941@gmail.com&gt;
+3 Section: libs
+4 Priority: optional
+5 Standards-Version: 3.9.5
+6 Build-Depends: debhelper (&gt;= 9), glfw, doxygen, libglew-dev, libfreetype6-dev, libfreetype6, libxrandr-dev, libxi-dev, x11proto-xf86vidmode-dev, libglu1-mesa-dev
+7
+8  Package: tsgl
+9 Architecture: amd64
+10 Depends: ${shlibs:Depends}, ${misc:Depends}, glfw, libfreetype6, libfreetype6-dev, libglew-dev, libxrandr-dev, doxygen, devscripts, build-essential 
+11 Description: A Thread-Safe Graphics Library.
+</pre><p>```</p>
 <p>(Line numbers added)</p>
 <p>The one for the <code>xenial</code> package is the same.</p>
-<p>If nothing has changed (no new dependencies have been added...), simply copy and paste it into the new <code>control</code> file.</p>
-<p>Change the <code>Maintainer</code> field to your name and email.</p>
+<p>If nothing has changed (no new dependencies have been added...), simply copy and paste it into the new <code>control</code> file. (Be sure to remove the added line numbers!)</p>
+<p>Change the <code>Maintainer</code> field to the Real Name and Email associated with your GPG key (see [[GPG keys and You]]).</p>
 <p>Save the changes and close the file. </p>
 <hr/>
  <h2>| <code>compat</code> file | </h2>
@@ -243,7 +263,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>This means, "Use the tools which help build Debian packages from toolset version 9." </p>
 <hr/>
  <h2>| <code>rules</code> file | </h2>
-<p>This file tells the build system how to make the binary package (in this case, the one that will be built in our ppa after we upload the source package).</p>
+<p>This file tells the build system how to make the binary package (in this case, the one that will be built in our PPA after we upload the source package).</p>
 <p>As mentioned above, there are three components to a Debian package: upstream tarball, source package, and binary package.</p>
 <p>We've already made the upstream tarball.</p>
 <p>Our source and binary packages, however, will be made for us.</p>
@@ -252,6 +272,16 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>It then publishes the upstream tarball, source package, and binary packages so that users can download and install tsgl.</p>
 <p>You can upload binaries, though it is NOT recommended.</p>
 <p>At any rate, this is what the <code>rules</code> files looks like for both the <code>trusty</code> and <code>xenial</code> packages:</p>
+<p>```</p>
+<p>#!/usr/bin/make -f</p>
+<p>%: dh $@</p>
+<p>override_dh_auto_install: #Do nothing.</p>
+<p>```</p>
+<p>The <code>override_dh_auto_install:</code> section tells the build system to not perform an automatic dry install of TSGL. Originally, we had the build system do the automatic install (to test whether it would install correctly), but we kept getting <code>Permission denied</code> errors whenever it tried to install the <code>libtsgl.so</code> file.</p>
+<p>This is why we had to override the auto install and create a <code>tsgl.install</code> file that would install the files manually (see next section).</p>
+<p>The <code>%:</code> tells the build system to use our <code>Makefile</code> in order to create TSGL.</p>
+<p>If no changes need to be made, copy and paste the code section into the <code>rules</code> file.</p>
+<p>Save the changes and close the file. </p>
 <hr/>
  <h2>| <code>tsgl.install</code> file | </h2>
 <p>This file explains where files need to go when the package is being installed.</p>
@@ -259,6 +289,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>An example would be an executable. Normally, you put executables inside of a user's <code>/usr/bin</code> or <code>/usr/local/bin</code> directory when it is being installed.</p>
 <p>This file specifies where certain files go on a user's system.</p>
 <p>In our case, we need to put the <code>libtsgl.so</code> and <code>libtsgl.a</code> files into <code>/usr/lib/</code>, the <code>.h</code> header files from <code>src/TSGL</code> into <code>/usr/include/TSGL/</code>, and the generic <code>Makefile</code> into <code>/usr/include/TSGL_GENERIC_MAKEFILE/</code> (so users can create programs with TSGL with ease).</p>
+<p>Here is what the file looks like for both <code>trusty</code> and <code>xenial</code>:</p>
+<p>``` </p>
+<pre class="fragment">lib/libtsgl.a usr/lib
+lib/libtsgl.so usr/lib
+src/TSGL/*.h usr/include/TSGL
+genericMakefile/Makefile usr/include/TSGL_GENERIC_MAKEFILE/
+</pre><p>```</p>
+<p>If no changes need to be made, simplu copy and paste it into <code>tsgl.install</code>.</p>
+<p>Save the changes and close the file. </p>
 <hr/>
  <h2>| <code>source/format</code> file | </h2>
 <hr/>
@@ -274,6 +313,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <hr/>
  <h2>| <code>postinst</code> file | </h2>
 <p>This file is usually a shell/bash script that is executed ***after*** the installation of the package.</p>
+<p>You can do many things with this file.</p>
+<p>We use it to change file permissions on the generic Makefile.</p>
+<p>This is so that users can do whatever they wish to it.</p>
+<p>Here is what the file looks like for the <code>trusty</code> and <code>xenial</code> packages:</p>
+<p>``` </p>
+<pre class="fragment">#!/bin/sh
+
+sudo chmod 777 /usr/include/TSGL_GENERIC_MAKEFILE/Makefile
+</pre><p>```</p>
+<p>If no changes need to be made, copy and paste it into the <code>postinst</code> file.</p>
+<p>Save the changes and close the file.</p>
 <p>Whew, that was a lot of files!</p>
 <p>Let's move onto the easiest part of Debian package creation: actually building one! </p>
 <hr/>
@@ -302,7 +352,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 10 2016 16:05:45 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 12 2016 09:35:22 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>

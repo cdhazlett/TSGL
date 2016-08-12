@@ -1,13 +1,8 @@
+$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S!!!"$\ast$$\ast$$\ast$ 
 
+ \subsection*{$\vert$ C\-R\-E\-A\-T\-I\-N\-G A N\-E\-W M\-A\-C O\-S X I\-N\-S\-T\-A\-L\-L\-E\-R P\-A\-C\-K\-A\-G\-E (Last updated\-: 08/11/16) $\vert$ }
 
- \subsection*{$\vert$ C\-R\-E\-A\-T\-I\-N\-G A N\-E\-W M\-A\-C O\-S X I\-N\-S\-T\-A\-L\-L\-E\-R P\-A\-C\-K\-A\-G\-E (Last updated\-: 07/22/16) $\vert$ }
-
-$\ast$$\ast$$\ast$\-W\-O\-R\-K I\-N P\-R\-O\-G\-R\-E\-S\-S!!!"$\ast$$\ast$$\ast$
-\begin{DoxyItemize}
-\item Need to finalize this page.
-\end{DoxyItemize}
-
-Creating a new .pkg Installer for Mac O\-S X isn't as difficult as R\-P\-M or Debian package creation.
+Creating a new {\ttfamily .pkg} Installer for Mac O\-S X isn't as difficult as creating an R\-P\-M or Debian package.
 
 You do have to be on a Mac, however.
 
@@ -89,9 +84,9 @@ This is the first thing that a user will see when they double-\/click on the Ins
 
 Here's the introduction that we used\-:
 
-``` Hello! Thank you for choosing to install T\-S\-G\-L on your Mac.
+``` Hello! Thank you for choosing to install T\-S\-G\-L on your Mac!
 
-The installation process should take about 22-\/45 minutes.
+To start, please click \char`\"{}\-Continue\char`\"{}.
 
 ```
 
@@ -105,15 +100,17 @@ This is the next thing that a user will see when they continue with the installa
 
 Essentially, we specified what dependencies would be installed and with which package manager.
 
-``` \begin{DoxyVerb}The following dependencies will be installed on your Mac using Homebrew:
+``` \begin{DoxyVerb}The following dependencies will be installed on your Mac:
 
-    - doxygen
-    - gcc49 <--- (Takes the longest to install with Homebrew)
-    - freetype
-    - glew
-    - glfw3
+    - X11 libs
+    - Homebrew
+    - Freetype (through Homebrew)
+    - glfw3 (through Homebrew)
+    - glew (through Homebrew)
+    - doxygen (through Homebrew)
+    - gcc5 (through Homebrew)
 
-By continuing, you agree to having these components on your Mac for TSGL. 
+By clicking "Continue", you agree to having these dependencies installed. 
 \end{DoxyVerb}
 
 
@@ -135,7 +132,7 @@ Simply open up the T\-S\-G\-L source code folder (the clone or downloaded zip fi
 
 Save and close the file. 
 
- \subsection*{$\vert$ Homestretch $\vert$ }
+ \subsection*{$\vert$ Almost there $\vert$ }
 
 Now that we have those three text files made, it's time to integrate them into the Installer.
 
@@ -153,6 +150,120 @@ Double-\/click on the {\ttfamily intro.\-txt} file that we made earlier.
 
 Now the text inside of the {\ttfamily Introduction} Installer page should change to the text inside of {\ttfamily intro.\-txt}.
 
+Do the same thing for the {\ttfamily R\-E\-A\-D\-M\-E.\-txt} and {\ttfamily license.\-txt} files.
+
+Once you have done that, you are almost ready to create the {\ttfamily .pkg} Installer! 
+
+ \subsection*{$\vert$ Installer plugins $\vert$ }
+
+Our Installer can have two shell scripts which are executed before and after T\-S\-G\-L is installed.
+
+The {\ttfamily preinstall} and {\ttfamily postinstall} scripts, respectively.
+
+We will go into more detail later on these scripts, but for now just know that they are needed for our Installer.
+
+However, they are not the {\itshape O\-N\-L\-Y} things that are needed.
+
+As we developed the {\ttfamily .pkg} Installer, we focused primarily on making it self-\/contained.
+
+We wanted a user to simply mount our {\ttfamily .dmg} file, double-\/click on the {\ttfamily .pkg} file, and have T\-S\-G\-L installed on their Mac.
+
+We didn't want them to execute any programs beforehand; we wanted everything to be done by the {\ttfamily .pkg} Installer.
+
+This proved to be most difficult with just the {\ttfamily preinstall} and {\ttfamily postinstall} scripts.
+
+Which is why, another resource was needed\-: an Installer plugin.
+
+An Installer plugin is essentially another pane that you can add to the installation process.
+
+What's important about this resource?
+
+You can execute commands based off of user input.
+
+Even shell scripts.
+
+This was {\itshape V\-E\-R\-Y} useful for us when we had to install {\ttfamily Homebrew} as a dependency, as well as a solution to many problems, for the reasons outlined in the next section. 
+
+ \subsection*{$\vert$ The trouble with {\ttfamily preinstall} and {\ttfamily postinstall} $\vert$ }
+
+As mentioned above, the {\ttfamily preinstall} and {\ttfamily postinstall} scripts are shell scripts which can be executed before and after T\-S\-G\-L is installed, respectively.
+
+They are perfect for small tasks, like making symlinks or installing some dependencies.
+
+However, they are run as {\ttfamily root}.
+
+This doesn't seem like such a big deal, but consider this scenario\-:
+
+1). The {\ttfamily preinstall} script is executed when the user clicks {\ttfamily Install} during the T\-S\-G\-L installation process.
+
+2). The script finds that a user doesn't have {\ttfamily Homebrew} installed.
+
+3). It attempts to install {\ttfamily Homebrew}.
+
+4). Because the script was run as {\ttfamily root}, {\ttfamily Homebrew} refuses to install.
+
+5). No dependencies are installed, and the installation process shows that T\-S\-G\-L was installed correctly (even though it wasn't).
+
+See https\-://github.com/\-Homebrew/brew/blob/master/share/doc/homebrew/\-F\-A\-Q.\-md \char`\"{}the Homebrew F\-A\-Q page\char`\"{} for more information on why using {\ttfamily sudo} and {\ttfamily brew} is a bad thing.
+
+This was a recurring problem, with many workarounds attempted.
+
+One of them involved creating a separate executable that the user could run {\itshape before} the {\ttfamily .pkg} Installer, but that would mean that the Installer would no longer be self-\/contained. Strike 1.
+
+You can execute the scripts as normal user by changing a setting inside of the {\ttfamily .pkg} file {\itshape after} it's been created. That would be a workaround.
+
+However, that brings another problem to the table.
+
+When we have to install {\ttfamily X11} libs, we use the {\ttfamily curl} command in order to download the {\ttfamily x\-Quartz} {\ttfamily .dmg} file which contains a {\ttfamily .pkg} file so that they can be installed.
+
+We then open up that file and tell the user to follow the installation process.
+
+But...two Installers {\itshape cannot} be running at the same time.
+
+If they are, one will wait for the other to finish before beginning.
+
+This {\itshape always} happened with the installation of the {\ttfamily X11} libs.
+
+The installation would wait until {\itshape after} the installation of T\-S\-G\-L was completed, then move onto installing {\ttfamily X11} libs. T\-S\-G\-L needs those libs in order to compile, and because they were not installed {\itshape before} T\-S\-G\-L, this would mean that T\-S\-G\-L would fail to compile and would {\itshape N\-O\-T} be installed correctly.
+
+A workaround for this would be to use the {\ttfamily installer} command and use it to install the {\ttfamily .pkg} file via a Terminal.
+
+But...the execution of the {\ttfamily installer} command could cause the same issue (two Installer running at the same time).
+
+Even if it were to work, this workaround brings with it a new problem.
+
+For some odd reason, the commands executed by the {\ttfamily preinstall} script are asynchronous.
+
+What this means is that when one command is executed, the next command doesn't wait until the first has terminated. It executes, and the successive commands do the same.
+
+This is really bad in terms of installing dependencies.
+
+To give an example, consider {\ttfamily Homebrew} again.
+
+{\ttfamily Homebrew} needs to be installed before {\ttfamily glew}, {\ttfamily glfw3}, {\ttfamily doxygen}, {\ttfamily freetype}, and {\ttfamily gcc5}.
+
+If a user doesn't have {\ttfamily Homebrew} installed, the script needs to install {\ttfamily Homebrew}.
+
+As a consequence of the commands being executed asynchronously, the other dependencies will also be installed {\itshape regardless of the {\ttfamily Homebrew} install finishing or not}.
+
+This would lead to another failed install. Strike 2.
+
+There are other problems, but we won't go into them in detail.
+
+We attempted numerous workarounds, ranging from having the {\ttfamily preinstall} script execute other install scripts, to using {\ttfamily sleep} and {\ttfamily wait} commands.
+
+None of them provided a solid, foolproof binary Installer. Strike 3.
+
+Given all of these reasons, we ultimately decided to go with Installer plugins.
+
+They provided a solid, self-\/contained, foolproof Installer.
+
+We used one to install {\ttfamily Homebrew}, and {\ttfamily X11} libs.
+
+We also utilized the {\ttfamily sleep} command in order to avoid having multiple dependencies installed at once (e.\-g. {\ttfamily X\-Code Command Line Tools} and dependencies installed by {\ttfamily Homebrew}). 
+
+ \subsection*{$\vert$ Back to Installer plugins $\vert$ }
+
 
 
  \subsection*{$\vert$ Building the Installer $\vert$ }
@@ -160,6 +271,12 @@ Now the text inside of the {\ttfamily Introduction} Installer page should change
 
 
  \subsection*{$\vert$ Wrapping it up in a .dmg file $\vert$ }
+
+Now that you have the {\ttfamily .pkg} file created, it's time to wrap it up in a {\ttfamily .dmg} file.
+
+Open up the {\ttfamily Disk Utility} application (which should be located in a folder called {\ttfamily Utilities}).
+
+This is where we'll be creating the .dmg file.
 
 That concludes this page!
 

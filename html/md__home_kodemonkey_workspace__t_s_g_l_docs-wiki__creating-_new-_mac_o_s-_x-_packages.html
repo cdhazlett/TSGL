@@ -79,13 +79,10 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">Creating-New-MacOS-X-Packages </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><hr/>
- <h2>| CREATING A NEW MAC OS X INSTALLER PACKAGE (Last updated: 07/22/16) | </h2>
-<p>***WORK IN PROGRESS!!!"***</p>
-<ul>
-<li>Need to finalize this page.</li>
-</ul>
-<p>Creating a new .pkg Installer for Mac OS X isn't as difficult as RPM or Debian package creation.</p>
+<div class="textblock"><p>***WORK IN PROGRESS!!!"*** </p>
+<hr/>
+ <h2>| CREATING A NEW MAC OS X INSTALLER PACKAGE (Last updated: 08/11/16) | </h2>
+<p>Creating a new <code>.pkg</code> Installer for Mac OS X isn't as difficult as creating an RPM or Debian package.</p>
 <p>You do have to be on a Mac, however.</p>
 <p>If you cannot procure a Mac with OS X 10.5 or greater (or a VM with OS X 10.5 or greater on it, <em>though this has not been tested</em>), ***please stop reading and go get a Mac***.</p>
 <p>Otherwise, please continue. </p>
@@ -129,8 +126,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
  <h2>| <code>intro.txt</code> | </h2>
 <p>This is the first thing that a user will see when they double-click on the Installer package.</p>
 <p>Here's the introduction that we used:</p>
-<p>``` Hello! Thank you for choosing to install TSGL on your Mac.</p>
-<p>The installation process should take about 22-45 minutes.</p>
+<p>``` Hello! Thank you for choosing to install TSGL on your Mac!</p>
+<p>To start, please click "Continue".</p>
 <p>```</p>
 <p>Copy and paste this into your <code>intro.txt</code> file and make any changes.</p>
 <p>Save and close it when you are satisfied. </p>
@@ -139,15 +136,17 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <p>This is the next thing that a user will see when they continue with the installation process.</p>
 <p>Essentially, we specified what dependencies would be installed and with which package manager.</p>
 <p>``` </p>
-<pre class="fragment">The following dependencies will be installed on your Mac using Homebrew:
+<pre class="fragment">The following dependencies will be installed on your Mac:
 
-    - doxygen
-    - gcc49 &lt;--- (Takes the longest to install with Homebrew)
-    - freetype
-    - glew
-    - glfw3
+    - X11 libs
+    - Homebrew
+    - Freetype (through Homebrew)
+    - glfw3 (through Homebrew)
+    - glew (through Homebrew)
+    - doxygen (through Homebrew)
+    - gcc5 (through Homebrew)
 
-By continuing, you agree to having these components on your Mac for TSGL. 
+By clicking "Continue", you agree to having these dependencies installed. 
 </pre><p>```</p>
 <p>Copy the above text and paste it into your <code>README.txt</code> file.</p>
 <p>Make any changes as you see fit, then save and close the file. </p>
@@ -159,7 +158,7 @@ By continuing, you agree to having these components on your Mac for TSGL.
 <p>Simply open up the TSGL source code folder (the clone or downloaded zip file), open up <code>license</code>, and copy the text inside of it. Paste that text inside of <code>license.txt</code>.</p>
 <p>Save and close the file. </p>
 <hr/>
- <h2>| Homestretch | </h2>
+ <h2>| Almost there | </h2>
 <p>Now that we have those three text files made, it's time to integrate them into the Installer.</p>
 <p>Back in <code>Packages</code>, make sure that you are in the <code>Project</code> details (click on <code>Project</code> on the left side of the window), and on the <code>Presentation</code> page (click on the <code>Presentation</code> tab).</p>
 <p>In the drop down box on the right, make sure that it says <code>Introduction</code>.</p>
@@ -168,10 +167,73 @@ By continuing, you agree to having these components on your Mac for TSGL.
 <p>Click on the section that has the <code>-</code> in it, and click <code>Choose</code> from the drop down menu.</p>
 <p>Double-click on the <code>intro.txt</code> file that we made earlier.</p>
 <p>Now the text inside of the <code>Introduction</code> Installer page should change to the text inside of <code>intro.txt</code>.</p>
+<p>Do the same thing for the <code>README.txt</code> and <code>license.txt</code> files.</p>
+<p>Once you have done that, you are almost ready to create the <code>.pkg</code> Installer! </p>
+<hr/>
+ <h2>| Installer plugins | </h2>
+<p>Our Installer can have two shell scripts which are executed before and after TSGL is installed.</p>
+<p>The <code>preinstall</code> and <code>postinstall</code> scripts, respectively.</p>
+<p>We will go into more detail later on these scripts, but for now just know that they are needed for our Installer.</p>
+<p>However, they are not the <em>ONLY</em> things that are needed.</p>
+<p>As we developed the <code>.pkg</code> Installer, we focused primarily on making it self-contained.</p>
+<p>We wanted a user to simply mount our <code>.dmg</code> file, double-click on the <code>.pkg</code> file, and have TSGL installed on their Mac.</p>
+<p>We didn't want them to execute any programs beforehand; we wanted everything to be done by the <code>.pkg</code> Installer.</p>
+<p>This proved to be most difficult with just the <code>preinstall</code> and <code>postinstall</code> scripts.</p>
+<p>Which is why, another resource was needed: an Installer plugin.</p>
+<p>An Installer plugin is essentially another pane that you can add to the installation process.</p>
+<p>What's important about this resource?</p>
+<p>You can execute commands based off of user input.</p>
+<p>Even shell scripts.</p>
+<p>This was <em>VERY</em> useful for us when we had to install <code>Homebrew</code> as a dependency, as well as a solution to many problems, for the reasons outlined in the next section. </p>
+<hr/>
+ <h2>| The trouble with <code>preinstall</code> and <code>postinstall</code> | </h2>
+<p>As mentioned above, the <code>preinstall</code> and <code>postinstall</code> scripts are shell scripts which can be executed before and after TSGL is installed, respectively.</p>
+<p>They are perfect for small tasks, like making symlinks or installing some dependencies.</p>
+<p>However, they are run as <code>root</code>.</p>
+<p>This doesn't seem like such a big deal, but consider this scenario:</p>
+<p>1). The <code>preinstall</code> script is executed when the user clicks <code>Install</code> during the TSGL installation process.</p>
+<p>2). The script finds that a user doesn't have <code>Homebrew</code> installed.</p>
+<p>3). It attempts to install <code>Homebrew</code>.</p>
+<p>4). Because the script was run as <code>root</code>, <code>Homebrew</code> refuses to install.</p>
+<p>5). No dependencies are installed, and the installation process shows that TSGL was installed correctly (even though it wasn't).</p>
+<p>See https://github.com/Homebrew/brew/blob/master/share/doc/homebrew/FAQ.md "the Homebrew FAQ page" for more information on why using <code>sudo</code> and <code>brew</code> is a bad thing.</p>
+<p>This was a recurring problem, with many workarounds attempted.</p>
+<p>One of them involved creating a separate executable that the user could run <em>before</em> the <code>.pkg</code> Installer, but that would mean that the Installer would no longer be self-contained. Strike 1.</p>
+<p>You can execute the scripts as normal user by changing a setting inside of the <code>.pkg</code> file <em>after</em> it's been created. That would be a workaround.</p>
+<p>However, that brings another problem to the table.</p>
+<p>When we have to install <code>X11</code> libs, we use the <code>curl</code> command in order to download the <code>xQuartz</code> <code>.dmg</code> file which contains a <code>.pkg</code> file so that they can be installed.</p>
+<p>We then open up that file and tell the user to follow the installation process.</p>
+<p>But...two Installers <em>cannot</em> be running at the same time.</p>
+<p>If they are, one will wait for the other to finish before beginning.</p>
+<p>This <em>always</em> happened with the installation of the <code>X11</code> libs.</p>
+<p>The installation would wait until <em>after</em> the installation of TSGL was completed, then move onto installing <code>X11</code> libs. TSGL needs those libs in order to compile, and because they were not installed <em>before</em> TSGL, this would mean that TSGL would fail to compile and would <em>NOT</em> be installed correctly.</p>
+<p>A workaround for this would be to use the <code>installer</code> command and use it to install the <code>.pkg</code> file via a Terminal.</p>
+<p>But...the execution of the <code>installer</code> command could cause the same issue (two Installer running at the same time).</p>
+<p>Even if it were to work, this workaround brings with it a new problem.</p>
+<p>For some odd reason, the commands executed by the <code>preinstall</code> script are asynchronous.</p>
+<p>What this means is that when one command is executed, the next command doesn't wait until the first has terminated. It executes, and the successive commands do the same.</p>
+<p>This is really bad in terms of installing dependencies.</p>
+<p>To give an example, consider <code>Homebrew</code> again.</p>
+<p><code>Homebrew</code> needs to be installed before <code>glew</code>, <code>glfw3</code>, <code>doxygen</code>, <code>freetype</code>, and <code>gcc5</code>.</p>
+<p>If a user doesn't have <code>Homebrew</code> installed, the script needs to install <code>Homebrew</code>.</p>
+<p>As a consequence of the commands being executed asynchronously, the other dependencies will also be installed <em>regardless of the <code>Homebrew</code> install finishing or not</em>.</p>
+<p>This would lead to another failed install. Strike 2.</p>
+<p>There are other problems, but we won't go into them in detail.</p>
+<p>We attempted numerous workarounds, ranging from having the <code>preinstall</code> script execute other install scripts, to using <code>sleep</code> and <code>wait</code> commands.</p>
+<p>None of them provided a solid, foolproof binary Installer. Strike 3.</p>
+<p>Given all of these reasons, we ultimately decided to go with Installer plugins.</p>
+<p>They provided a solid, self-contained, foolproof Installer.</p>
+<p>We used one to install <code>Homebrew</code>, and <code>X11</code> libs.</p>
+<p>We also utilized the <code>sleep</code> command in order to avoid having multiple dependencies installed at once (e.g. <code>XCode Command Line Tools</code> and dependencies installed by <code>Homebrew</code>). </p>
+<hr/>
+ <h2>| Back to Installer plugins | </h2>
 <hr/>
  <h2>| Building the Installer | </h2>
 <hr/>
  <h2>| Wrapping it up in a .dmg file | </h2>
+<p>Now that you have the <code>.pkg</code> file created, it's time to wrap it up in a <code>.dmg</code> file.</p>
+<p>Open up the <code>Disk Utility</code> application (which should be located in a folder called <code>Utilities</code>).</p>
+<p>This is where we'll be creating the .dmg file.</p>
 <p>That concludes this page!</p>
 <hr/>
  <h2>| MISC | </h2>
@@ -179,7 +241,7 @@ By continuing, you agree to having these components on your Mac for TSGL.
 </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
-Generated on Wed Aug 10 2016 16:05:45 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
+Generated on Fri Aug 12 2016 09:35:22 for TSGL by &#160;<a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/>
 </a> 1.8.6
 </small></address>
