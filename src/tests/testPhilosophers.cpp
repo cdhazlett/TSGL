@@ -36,8 +36,48 @@ struct Fork {
   Fork() {
     user = -1; id = 0;
   }
-  void draw(Canvas& can, int x, int y, ColorFloat c) {
-    can.drawCircle(x,y,16,32,c,true);
+  void draw(Canvas& can, int x, int y, double angle, ColorFloat c) {
+    const int POINTS = 20; // number of vertices in polygon
+    const int HEIGHT = 42; // 42 is preferred
+    const int WIDTH = 12;  // 12 is preferred
+    int xs[POINTS], ys[POINTS];
+    
+    // scales (out of 100) for the dimensions of the fork
+    double xscale[POINTS] = {0, 19, 19, 27, 27, 46, 46, 54, 54, 73, 73, 81, 81, 100, 100, 65,  65,  35, 35,  0};
+    double yscale[POINTS] = {0,  0, 20, 20,  0,  0, 20, 20,  0,  0, 20, 20,  0,   0,  30, 30, 100, 100, 30, 30};
+    
+    // create the fork points from the scale arrays
+    for(int i = 0; i < POINTS; ++i) {
+		  // scale the fork
+      xs[i] = WIDTH  * xscale[i];
+		  ys[i] = HEIGHT * yscale[i];
+      xs[i] = xs[i]/100;
+      ys[i] = ys[i]/100;
+      
+      // move so (0, 0) is center, not top left corner
+      xs[i] -= WIDTH/2;
+      ys[i] -= HEIGHT/2;
+    } 
+    
+    // create color array
+    ColorFloat colors[POINTS];
+    
+    // rotate fork around 0,0 by angle
+    angle -= PI/2; // rotate by 90 degrees for fork next to philosopher
+      // if adding PI/2, then the forks point out, if subtracting PI/2 the forks point in to table
+        // without this line, the forks are perpendicular to philosophers
+    
+    for(int i = 0; i < POINTS; ++i) {
+      double a =  xs[i]*cos(angle) - ys[i]*sin(angle);
+      double b =  xs[i]*sin(angle) + ys[i]*cos(angle);
+      xs[i] = a+x; // transpose fork to be around table
+      ys[i] = b+y;
+      
+      // set the color
+      colors[i] = c;
+    }
+
+    can.drawConcavePolygon(POINTS, xs, ys, colors, true); // draw fork
   }
 };
 
@@ -201,6 +241,7 @@ public:
    *     .
    *   - Philosopher has right fork:
    *     - If the left fork is free, try to get that fork.
+   *     - Else, release the right fork.
    *     .
    *   - Philosopher has the left fork:
    *     - If the right fork is free, try to get that fork.
@@ -212,7 +253,7 @@ public:
    *   .
    * .
    * \param id The id number of the current Philosopher.
-   * \note This is an example of Deadlock amongst threads.
+   * \note This is an example of Livelock amongst threads.
    */
   void forfeitWhenBlockedMethod(int id) {
     int left = id, right = (id+numPhils-1)%numPhils;
@@ -269,7 +310,7 @@ public:
    *   .
    * .
    * \param id The id number of the current Philosopher.
-   * \note This is an example of Livelock amongst threads.
+   * \note This is an example of Deadlock amongst threads.
    */
   void waitWhenBlockedMethod(int id) {
     int left = id, right = (id+numPhils-1)%numPhils;
@@ -552,7 +593,7 @@ public:
 
     myCan->drawCircle(tabX,tabY,RAD-48,RAD,DARKGRAY);
     int i = omp_get_thread_num();
-//    for (int i = 0; i < numPhils; ++i) {
+//  for (int i = 0; i < numPhils; ++i) {
       float pangle = (i*2*PI)/numPhils;
       ColorFloat fcolor = BLACK;
       float fangle = (i+0.5f)*ARC;
@@ -570,29 +611,72 @@ public:
         fangle = ((i+1)*ARC) - CLOSE;
         fcolor = (phils[(i+1)%numPhils].state() == hasBoth) ? GREEN : ORANGE;
       }
-      forks[i].draw(*myCan,tabX+RAD*cos(fangle),tabY+RAD*sin(fangle),fcolor);
-//    }
+      forks[i].draw(*myCan,tabX+RAD*cos(fangle),tabY+RAD*sin(fangle),fangle,fcolor);
+//  }
+//  }
+  }
+  
+  void drawAllStep() {
+    const int RAD = 300;
+    const float ARC =2*PI/numPhils;
+    const float CLOSE = 0.15f;
+    const float BASEDIST = RAD+64; // where to start the meal indicators
+
+    myCan->drawCircle(tabX,tabY,RAD-48,RAD,DARKGRAY);
+    //int i = omp_get_thread_num();
+  for (int i = 0; i < numPhils; ++i) {
+      float pangle = (i*2*PI)/numPhils;
+      ColorFloat fcolor = BLACK;
+      float fangle;// = (i+0.5f)*ARC;
+
+      phils[i].draw(*myCan,tabX+RAD*cos(pangle),tabY+RAD*sin(pangle));
+      for (int j = 0; j < phils[i].getMeals(); ++j) { // draw the meals
+        float angle = pangle+(j/10)*2*PI/RAD, dist = BASEDIST+8*(j%10);
+        myCan->drawCircle(tabX+dist*cos(angle), tabY+dist*sin(angle), 3,8,BROWN);
+      }
+      if(forks[i].user == -1) { // unheld fork
+        fangle = (i+0.5f)*ARC;
+      }
+      else if (forks[i].user == forks[i].id) { // left fork for philosopher i, increase rotation
+        fangle = pangle + CLOSE;
+        fcolor = (phils[i].state() == hasBoth) ? GREEN : YELLOW;
+      }
+      else { // right fork for philosopher i+1%numPhils, decrease rotation
+        fangle = ((i+1)*ARC) - CLOSE;
+        fcolor = (phils[(i+1)%numPhils].state() == hasBoth) ? GREEN : ORANGE;
+      }
+      forks[i].draw(*myCan,tabX+RAD*cos(fangle),tabY+RAD*sin(fangle),fangle,fcolor);
+  }
+//  }
   }
 };
 
 void philosopherFunction(Canvas& can,int philosophers) {
   //Uncomment exactly one of the below constructors to select a resolution method
 //  Table t(can,philosophers,waitWhenBlocked);    //Deadlock
-//  Table t(can,philosophers,forfeitWhenBlocked); //Livelock (when synchronized)
+  Table t(can,philosophers,forfeitWhenBlocked); //Livelock (when synchronized)
 //  Table t(can,philosophers,nFrameRelease);      //No locking; mostly fair for N philosophers, N >= 5
 //  Table t(can,philosophers,resourceHierarchy);  //No locking; mostly fair for N philosophers, N >= 2
-  Table t(can,philosophers,oddEven);            //No locking; perfectly fair for N philosophers, N >= 2
+//  Table t(can,philosophers,oddEven);            //No locking; perfectly fair for N philosophers, N >= 2
 
+  bool paused = false; // Flag that determines whether the animation is paused
+  can.bindToButton(TSGL_SPACE, TSGL_PRESS, [&paused]() { // toggle pause when spacebar is pressed
+		paused = !paused;
+	});
+  
   #pragma omp parallel num_threads(philosophers)
   {
     while(can.isOpen()) {
-      t.checkStep();
-      can.pauseDrawing();
-//      #pragma omp barrier               //Barrier for optional synchronization
-      t.actStep();
-      can.clear();
-      t.drawStep();
-      can.resumeDrawing();
+		  if (!paused) {
+      		t.checkStep();
+      		can.pauseDrawing();
+      //#pragma omp barrier               //Barrier for optional synchronization
+      		t.actStep();
+      		can.clear();
+          can.sleep(); // ensures each fork is only drawn once per frame
+          t.drawStep();
+          can.resumeDrawing();
+		  }
       can.sleep();
     }
   }
