@@ -1,18 +1,19 @@
 /*
  * testPhilosophers.cpp
  *
- * Usage: ./testPhilosophers <numPhilosophers> <speed>
+ * Usage: ./testPhilosophers <numPhilosophers> <speed> <resolutionMethod>
  */
 
 #include <omp.h>
 #include <tsgl.h>
+#include <random>
 
 using namespace tsgl;
 
 /*! \brief Enum for valid states for the Dining Philosophers
  */
 enum PhilState {
-  hasNone, hasRight, hasLeft, hasBoth, isFull
+  hasNone, hasRight, hasLeft, hasBoth, isFull, thinking
 };
 
 /*! \brief Enum for valid actions for the Dining Philosophers
@@ -107,6 +108,7 @@ public:
       case hasLeft:  c=YELLOW; break;
       case hasBoth:  c=GREEN;  break;
       case isFull:   c=BLUE;   break;
+      case thinking: c=BLUE;   break;
     }
     can.drawCircle(x,y,SIZE,SIZE,c,true);
   }
@@ -143,8 +145,14 @@ public:
     f.user = -1;
     return true;
   }
+  void think() {
+    if(rand()%3 == 0) {
+      setState(hasNone);
+      setAction(doNothing);
+    }
+  }
   int getMeals() { return meals; }
-  void eat() { ++meals; myState = hasNone; myAction = doNothing; }
+  void eat() { ++meals; myState = thinking; myAction = doNothing; }
   PhilState state() { return myState; }
   void setState(PhilState p) { myState = p; }
   PhilAction action() { return myAction; }
@@ -281,6 +289,9 @@ public:
       case hasBoth:
         phils[id].setAction(releaseBoth);
         break;
+      case thinking:
+        phils[id].think();
+        break;
       default:
         break;
     }
@@ -337,6 +348,9 @@ public:
         break;
       case hasBoth:
         phils[id].setAction(releaseBoth);
+        break;
+      case thinking:
+        phils[id].think();
         break;
       default:
         break;
@@ -406,6 +420,9 @@ public:
       case hasBoth:
         phils[id].setAction(releaseBoth);
         break;
+      case thinking:
+        phils[id].think();
+        break;
       default:
         break;
     }
@@ -471,6 +488,9 @@ public:
       case hasBoth:
         phils[id].setAction(releaseBoth);
         break;
+      case thinking:
+        phils[id].think();
+        break;
       default:
         break;
     }
@@ -523,6 +543,9 @@ public:
         break;
       case hasBoth:
         phils[id].setAction(releaseBoth);
+        break;
+      case thinking:
+        phils[id].think();
         break;
       default:
         break;
@@ -651,13 +674,33 @@ public:
   }
 };
 
-void philosopherFunction(Canvas& can,int philosophers) {
-  //Uncomment exactly one of the below constructors to select a resolution method
-//  Table t(can,philosophers,waitWhenBlocked);    //Deadlock
-  Table t(can,philosophers,forfeitWhenBlocked); //Livelock (when synchronized)
-//  Table t(can,philosophers,nFrameRelease);      //No locking; mostly fair for N philosophers, N >= 5
-//  Table t(can,philosophers,resourceHierarchy);  //No locking; mostly fair for N philosophers, N >= 2
-//  Table t(can,philosophers,oddEven);            //No locking; perfectly fair for N philosophers, N >= 2
+void philosopherFunction(Canvas& can,int philosophers, std::string RM) {
+
+  PhilMethod method;
+  //switch statement to create table with resolution method
+  char resolutionMethod =  RM[0];
+  switch(resolutionMethod) {
+    case 'w':
+      method = waitWhenBlocked;    //Deadlock
+      break;
+    case 'f':
+      method = forfeitWhenBlocked; //Livelock (when synchronized)
+      break;
+    case 'n':
+      method = nFrameRelease;      //No locking; mostly fair for N philosophers, N >= 5
+      break;
+    case 'r':
+      method = resourceHierarchy;  //No locking; mostly fair for N philosophers, N >= 2
+      break;
+    case 'o':
+      method = oddEven;           //No locking; perfectly fair for N philosophers, N >= 2
+      break;
+    default:
+      method = oddEven;           //No locking; perfectly fair for N philosophers, N >= 2
+      break;
+  }
+  
+  Table t(can,philosophers,method);
 
   bool paused = false; // Flag that determines whether the animation is paused
   can.bindToButton(TSGL_SPACE, TSGL_PRESS, [&paused]() { // toggle pause when spacebar is pressed
@@ -683,8 +726,9 @@ void philosopherFunction(Canvas& can,int philosophers) {
 }
 
 int main(int argc, char* argv[]) {
-    int nphil = (argc > 1) ? atoi(argv[1]) : 5;
-    int speed = (argc > 2) ? atoi(argv[2]) : 10;
+    int  nphil = (argc > 1) ? atoi(argv[1]) : 5;
+    int  speed = (argc > 2) ? atoi(argv[2]) : 10;
+    std::string resM  = (argc > 3) ? argv[3] : "o";
     Canvas c(-1, -1, -1, -1, "Dining Philosophers",1.0f/speed);
-    c.run(philosopherFunction,nphil);
+    c.run(philosopherFunction,nphil,resM);
 }
