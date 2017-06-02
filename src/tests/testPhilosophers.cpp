@@ -1,7 +1,14 @@
 /*
- * testPhilosophers.cpp
+ * testPhilosophers.cpp runs the Dining Philosphers Problem animation using the TSGL library and OpenMP.
+ * This file includes a main method, Philospher class, Fork class, and Table class.
  *
- * Usage: ./testPhilosophers <numPhilosophers> <speed> <resolutionMethod>
+ * The program provides a visualization of the Dining Philosophers Problem 
+ *  in which philosophers sit around a table, think for a random amount of time, and then want to eat.
+ * In order to eat, each philosopher needs the forks to their right and left, shared with the other philosophers.
+ * This visualization includes six different ways of resolving the conflicts.
+ * See also: https://en.wikipedia.org/wiki/Dining_philosophers_problem.
+ *
+ * Usage: ./testPhilosophers <numPhilosophers> <speed> <resolutionMethodChar>
  */
 
 #include <omp.h>
@@ -60,11 +67,10 @@ struct Fork {
       ys[i] -= HEIGHT/2;
     } 
     
-    // create color array
-    ColorFloat colors[POINTS];
+    ColorFloat colors[POINTS]; //Array of colors to draw points of Fork
     
     // rotate fork around 0,0 by angle
-    angle -= PI/2; // rotate by 90 degrees for fork next to philosopher
+    angle -= PI/2; // rotate by PI/2 radians or 90 degrees for fork next to philosopher
       // if adding PI/2, then the forks point out, if subtracting PI/2 the forks point in to table
         // without this line, the forks are perpendicular to philosophers
     
@@ -552,6 +558,9 @@ public:
     }
   }
 
+  /*!
+   * \brief Method for determining which method of resolution the philosopher is using.
+   */
   void checkStep() {
     int i = omp_get_thread_num();
     if (phils[i].state() == isFull) {
@@ -579,6 +588,9 @@ public:
     }
   }
 
+  /*!
+   * \brief Method for philosopher to act based on myAction.
+   */
   void actStep() {
     int i = omp_get_thread_num();
     int left = i, right = (i+numPhils-1)%numPhils;
@@ -608,6 +620,9 @@ public:
     }
   }
 
+  /*!
+   * \brief Method calculating angles calling draw methods of a philosopher and its fork or forks.
+   */
   void drawStep() {
     const int RAD = 300;
     const float ARC =2*PI/numPhils;
@@ -616,7 +631,6 @@ public:
 
     myCan->drawCircle(tabX,tabY,RAD-48,RAD,DARKGRAY);
     int i = omp_get_thread_num();
-//  for (int i = 0; i < numPhils; ++i) {
       float pangle = (i*2*PI)/numPhils;
       ColorFloat fcolor = BLACK;
       float fangle = (i+0.5f)*ARC;
@@ -635,43 +649,8 @@ public:
         fcolor = (phils[(i+1)%numPhils].state() == hasBoth) ? GREEN : ORANGE;
       }
       forks[i].draw(*myCan,tabX+RAD*cos(fangle),tabY+RAD*sin(fangle),fangle,fcolor);
-//  }
-//  }
   }
   
-  void drawAllStep() {
-    const int RAD = 300;
-    const float ARC =2*PI/numPhils;
-    const float CLOSE = 0.15f;
-    const float BASEDIST = RAD+64; // where to start the meal indicators
-
-    myCan->drawCircle(tabX,tabY,RAD-48,RAD,DARKGRAY);
-    //int i = omp_get_thread_num();
-  for (int i = 0; i < numPhils; ++i) {
-      float pangle = (i*2*PI)/numPhils;
-      ColorFloat fcolor = BLACK;
-      float fangle;// = (i+0.5f)*ARC;
-
-      phils[i].draw(*myCan,tabX+RAD*cos(pangle),tabY+RAD*sin(pangle));
-      for (int j = 0; j < phils[i].getMeals(); ++j) { // draw the meals
-        float angle = pangle+(j/10)*2*PI/RAD, dist = BASEDIST+8*(j%10);
-        myCan->drawCircle(tabX+dist*cos(angle), tabY+dist*sin(angle), 3,8,BROWN);
-      }
-      if(forks[i].user == -1) { // unheld fork
-        fangle = (i+0.5f)*ARC;
-      }
-      else if (forks[i].user == forks[i].id) { // left fork for philosopher i, increase rotation
-        fangle = pangle + CLOSE;
-        fcolor = (phils[i].state() == hasBoth) ? GREEN : YELLOW;
-      }
-      else { // right fork for philosopher i+1%numPhils, decrease rotation
-        fangle = ((i+1)*ARC) - CLOSE;
-        fcolor = (phils[(i+1)%numPhils].state() == hasBoth) ? GREEN : ORANGE;
-      }
-      forks[i].draw(*myCan,tabX+RAD*cos(fangle),tabY+RAD*sin(fangle),fangle,fcolor);
-  }
-//  }
-  }
 };
 
 void philosopherFunction(Canvas& can,int philosophers, std::string RM) {
@@ -701,6 +680,8 @@ void philosopherFunction(Canvas& can,int philosophers, std::string RM) {
   }
   
   Table t(can,philosophers,method);
+  
+  srand(time(NULL)); // seed the random number generator for thinking steps
 
   bool paused = false; // Flag that determines whether the animation is paused
   can.bindToButton(TSGL_SPACE, TSGL_PRESS, [&paused]() { // toggle pause when spacebar is pressed
