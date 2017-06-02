@@ -4,7 +4,6 @@
 #ifndef PRODUCER_H_
 #define PRODUCER_H_
 
-#include <omp.h>
 #include <random>
 #include <tsgl.h>
 #include "Queue.h"
@@ -22,8 +21,8 @@ public:
 	Producer(Queue<ColorInt> & sharedBuffer, unsigned long id, Canvas & can);  //Size of data to generate	and id of pthread
 	void produce(); //Generate color data
 	void draw(Canvas & can); //Draw the circles onto the Canvas
-	int getX() const; //Get the center X coordinate
-	int getY() const;  //Get the center Y coordinate
+	int getX() const { return myX; } //Get the center X coordinate
+	int getY() const { return myY; }  //Get the center Y coordinate
 	void run();  //Implementation of run() method for pthread
 	
 private:

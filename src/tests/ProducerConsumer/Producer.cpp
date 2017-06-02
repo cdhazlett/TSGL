@@ -29,11 +29,19 @@ Producer::Producer(Queue<ColorInt> & sharedBuffer, unsigned long id, Canvas & ca
  */
 void Producer::produce() {
 	while (myCan->isOpen()) {  //While the Canvas is still open...
+		sleep( (rand()%10+3)/10 );
 		myFirst = rand() % 255;  //Generate your data and try to stick it in the Queue
 		mySecond = rand() % 255;
 		myThird = rand() % 255;
 		myColorData = ColorInt(myFirst, mySecond, myThird);
+		buffer->appendLock();
+		int i = buffer->getLastIndex();
 		buffer->append(myColorData, getId());  //Append something and pass your id along too
+		
+		float itAngle = (i*2*PI + PI)/8; // angle of item
+		myCan->sleep();
+		myCan->drawCircle(100*cos(itAngle)+(myCan->getWindowWidth()/2), -100*sin(itAngle)+(myCan->getWindowHeight()/2), 20, 50, myColorData, true); // draw the item as a circle
+		buffer->appendUnlock();
 	} 
 }
 
@@ -46,14 +54,6 @@ void Producer::draw(Canvas & can) {
 	ColorFloat color = Colors::highContrastColor(id);  //Get the color based off of the id
 	myY = myX * (id + 1); //Multiply the center y-coordinate by the id of the pthread and add 1	
 	can.drawCircle(myX, myY, 20, 32, color);
-}
-
-int Producer::getX() const {
-	return myX;
-}
-
-int Producer::getY() const {
-	return myY;
 }
 
 /**

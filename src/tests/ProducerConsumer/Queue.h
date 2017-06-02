@@ -3,7 +3,7 @@
  * Used in the Producer-Consumer visualization in order to visualize a shared buffer amongst pthreads.
  * A mutex and condition variables are used to synchronize accesses to the Queue and to avoid race conditions.
  * (Condition variable logic was adapted from the TS_Queue code given to me by Professor Joel Adams).
- * (Self-synchronization logic was also adapted from TS_Queue). 
+ * (Self-synchronization logic was also adapted from TS_Queue).
  */
 
 #ifndef QUEUE_H_
@@ -11,10 +11,11 @@
 
 #include <stdio.h>
 #include <pthread.h>
+#include <unistd.h>
 #include <tsgl.h>
 using namespace tsgl;
 
-template<class Item> 
+template<class Item>
 
 /**
  * Queue class contains the data necessary in order to create a custom Queue object.
@@ -33,10 +34,16 @@ public:
 	Item getLast();
 	int getCapacity();
 	int* getPthreadIds();  //Stored Pthread ids
+	int getLastIndex() { return myLast; }
+	int getFirstIndex() { return myFirst; }
 	//Utility methods	
 	bool isEmpty() const;
 	bool isFull() const;
-	~Queue(); //Destructor	
+	void appendLock();
+	void appendUnlock();
+	void removeLock();
+	void removeUnlock();
+	~Queue(); //Destructor
 
 private:
 	Item * myArray;  //Array of data
@@ -77,7 +84,7 @@ Queue<Item>::Queue(int size, Canvas & can) {
 	myPthreadIds = new int[size];
 	mySize = size;  //Max number of elements to be in the Queue
 	myCount = 0;  //Number of elements currently in the Queue
-	myFirst = myLast = 0;  
+	myFirst = myLast = 0;
 	pthread_cond_init( &notEmpty, NULL );   //Initialize the condition variables and the mutex
 	pthread_cond_init( &notFull, NULL );
 	pthread_cond_init( &notOpen, NULL );
@@ -93,6 +100,19 @@ Queue<Item>::Queue(int size, Canvas & can) {
  */
 template<class Item>
 void Queue<Item>::append(Item it, int proId) {
+	myArray[myLast] = it;
+	myLast = (myLast + 1) % mySize;  //Increment the indexer to my last item
+	myCount++;
+	myPthreadIds[myLast] = proId;  //Store the most recent pthread id
+	pthread_cond_signal(&notEmpty);  //Signal that the Queue is not empty.
+	myPthreadIds[myLast] = proId;  //Store the most recent pthread id	
+}
+
+/**
+ * appendLock() locks the Queue for the thread to append an item
+ */
+template<class Item>
+void Queue<Item>::appendLock() {
 	pthread_mutex_lock( &myMutex );  //Lock the mutex so only one thread can append
 	while(myCount == mySize) {
 		pthread_cond_wait(&notFull, &myMutex); //The Queue is full, please wait until it is not full.
@@ -101,10 +121,13 @@ void Queue<Item>::append(Item it, int proId) {
 		pthread_cond_broadcast( &notOpen );
 		pthread_mutex_unlock( &myMutex );
 	}	//Else...
-	myLast = (myLast + 1) % mySize;  //Increment the indexer to my last item
-	myArray[myLast] = it;
-	myCount++;
-	myPthreadIds[myLast] = proId;  //Store the most recent pthread id		
+}
+
+/**
+ * appendUnlock() unlocks the Queue after the thread appends an item
+ */
+template<class Item>
+void Queue<Item>::appendUnlock() {
 	pthread_cond_signal(&notEmpty);  //Signal that the Queue is not empty.
 	pthread_mutex_unlock( &myMutex );		//Unlock for other threads
 }
@@ -116,24 +139,37 @@ void Queue<Item>::append(Item it, int proId) {
  */
 template<class Item>
 Item Queue<Item>::remove() {
-//	ColorInt white(0, 0, 0);	
+	//ColorInt white(255, 255, 255);
+	Item temp = myArray[myFirst]; // Item to be removed from Queue
+	//myArray[myFirst] = white;	
+	myFirst = (myFirst + 1) % mySize;
+	myCount--;
+	return temp;
+}
+
+/**
+ * removeLock() locks the Queue for the thread to remove an item
+ */
+template<class Item>
+void Queue<Item>::removeLock() {
 	pthread_mutex_lock( &myMutex );  //Lock the mutex
-	Item temp;  //Item to be removed from Queue
 	if(!myCan->isOpen()) { //If the Canvas is not open, wake up all of the sleeping threads
 		pthread_cond_broadcast( &notOpen );
 		pthread_mutex_unlock( &myMutex );
-		return temp;  //Return the item
-	}	//Else...
-	while(myCount == 0) {
-		pthread_cond_wait(&notEmpty, &myMutex);  //The Queue is empty, please wait until it is not empty
-	} 
-	temp = myArray[myFirst];
-//	myArray[myFirst] = white;	
-	myFirst = (myFirst + 1) % mySize;
-	myCount--;    
+	} else {	//Else...
+		while(myCount == 0) {
+			pthread_cond_wait(&notEmpty, &myMutex);  //The Queue is empty, please wait until it is not empty
+		} 
+	}
+}
+
+/**
+ * removeUnlock() locks the Queue after the thread to removes an item
+ */
+template<class Item>
+void Queue<Item>::removeUnlock() {
 	pthread_cond_signal(&notFull);  //Signal that the Queue is not full
 	pthread_mutex_unlock( &myMutex );  //Unlock before returning
-	return temp;
 }
 
 //Accessors 

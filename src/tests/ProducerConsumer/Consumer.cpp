@@ -21,6 +21,7 @@ Consumer::Consumer(Queue<ColorInt> & sharedBuffer, unsigned long id, Canvas & ca
 	myColor = ColorInt(0, 0, 0);
 	buffer = &sharedBuffer;   //Get the address of that buffer and have the handle point to it
 	myCan = &can;	//Get the handle to the Canvas
+	draw();
 }
 
 /**
@@ -28,7 +29,16 @@ Consumer::Consumer(Queue<ColorInt> & sharedBuffer, unsigned long id, Canvas & ca
  */
 void Consumer::consume() {
 	while(myCan->isOpen()) { //While the Canvas is still open...
+		sleep( (rand()%10+3)/10 );
+		buffer->removeLock();
+		int i = buffer->getFirstIndex();
 		myColor = buffer->remove();  //Take out data from the Queue and consume it
+		myCan->sleep();
+		draw(); // draw the color just found 
+		// white out the location in drawn buffer
+		float itAngle = (i*2*PI + PI)/8; // angle of item
+		myCan->drawCircle(100*cos(itAngle)+(myCan->getWindowWidth()/2), -100*sin(itAngle)+(myCan->getWindowHeight()/2), 20, 50, ColorFloat(255, 255, 255), true); // draw the item as a circle
+		buffer->removeUnlock();
 	}
 }
 
@@ -38,13 +48,10 @@ void Consumer::consume() {
  * @param: windowWidth, an int representing the window width of the Canvas.
  * (in order to draw the Consumer on the right side of the Canvas, I had to take the max width of the Canvas and subtract it by an offset.)
  */
-void Consumer::draw(Canvas & can, int windowWidth) {
+void Consumer::draw() {
+	int windowWidth = myCan->getWindowWidth();
 	unsigned long offset = getId();   //Get the id of the pthread (the id will act as an offset)
-	ColorInt white = ColorInt(255, 255, 255);	
-	if(myColor == white) {
-		myColor = ColorInt(0, 0, 0);
-	}	
-	can.drawCircle((windowWidth - 50), (50 * (offset + 1)), 20, 32, myColor);
+	myCan->drawCircle((windowWidth - 50), (50 * (offset + 1)), 20, 32, myColor);
 }
 
 /**

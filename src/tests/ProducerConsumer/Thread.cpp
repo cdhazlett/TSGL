@@ -34,13 +34,14 @@ void* Thread::threadFunction(void* obj) {
  */
 void Thread::start() {
 	pthread_create(&myThread, NULL, threadFunction, this);
+	pthread_setcancelstate(PTHREAD_CANCEL_ENABLE,NULL);
 }
 
 /**
- * join() function joins the pthread inside of the Thread class.
+ * join() function cancels the pthread inside of the Thread class.
  */
 void Thread::join() {
-	pthread_join(myThread, NULL);
+	pthread_cancel(myThread);
 }
 
 /**

@@ -10,7 +10,7 @@
 #define THREAD_H_
 
 #include <pthread.h>
-#include <iostream>
+//#include <iostream>
 
 /**
  * The Thread class encapsulates the details of creating a pthread.
