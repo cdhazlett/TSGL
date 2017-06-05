@@ -23,6 +23,8 @@ public:
 	void draw();  //Draw the Consumer onto the Canvas and id of pthread
 	void run();	//Inheirted from Thread class; function that the pthread should run.
 private:
+	int numConsumed; //Count of items consumed
+	int myX, myY; //Location of Consumer on Canvas
 	ColorInt myColor;  //Color data obtained from the shared buffer
 	Queue<ColorInt> * buffer; //Handle to the current buffer
 	Canvas * myCan;  //Handle to the Canvas

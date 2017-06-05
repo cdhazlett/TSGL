@@ -53,7 +53,6 @@ void preDisplay(Canvas & can, int centerX) {
 //Global constants
 const int WINDOW_WIDTH = 600, WINDOW_HEIGHT = 500, MAX_DATA = 8; //Size of Canvas and limit on amount of data to be stored in Queue 
 Canvas queueDisplay(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, "Producer-Consumer", FRAME * 13);  //Canvas to draw on
-Canvas legendDisplay(700, 400, 400, 400, "Legend");  //Legend
 Queue<ColorInt> sharedBuffer(MAX_DATA, queueDisplay);  //Shared buffer (has colored data)
 
 //Main method
@@ -88,13 +87,8 @@ int main(int argc, char * argv[]) {
 	
 	//Fire up the visualization
     queueDisplay.start();
-
-	//Fire up the Legend
-	legendDisplay.start(); 	
 	
 	queueDisplay.setBackgroundColor(WHITE);	
-	legendDisplay.setBackgroundColor(WHITE);
-
 		
 	//Fill the arrays of Producers and Consumers with Producer and Consumer objects
 	for(int i = 0; i < numProducers; i++) {
@@ -105,14 +99,14 @@ int main(int argc, char * argv[]) {
 		con[j] = Consumer(sharedBuffer, j, queueDisplay);	
 	}
 
-	int colorChanger = 0; //Changes color on Legend
-	//Draw the Legend	
-	for(int i = 0; i < 8; i++) {
-		legendDisplay.drawCircle(30, (40 * (i + 1) - 10), 15, 32, Colors::highContrastColor(i));	
-		legendDisplay.drawText("is Producer " + to_string(i), 60, (40 * (i + 1)), 15, BLACK);				
-	}
-	legendDisplay.drawText("Consumers are on the right side ", 60, 360, 15, BLACK);	
-		
+	int WINDOW_WIDTH = queueDisplay.getWindowWidth();
+	int WINDOW_HEIGHT = queueDisplay.getWindowHeight();
+	queueDisplay.drawText("Numbers indicate counts", WINDOW_WIDTH-260, WINDOW_HEIGHT-50, 20, BLACK);
+	queueDisplay.drawText("of produced/consumed", WINDOW_WIDTH-235, WINDOW_HEIGHT-30, 20, BLACK);
+
+	// Label Readers and Writers
+	queueDisplay.drawText("Producers", 20, 20, 20, BLACK);
+	queueDisplay.drawText("Consumers", WINDOW_HEIGHT-20, 20, 20, BLACK);
 	
 	//Start up the pthreads for Producers and Consumers
 	for(int k = 0; k < numProducers; k++) {
@@ -129,14 +123,8 @@ int main(int argc, char * argv[]) {
 	for(int m = 0; m < numProducers; m++) {  //Draw the Producers onto the Canvas				
 		pro[m].draw(queueDisplay);
 	}
-	
-	//Drawing loop	
- 	while(queueDisplay.isOpen()) {
-			legendDisplay.sleep();
-			legendDisplay.sleepFor(0.5);
-			legendDisplay.drawCircle(30, 360, 15, 32, Colors::highContrastColor(colorChanger));  //Consumer on Legend
-			colorChanger++;
-	}
+
+	queueDisplay.wait(); // wait until queueDisplay is closed
 		
 	//Now join them
 	for(int o = 0; o < numProducers; o++) {	//Join the pthreads for the Producers	
@@ -153,11 +141,5 @@ int main(int argc, char * argv[]) {
 	pro = NULL;
 	con = NULL;
 
-	queueDisplay.wait();
-	if(legendDisplay.isOpen()) {  //Close up the Legend Canvas if it's still open, else call wait().
-		legendDisplay.stop();
-	} else {
-		legendDisplay.wait();
-	}
 	return 0;
 }

@@ -5,7 +5,7 @@
  * @return: The constructed Producer object.
  */
 Producer::Producer() : Thread() {
-	myFirst = mySecond = myThird = myX = myY = 0;
+	myFirst = mySecond = myThird = myX = myY = numProduced = 0;
 	buffer = NULL;
 	myCan = NULL;
 }	
@@ -18,7 +18,7 @@ Producer::Producer() : Thread() {
  * @return: The constructed Producer object.
  */
 Producer::Producer(Queue<ColorInt> & sharedBuffer, unsigned long id, Canvas & can) : Thread(id) {
-	myFirst = mySecond = myThird = myY = 0;
+	myFirst = mySecond = myThird = myY = numProduced = 0;
 	myX = 50; //Set the x-coordinate to 50
 	buffer = &sharedBuffer;  //Get the handle to the buffer and have it point to the buffer
 	myCan = &can;  //Get the handle to the Canvas
@@ -37,7 +37,8 @@ void Producer::produce() {
 		buffer->appendLock();
 		int i = buffer->getLastIndex();
 		buffer->append(myColorData, getId());  //Append something and pass your id along too
-		
+		numProduced++;
+		draw(*myCan);
 		float itAngle = (i*2*PI + PI)/8; // angle of item
 		myCan->sleep();
 		myCan->drawCircle(100*cos(itAngle)+(myCan->getWindowWidth()/2), -100*sin(itAngle)+(myCan->getWindowHeight()/2), 20, 50, myColorData, true); // draw the item as a circle
@@ -54,6 +55,8 @@ void Producer::draw(Canvas & can) {
 	ColorFloat color = Colors::highContrastColor(id);  //Get the color based off of the id
 	myY = myX * (id + 1); //Multiply the center y-coordinate by the id of the pthread and add 1	
 	can.drawCircle(myX, myY, 20, 32, color);
+	//can.drawText( to_string(numProduced), myX-5-10*floor( log10(numProduced) ), myY+5, 20, BLACK);
+	can.drawText( to_string(numProduced), myX-15, myY+5, 20, BLACK);
 }
 
 /**

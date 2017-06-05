@@ -8,6 +8,7 @@ Consumer::Consumer() : Thread() {
 	myColor = ColorInt(0,0,0);
 	buffer = NULL;
 	myCan = NULL;
+	numConsumed = 0;
 }
 
 /**
@@ -22,6 +23,7 @@ Consumer::Consumer(Queue<ColorInt> & sharedBuffer, unsigned long id, Canvas & ca
 	buffer = &sharedBuffer;   //Get the address of that buffer and have the handle point to it
 	myCan = &can;	//Get the handle to the Canvas
 	draw();
+	numConsumed = 0;
 }
 
 /**
@@ -34,6 +36,7 @@ void Consumer::consume() {
 		int i = buffer->getFirstIndex();
 		myColor = buffer->remove();  //Take out data from the Queue and consume it
 		myCan->sleep();
+		numConsumed++;
 		draw(); // draw the color just found 
 		// white out the location in drawn buffer
 		float itAngle = (i*2*PI + PI)/8; // angle of item
@@ -51,7 +54,10 @@ void Consumer::consume() {
 void Consumer::draw() {
 	int windowWidth = myCan->getWindowWidth();
 	unsigned long offset = getId();   //Get the id of the pthread (the id will act as an offset)
-	myCan->drawCircle((windowWidth - 50), (50 * (offset + 1)), 20, 32, myColor);
+	int x = windowWidth - 50;
+	int y = 50 * (offset+1);
+	myCan->drawCircle(x, y, 20, 32, myColor);
+	myCan->drawText( to_string(numConsumed), x-15, y+5, 20, BLACK);
 }
 
 /**

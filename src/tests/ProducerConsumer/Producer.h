@@ -28,6 +28,7 @@ public:
 private:
 	int myFirst, mySecond, myThird; //Ints for the ColorInt to use in generating a random color
 	int myX, myY;   //Center coordinates for the Producer
+	int numProduced; //Count of items produced
 	ColorInt myColorData;  //Generated color data
 	Queue<ColorInt> * buffer;  //Handle to the shared buffer
 	Canvas * myCan;   //Handle to the Canvas
