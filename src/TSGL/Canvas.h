@@ -301,7 +301,7 @@ public:
      *   \param color The color of the line
      *     (set to BLACK by default).
      */
-    virtual void drawLine(int x1, int y1, int x2, int y2, ColorFloat color = BLACK);
+    virtual void drawLine(int x1, int y1, int x2, int y2, ColorFloat color = BLACK, bool dashed = false, bool endArrowHead = false, bool beginArrowHead = false);
 
     /*!
      * \brief Draws a single pixel, specified in row,column format.

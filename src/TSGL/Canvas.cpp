@@ -217,9 +217,9 @@ void Canvas::draw() {
         textureShaders(true);
         const float vertices[32] = {
           0,       0,        1,1,1,1,0,1,
-          winWidth,0,        1,1,1,1,1,1,
-          0,       winHeight,1,1,1,1,0,0,
-          winWidth,winHeight,1,1,1,1,1,0
+          static_cast<float>(winWidth),0,        1,1,1,1,1,1,
+          0,       static_cast<float>(winHeight),1,1,1,1,0,0,
+          static_cast<float>(winWidth),static_cast<float>(winHeight),1,1,1,1,1,0
         };
         glBindTexture(GL_TEXTURE_2D,renderedTexture);
         glPixelStorei(GL_UNPACK_ALIGNMENT,4);
@@ -310,9 +310,9 @@ void Canvas::drawImage(std::string filename, int x, int y, int width, int height
     drawShape(im);                                        // Push it onto our drawing buffer
 }
 
-void Canvas::drawLine(int x1, int y1, int x2, int y2, ColorFloat color) {
-    Line* l = new Line(x1, y1, x2, y2, color);  // Creates the Line with the specified coordinates and color
-    drawShape(l);                               // Push it onto our drawing buffer
+void Canvas::drawLine(int x1, int y1, int x2, int y2, ColorFloat color, bool dashed, bool endArrowHead, bool beginArrowHead) {
+    Line* l = new Line(x1, y1, x2, y2, color, dashed, endArrowHead, beginArrowHead);  // Creates the Line with the specified coordinates and color
+    drawShape(l);                                                                     // Push it onto our drawing buffer
 }
 
 inline void Canvas::drawPixel(int row, int col, ColorFloat color) {

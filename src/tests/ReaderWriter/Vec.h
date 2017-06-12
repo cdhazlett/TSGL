@@ -7,9 +7,10 @@
 #ifndef VEC_H_
 #define VEC_H_
 
-#include <tsgl.h>
+//#include <tsgl.h>
 #include <pthread.h>
 #include <unistd.h>
+#include "../../TSGL/tsgl.h"
 using namespace tsgl;
 
 template<class Item>
@@ -22,13 +23,15 @@ class Vec {
 public:
 	enum LockMethod { readerPref, writerPref, monitors }; // enum for type of lock
 	Vec(); // Default constructor
-	Vec(unsigned size, LockMethod pref); // Explicit constructor
+	Vec(unsigned size, unsigned max, LockMethod pref); // Explicit constructor
 	unsigned getSize() const  { return mySize; }  // get current capacity of the Vec
 	unsigned getItems() const { return myItems; } // get number of items that have been appended
+	unsigned getMax() const   { return myMax; } // get maximum capacity
 	void     setSize(unsigned newSize);
 	Item&    operator[](unsigned i);
 	Item&    operator[](const unsigned i) const;
-	void     write(Item it);
+	Item&    getItem(int i) { return myArray[i]; }
+	void     write(Item it, unsigned index);
 	Item     read();
 	//Lock and Unlock methods
 	void     beginRead();
@@ -59,6 +62,7 @@ private:
 	
 	unsigned 	mySize;
 	unsigned 	myItems;
+	unsigned	myMax;
 	Item *   	myArray;
 	LockMethod 	myLockMethod;
 	
@@ -85,7 +89,7 @@ private:
  */
 template<class Item>
 Vec<Item>::Vec() {
-	mySize = myItems = 0;
+	mySize = myItems = myMax = 0;
 	myArray = NULL;
 	myLockMethod = readerPref;
 	readcount = readers = writers = 0;
@@ -97,12 +101,13 @@ Vec<Item>::Vec() {
  * @param locks, the type of locks to use
  */
 template<class Item>
-Vec<Item>::Vec(unsigned size, LockMethod locks) {
+Vec<Item>::Vec(unsigned size, unsigned max, LockMethod locks) {
 	myItems = 0;
 	mySize = size;
+	myMax = max;
 	myArray = new Item[size];
 	for(unsigned i = 0; i < size; i++ ) {
-		myArray[i] = Item(0);
+		myArray[i] = Item();
 	}
 	myLockMethod = locks;
 	readcount = readers = writers = 0;
@@ -127,7 +132,7 @@ void Vec<Item>::setSize(unsigned newSize) {
 					if(i < mySize) {
 						newArray[i] = myArray[i];
 					} else {
-						newArray[i] = Item(0);
+						newArray[i] = Item();
 					}
 				}
 			} else {
@@ -175,12 +180,20 @@ Item& Vec<Item>::operator[](unsigned i) const {
  * @param it, an Item to add at the next location
  */
 template <class Item>
-void Vec<Item>::write(Item it) {
-	if (myItems >= mySize) {
-		setSize(mySize*2);
+void Vec<Item>::write(Item it, unsigned index) {
+	while (index >= mySize) {
+		if( myMax < index )
+			throw std::range_error("index beyond max");
+		if( mySize*2 < myMax ) {
+			setSize(mySize*2);
+		} else {
+			setSize( myMax );
+		}
 	}
-	myArray[myItems] = it; // write it
-	myItems++;
+	myArray[index] = it; // write it
+	if (index == myItems) { // adding item at next available position
+		myItems++;
+	}
 }
 
 /**
@@ -360,36 +373,40 @@ void Vec<Item>::endWriteWP() {
 // monitors versions of locking
 template <class Item>
 void Vec<Item>::beginReadM() {
+	pthread_mutex_lock( &mutex );
 	while( numWriters > 0 ) {		// wait for readOK signal while there are writers in the data
-		pthread_mutex_lock( &mutex );
 		pthread_cond_wait( &readOK, &mutex );
-		pthread_mutex_unlock( &mutex );
 	}
 	numReaders++;
-	pthread_cond_signal( &readOK ); // alert other threads they may read
+	pthread_mutex_unlock( &mutex );
 }
 
 template <class Item>
 void Vec<Item>::endReadM() {
+	pthread_mutex_lock( &mutex );
 	numReaders--;
 	if( numReaders == 0 ) pthread_cond_signal( &writeOK );
+	pthread_mutex_unlock( &mutex );
 }
 
 template <class Item>
 void Vec<Item>::beginWriteM() {
+	pthread_mutex_lock( &mutex );
 	while( numReaders > 0 || numWriters > 0 ) { // wait for writeOK signal while any readers or writers in the data
-		pthread_mutex_lock( &mutex );
 		pthread_cond_wait( &writeOK, &mutex );
-		pthread_mutex_unlock( &mutex );
 	}
 	numWriters++;
+	pthread_mutex_unlock( &mutex );
 }
 
 template <class Item>
 void Vec<Item>::endWriteM() {
+	pthread_mutex_lock( &mutex );
 	numWriters--;
-	pthread_cond_signal( &writeOK ); // alert other writers they may write
-	pthread_cond_signal( &readOK );  // alert other readers they may read
+//	pthread_cond_signal( &writeOK ); // alert other writers they may write
+	if( numWriters == 0 )
+		pthread_cond_broadcast( &readOK );  // alert other readers they may read
+	pthread_mutex_unlock( &mutex );
 }
 
 // destructor

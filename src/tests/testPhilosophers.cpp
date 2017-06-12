@@ -9,6 +9,12 @@
  * See also: https://en.wikipedia.org/wiki/Dining_philosophers_problem.
  *
  * Usage: ./testPhilosophers <numPhilosophers> <speed> <resolutionMethodChar>
+ * for <resolutionMethodChar> enter:
+ *  'w' for waitWhenBlocked, which results in Deadlock
+ *  'f' for forfeitWhenBlocked, which results in Livelock
+ *  'n' for nFrameRelease, which does not lock and is mostly fair for N philosophers, N >= 5
+ *  'r' for resourceHierarchy, which does not lock and is mostly fair for N philosophers, N >= 2
+ *  'o' for oddEven, which does not lock and is perfectly fair for N philosophers, N >= 2 (default)
  */
 
 #include <omp.h>
@@ -111,7 +117,7 @@ public:
     switch(myState) {
       case hasNone:  c=RED;    break;
       case hasRight: c=ORANGE; break;
-      case hasLeft:  c=YELLOW; break;
+      case hasLeft:  c=PURPLE; break;
       case hasBoth:  c=GREEN;  break;
       case isFull:   c=BLUE;   break;
       case thinking: c=BLUE;   break;
@@ -221,16 +227,19 @@ public:
         break;
     }
 
-    myCan2 = new Canvas(0,0,300,300,"Legend");
+    myCan2 = new Canvas(0,0,350,300,"Legend");
+    myCan2->setBackgroundColor(WHITE);
     myCan2->start();
     myCan2->drawText("Method:",16,32,32,BLACK);
     myCan2->drawText("\"" + methodString + "\"",32,64,24,BLACK);
     myCan2->drawText("Legend:",16,96,24,BLACK);
     myCan2->drawText("Red: Hungry",32,128,24,RED);
     myCan2->drawText("Orange: Has Right Fork",32,160,24,ORANGE);
-    myCan2->drawText("Yellow: Has Left Fork",32,192,24,YELLOW);
+    myCan2->drawText("Purple: Has Left Fork",32,192,24,PURPLE);
     myCan2->drawText("Green: Eating",32,224,24,GREEN);
     myCan2->drawText("Blue: Thinking",32,256,24,BLUE);
+    myCan2->drawText("Meals eaten",57,288,24,BROWN);
+    myCan2->drawCircle(41,279,3,8,BROWN);
   }
 
   ~Table() {
@@ -296,7 +305,7 @@ public:
         phils[id].setAction(releaseBoth);
         break;
       case thinking:
-        phils[id].think();
+        phils[id].setState(hasNone);
         break;
       default:
         break;
@@ -624,9 +633,9 @@ public:
    * \brief Method calculating angles calling draw methods of a philosopher and its fork or forks.
    */
   void drawStep() {
-    const int RAD = 300;
+    const int RAD = 250;
     const float ARC =2*PI/numPhils;
-    const float CLOSE = 0.15f;
+    const float CLOSE = 0.175f;
     const float BASEDIST = RAD+64;
 
     myCan->drawCircle(tabX,tabY,RAD-48,RAD,DARKGRAY);
@@ -642,7 +651,7 @@ public:
       }
       if (forks[i].user == i) {
         fangle = i*ARC + CLOSE;
-        fcolor = (phils[i].state() == hasBoth) ? GREEN : YELLOW;
+        fcolor = (phils[i].state() == hasBoth) ? GREEN : PURPLE;
       }
       else if((forks[i].user == (i+1)%numPhils)) {
         fangle = ((i+1)*ARC) - CLOSE;
@@ -694,7 +703,9 @@ void philosopherFunction(Canvas& can,int philosophers, std::string RM) {
 		  if (!paused) {
       		t.checkStep();
       		can.pauseDrawing();
-      //#pragma omp barrier               //Barrier for optional synchronization
+        if(method == forfeitWhenBlocked || method == waitWhenBlocked) {
+        #pragma omp barrier               //Barrier for optional synchronization
+        }
       		t.actStep();
       		can.clear();
           can.sleep(); // ensures each fork is only drawn once per frame
@@ -711,5 +722,6 @@ int main(int argc, char* argv[]) {
     int  speed = (argc > 2) ? atoi(argv[2]) : 10;
     std::string resM  = (argc > 3) ? argv[3] : "o";
     Canvas c(-1, -1, -1, -1, "Dining Philosophers",1.0f/speed);
+    c.setBackgroundColor(WHITE);
     c.run(philosopherFunction,nphil,resM);
 }

@@ -5,10 +5,11 @@
  * @return: The constructed Reader object.
  */
 Reader::Reader() : Thread() {
-	myColor = ColorInt(0,0,0);
+	myColor = ColorItem();
 	vec = NULL;
 	myCan = NULL;
 	numRead = 0;
+	recentX = recentY = myX = myY = 0;
 }
 
 /**
@@ -18,16 +19,16 @@ Reader::Reader() : Thread() {
  * @param: can, a handle to the Canvas that will be drawn on and will determine whether or not to continue consuming object from the Queue. 
  * @return: The constructed Reader object.
  */
-Reader::Reader(Vec<ColorInt> & sharedVec, unsigned long id, Canvas & can) : Thread(id) {
-	numRead = 0;
-	myColor = ColorInt(0, 0, 0);
+Reader::Reader(Vec<ColorItem> & sharedVec, unsigned long id, Canvas & can) : Thread(id) {
+	numRead = recentX = recentY = 0;
+	myColor = ColorItem();
+	recentColor = can.getBackgroundColor();
 	vec = &sharedVec;   //Get the address of that buffer and have the handle point to it
 	myCan = &can;	//Get the handle to the Canvas
 	int windowWidth = myCan->getWindowWidth();
-	unsigned long offset = getId();   //Get the id of the pthread (the id will act as an offset)
 	myX = windowWidth-50;
-	myY = 50 * (offset + 1);
-	draw();
+	myY = 50 * (id + 1) + 60;
+	draw(myX, myY);
 }
 
 /**
@@ -35,14 +36,37 @@ Reader::Reader(Vec<ColorInt> & sharedVec, unsigned long id, Canvas & can) : Thre
  */
 void Reader::read() {
 	while(myCan->isOpen()) { //While the Canvas is still open...
-		myCan->sleepFor( (rand()%10+3)/10 );
+		myCan->sleepFor( (rand()%20+2)/10 ); //Wait for random time
+		
+		// want to get in Vec to read (move to space next to the data)
+		draw(myX-75, myY);
+
+		// get in Vec to read
 		vec->beginRead();
-		myColor = vec->read();
-		myCan->sleep();
-		draw();
 		numRead++;
-		myCan->drawText( to_string(numRead), myX-5-10*floor( log10(numRead) ), myY+5, 20, BLACK);
-		vec->endRead();
+		draw(myX-130, myY);
+		
+		// do the reading
+		myColor = vec->read();
+		int beginX = myX-150, beginY = myY, endX = myColor.getX()+(ColorItem::width/2), endY = myColor.getY()+ColorItem::width/2;
+		myCan->drawLine(beginX, beginY, endX, endY, BLACK, false, true); // draw arrow to item drawn
+		myCan->sleep();
+		myCan->drawLine(beginX, beginY, endX, endY, recentColor, false, true); // erase the arrow
+		// tell all the ColorItems we may have overlapped to redraw themselves
+		if( getId()%2 == 0 ) {
+			for( int i = vec->getItems()-1; i >= 0; i--) {
+				vec->getItem(i).draw();
+			}
+		} else {
+			for( unsigned i = 0; i < vec->getItems(); i++) {
+				vec->getItem(i).draw();
+			}
+		}
+
+		// release lock
+		draw(myX, myY); //Return to base location
+		//std::cout << "Y" << std::flush;
+		vec->endRead(); //Unlock the Vec
 	}
 }
 
@@ -52,12 +76,23 @@ void Reader::read() {
  * @param: windowWidth, an int representing the window width of the Canvas.
  * (in order to draw the Reader on the right side of the Canvas, I had to take the max width of the Canvas and subtract it by an offset.)
  */
-void Reader::draw() {
-	ColorInt white = ColorInt(255, 255, 255);	
-	if(myColor == white) {
-		myColor = ColorInt(0, 0, 0);
-	}	
-	myCan->drawCircle(myX, myY, 20, 32, myColor);
+void Reader::draw(int x, int y) {
+	myCan->sleep();
+	erase();
+	recentColor = myCan->getPoint(x, y);
+	myCan->drawCircle(x, y, 20, 32, myColor.getColor());
+	int textSize = 20;
+	if( numRead > 99 ) textSize = 15;
+	myCan->drawText( to_string(numRead), x-15, y+5, textSize, BLACK);
+	recentX = x;
+	recentY = y;
+}
+
+/**
+ * erase() method erases the Reader on the Canvas
+ */
+void Reader::erase() {
+	myCan->drawCircle(recentX, recentY, 20, 32, recentColor);
 }
 
 /**

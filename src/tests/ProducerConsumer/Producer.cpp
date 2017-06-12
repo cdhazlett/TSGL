@@ -55,7 +55,6 @@ void Producer::draw(Canvas & can) {
 	ColorFloat color = Colors::highContrastColor(id);  //Get the color based off of the id
 	myY = myX * (id + 1); //Multiply the center y-coordinate by the id of the pthread and add 1	
 	can.drawCircle(myX, myY, 20, 32, color);
-	//can.drawText( to_string(numProduced), myX-5-10*floor( log10(numProduced) ), myY+5, 20, BLACK);
 	can.drawText( to_string(numProduced), myX-15, myY+5, 20, BLACK);
 }
 
