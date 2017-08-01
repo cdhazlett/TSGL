@@ -114,6 +114,16 @@ all: tester ReaderWriter DiningPhilosophers ProducerConsumer sftests $(TESTFOLDE
 
 vis: ReaderWriter DiningPhilosophers ProducerConsumer
 
+#Shared Object Library
+lib: $(TSGLOBJ) $(HEADERS)
+	@echo ""
+	@tput setaf 3;
+	@echo "//////////////////// Linking TSGL Library ////////////////////"
+	@tput sgr0;
+	@echo ""
+	$(CC) $(TSGLOBJ) $(LFLAGS) -shared -o lib/tsgl.so
+
+
 #Test Program
 tester: $(PRGMOBJ) $(TSGLOBJ) $(HEADERS)
 	@echo ""

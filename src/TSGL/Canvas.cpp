@@ -241,6 +241,7 @@ namespace tsgl {
   }
 
   void Canvas::bindToScroll(std::function<void(double, double)> function) {
+    //TODO on macs, scrolls out no matter which direction?
     scrollFunction = function;
   }
 
