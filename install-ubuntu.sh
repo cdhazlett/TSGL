@@ -1,14 +1,13 @@
 #!/bin/bash
 #
 # install-linux.sh is the installation script for TSGL on Linux.
-# Last updated: 06/30/26
+# Last updated: 8/2/2017
 #
-# -SUBJECT TO CHANGE-
 ################################################################
 
 echo "Installing TSGL..."
 
-#Determine the OpenGL version (has to be 3.2 or higher)
+#Determine the OpenGL version (has to be 2.1 or higher)
 #(Use glxinfo, available in the mesa-utils package)
 sudo apt-get install mesa-utils
 
@@ -173,13 +172,11 @@ echo
 glfw=0   #glfw
 GL=0  #OpenGL
 freetype=0  #Freetype
-GLEW=0  #And GLEW
 
 #To do so, use the ldconfig command and pipe it to grep with the following keywords:
 ldconfig -p | grep glfw > glfw.txt   #'glfw'
 ldconfig -p | grep GL > opengl.txt  #'GL'
 ldconfig -p | grep freetype > freetype.txt  #'freetype'
-ldconfig -p | grep GLEW > glew.txt  #and 'GLEW'
 
 #Based off of the piping above, if any of the keywords were found, then the corresponding text files will have
 #information about the libraries currently installed.
@@ -224,20 +221,9 @@ then
 	fi
 fi
 
-#GLEW
-if [ -e glew.txt ]
-then
-	if grep "libGLEW.so" glew.txt > holder.txt
-	then
-		GLEW=1
-		echo
-	fi
-fi
-
 #Alright, we're done checking.
 #Clean up the text files, we no longer need them.
 rm glfw.txt
-rm glew.txt
 rm opengl.txt
 rm freetype.txt
 rm holder.txt
@@ -255,16 +241,13 @@ elif [ $freetype == 0 ]
 then
 	echo "Freetype not found! (Will be resolved shortly)."
 	exit 1
-elif [ $GLEW == 0 ]
-then
-	echo "GLEW not found! (Will be resolved shortly)"  #Same with GLEW
 fi
 
-#Alright, now get glfw and GLEW (freetype can be gained through the wiki as well as OpenGL).
+#Alright, now get glfw (freetype can be gained through the wiki as well as OpenGL).
 echo "Getting other dependencies (or updating if all found)..."
 
 #Get the necessary header files as well as doxygen, git
-sudo apt-get install --yes --force-yes build-essential libtool cmake xorg-dev libxrandr-dev libxi-dev x11proto-xf86vidmode-dev libglu1-mesa-dev git libglew-dev doxygen
+sudo apt-get install --yes --force-yes build-essential libtool cmake xorg-dev libxrandr-dev libxi-dev x11proto-xf86vidmode-dev libglu1-mesa-dev git doxygen
 
 echo
 
@@ -319,7 +302,7 @@ echo
 
 echo
 
-#Dependencies were installed! (GLEW and glfw, as well as g++)
+#Dependencies were installed! (glfw, as well as g++)
 echo "All dependencies resolved!"
 
 echo
@@ -337,10 +320,10 @@ mkdir -p lib bin build
 
 #Make the library
 make clean
-make
+sudo make
 
 #Install it
-sudo make install
+# sudo make install
 
 #Take out the .cpp files from the TSGL library package folder
 # sudo rm -rf /usr/local/include/TSGL/*.cpp

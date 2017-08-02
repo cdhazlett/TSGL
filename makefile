@@ -66,13 +66,17 @@ endif
 #Linker flags
 # Linux
 ifeq ($(UNAME), Linux)
+#Flags for linking programs built with TSGL
 LFLAGS = \
-	-Llib/ \
 	-L/usr/local/lib \
 	-L/usr/lib \
-	-L/usr/X11/lib/ \
-	-L/opt/AMDAPP/lib/x86_64/ \
-	-fopenmp -lfreetype -ldl -lm -lGLEW -lglfw -lX11 -lGL -lXrandr
+	-fopenmp -lfreetype -ldl -lm -lglfw -ltsgl
+
+#Flags for linking the TSGL shared library
+LIBLFLAGS = \
+	-L/usr/local/lib \
+	-L/usr/lib \
+	-shared -fopenmp -lfreetype -ldl -lm -lglfw
 endif
 
 
@@ -80,7 +84,7 @@ endif
 ifeq ($(UNAME), Darwin)
 LFLAGS = \
 	-Llib/ -L/usr/local/lib  -L/usr/X11/lib/ \
-	-lfreetype -lGLEW -lglfw -lX11  -lXrandr -fopenmp \
+	-lfreetype -lGLEW -lglfw -lX11  -lXrandr -fopenmp -ltsgl\
 	-framework Cocoa -framework OpenGl -framework IOKit -framework Corevideo
 endif
 
@@ -110,31 +114,59 @@ CFLAGS = \
 
 
 
-all: tester ReaderWriter DiningPhilosophers ProducerConsumer sftests $(TESTFOLDERS)
+all: lib tester ReaderWriter DiningPhilosophers ProducerConsumer sftests $(TESTFOLDERS)
 
 vis: ReaderWriter DiningPhilosophers ProducerConsumer
 
+
+
+
+
+
 #Shared Object Library
-lib: $(TSGLOBJ) $(HEADERS)
+lib: lib/libtsgl.so
+
+install: lib
+	@echo ""
+	@tput setaf 6;
+	@echo "//////////////////// Installing TSGL Library ////////////////////"
+	@echo ""
+	@echo "Removing old versions of TSGL..."
+	@tput setaf 2;
+	@sudo rm -f /usr/local/lib/libtsgl.so
+	@sudo install lib/libtsgl.so /usr/local/lib/
+	@echo "Library installed at /usr/local/lib/libtsgl.so"
+	@sudo ldconfig
+	@tput sgr0;
+
+lib/libtsgl.so: $(TSGLOBJ) $(HEADERS)
 	@echo ""
 	@tput setaf 3;
 	@echo "//////////////////// Linking TSGL Library ////////////////////"
 	@tput sgr0;
 	@echo ""
-	$(CC) $(TSGLOBJ) $(LFLAGS) -shared -o lib/tsgl.so
+	$(CC) $(TSGLOBJ) $(LIBLFLAGS) -o lib/libtsgl.so
+
+
+
+
+
+
+
+
 
 
 #Test Program
-tester: $(PRGMOBJ) $(TSGLOBJ) $(HEADERS)
+tester: $(PRGMOBJ) $(HEADERS) install
 	@echo ""
 	@tput setaf 3;
 	@echo "//////////////////// Linking Tester Program ////////////////////"
 	@tput sgr0;
 	@echo ""
-	$(CC) $(PRGMOBJ) $(TSGLOBJ) $(LFLAGS) -o $(BINDIR)/$(notdir $(@))
+	$(CC) $(PRGMOBJ) -o $(BINDIR)/$(notdir $(@)) $(LFLAGS)
 
 #Reader Writer
-ReaderWriter: $(RWOBJ) $(TSGLOBJ)
+ReaderWriter: $(RWOBJ) install
 	@echo ""
 	@tput setaf 3;
 	@echo "//////////////////// Linking Reader/Writer Visualization ////////////////////"
@@ -143,7 +175,7 @@ ReaderWriter: $(RWOBJ) $(TSGLOBJ)
 	$(CC) $(RWOBJ) $(TSGLOBJ) $(LFLAGS) -o $(BINDIR)/$(notdir $(@))
 
 #Dining Philosophers
-DiningPhilosophers: $(DPHOBJ) $(TSGLOBJ)
+DiningPhilosophers: $(DPHOBJ) install
 	@echo ""
 	@tput setaf 3;
 	@echo "//////////////////// Linking Dining Philosophers Visualization ////////////////////"
@@ -152,7 +184,7 @@ DiningPhilosophers: $(DPHOBJ) $(TSGLOBJ)
 	$(CC) $(DPHOBJ) $(TSGLOBJ) $(LFLAGS) -o $(BINDIR)/$(notdir $(@))
 
 #Producer Consumer
-ProducerConsumer: $(PCOBJ) $(TSGLOBJ)
+ProducerConsumer: $(PCOBJ) install
 	@echo ""
 	@tput setaf 3;
 	@echo "//////////////////// Linking Producer/Consumer Visualization ////////////////////"
@@ -163,10 +195,10 @@ ProducerConsumer: $(PCOBJ) $(TSGLOBJ)
 
 
 #Build all single-file tests
-sftests: $(TSGLOBJ) $(TESTPRGMS)
+sftests: $(TESTPRGMS)
 
 #Single-file test programs
-$(TESTPRGMS): %: $(BLDDIR)/tests/%.o $(TSGLOBJ)
+$(TESTPRGMS): %: $(BLDDIR)/tests/%.o install
 	@echo ""
 	@tput setaf 3;
 	@echo "//////////////////// Linking Test Program: $(@) ////////////////////"
@@ -176,7 +208,7 @@ $(TESTPRGMS): %: $(BLDDIR)/tests/%.o $(TSGLOBJ)
 
 
 #Tests with multiple files
-$(TESTFOLDERS): $(TSGLOBJ)
+$(TESTFOLDERS): install
 	cd tests/$@ && make
 
 
