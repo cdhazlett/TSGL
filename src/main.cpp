@@ -70,7 +70,7 @@ void alphaRectangleFunction(Canvas& can) {
     // can.add(c1);
 
     // // Add a blue rectangle at the bottom
-    Rectangle* botBlueRect = new Rectangle(0, 0, 1000, 1000, ColorInt(0*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
+    Rectangle* botBlueRect = new Rectangle(0, 0, 20, 40, ColorInt(0*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
     botBlueRect->setHasOutline(false);
     botBlueRect->setLayer(0);
     can.add(botBlueRect);
@@ -109,9 +109,9 @@ void alphaRectangleFunction(Canvas& can) {
     // }
 
     // // Test the text
-    Text* myText = new Text("Testing some more stuff", 200, 200, 26, WHITE);
+    Text* myText = new Text("Shared Library", 200, 200, 26, WHITE);
     myText->setCenter(100,100);
-    myText->setRotation(-90, 100, 100);
+    myText->setRotation(-45, 100, 100);
     can.add(myText);
     // printf("Text is %d pixels long.\n", myText->getStringWidth());
 
