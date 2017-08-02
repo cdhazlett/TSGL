@@ -173,7 +173,7 @@ namespace tsgl {
     // else { glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE); }
     glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
     glfwWindowHint(GLFW_VISIBLE, GL_FALSE);                         // Don't show the window at first
-    glfwWindowHint(GLFW_SAMPLES,4);
+    glfwWindowHint(GLFW_SAMPLES,8);
 
     // GLFW must be done with making a window before we start making another one
     // This mutex ensures that only one window is created at a time
@@ -465,6 +465,8 @@ namespace tsgl {
     glfwSetWindowShouldClose(window, GL_FALSE);
 
     setupCamera();  //Camera transformations
+
+    glEnable(GL_MULTISAMPLE);
 
     // Count number of frames
     int counter = 0;

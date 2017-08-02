@@ -136,6 +136,8 @@ install: lib
 	@sudo rm -f /usr/local/lib/libtsgl.so
 	@sudo install lib/libtsgl.so /usr/local/lib/
 	@echo "Library installed at /usr/local/lib/libtsgl.so"
+	@sudo cp -r src/TSGL /usr/local/include
+	@sudo rm -rf /usr/local/include/TSGL/*.cpp
 	@sudo ldconfig
 	@tput sgr0;
 

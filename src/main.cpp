@@ -1,4 +1,4 @@
-#include <tsgl.h>
+#include <TSGL/tsgl.h>
 using namespace tsgl;
 
 /*!
