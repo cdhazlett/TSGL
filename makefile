@@ -126,7 +126,7 @@ vis: ReaderWriter DiningPhilosophers ProducerConsumer
 #Shared Object Library
 lib: lib/libtsgl.so
 
-install: lib
+install: lib tester
 	@echo ""
 	@tput setaf 6;
 	@echo "//////////////////// Installing TSGL Library ////////////////////"
@@ -135,6 +135,7 @@ install: lib
 	@tput setaf 2;
 	@sudo rm -f /usr/local/lib/libtsgl.so
 	@sudo install lib/libtsgl.so /usr/local/lib/
+	@sudo install bin/tester /usr/local/bin/testTSGL
 	@echo "Library installed at /usr/local/lib/libtsgl.so"
 	@sudo cp -r src/TSGL /usr/local/include
 	@sudo rm -rf /usr/local/include/TSGL/*.cpp

@@ -78,7 +78,7 @@ class Text : public DiscreteDrawable {
     *   \param c Reference of the color for the Text.
     *   \param fname The location of the font's file. (Defaults to FreeSans.)
     */
-    Text(std::string t, int x, int y, unsigned int font_size, const ColorFloat &c, std::string fname = "assets/freefont/FreeSans.ttf");
+    Text(std::string t, int x, int y, unsigned int font_size, const ColorFloat &c, std::string fname = "/usr/local/lib/TSGL/assets/freefont/FreeSans.ttf");
     void generateTextBitmaps();
     void render();
 
