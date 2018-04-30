@@ -12,7 +12,9 @@
   #define GLEW_STATIC
 #endif
 
-#include "glad/glad.h"      // New loader for GL function calls TODO: fix the path here
+#include "../glad/glad.h"      // New loader for GL function calls TODO: fix the path here
+
+#include <OpenGL/glu.h> // TODO works on mac, change to GL on linux!!
 
 
 // #include "Array.h"          // Our own array for buffering drawing operations
@@ -44,6 +46,9 @@
 #include "Triangle.h"       // Our own class for drawing triangles
 #include "UnfilledTriangle.h" //Our own class for drawing unfilled triangles
 #include "Util.h"           // Needed constants and has cmath for performing math operations
+
+// 3D Primitives
+#include "Cube.h"
 
 #include <functional>       // For callback upon key presses
 #include <iostream>         // DEBUGGING
@@ -109,14 +114,10 @@ private:
     bool            loopAround;                                         // Whether our point buffer has looped back to the beginning this
     int             monitorX, monitorY;                                 // Monitor position for upper left corner
     double          mouseX, mouseY;                                     // Location of the mouse once HandleIO() has been called
-	bool            readyToDraw;                                        // Whether a Canvas is ready to start drawing
+    bool            readyToDraw;                                        // Whether a Canvas is ready to start drawing
     int             realFPS;                                            // Actual FPS of drawing
     GLuint          renderedTexture;                                    // Texture to which we render to every frame
-  // #ifdef __APPLE__
-  //   pthread_t     renderThread;                                         // Thread dedicated to rendering the Canvas
-  // #else
     std::thread   renderThread;                                         // Thread dedicated to rendering the Canvas
-  // #endif
     doubleFunction  scrollFunction;                                     // Single function object for scrolling
     GLtexture       shaderFragment,                                     // Address of the fragment shader
                     shaderProgram,                                      // Addres of the shader program to send to the GPU
@@ -125,15 +126,12 @@ private:
     bool            started;                                            // Whether our canvas is running and the frame counter is counting
     std::mutex      syncMutex;                                          // Mutex for syncing the rendering thread with a computational thread
     int             syncMutexLocked;                                    // Whether the syncMutex is currently locked
-	int             syncMutexOwner;                                     // Thread ID of the owner of the syncMutex
+    int             syncMutexOwner;                                     // Thread ID of the owner of the syncMutex
     GLtexture       textureShaderFragment,                              // Address of the textured fragment shader
                     textureShaderProgram,                               // Addres of the textured shader program to send to the GPU
                     textureShaderVertex;                                // Address of the textured vertex shader
     bool            toClose;                                            // If the Canvas has been asked to close
     unsigned int    toRecord;                                           // To record the screen each frame
-    // GLint           uniModel,                                           // Model perspective of the camera
-    //                 uniView,                                            // View perspective of the camera
-    //                 uniProj;                                            // Projection of the camera
     GLtexture       vertexArray,                                        // Address of GL's array buffer object
                     vertexBuffer;                                       // Address of GL's vertex buffer object
     bool            windowClosed;                                       // Whether we've closed the Canvas' window or not
@@ -167,21 +165,22 @@ private:
     static void  scrollCallback(GLFWwindow* window, double xpos,
                    double ypos);                                        // GLFW callback for scrolling
     static void  setDrawBuffer(int buffer);                             // Sets the buffer used for drawing
-    void         setupCamera();                                         // Setup the 2D camera for smooth rendering
-  // #ifdef __APPLE__
-  //   static void* startDrawing(void* cPtr);
-  // #else
+    virtual void         setupCamera();                                         // Setup the 2D camera for smooth rendering //TODO remove me
+    virtual void updateCamera();
     static void  startDrawing(Canvas *c);                               // Static method that is called by the render thread
-  // #endif
     void         textureShaders(bool state);                            // Turn textures on or off
     static bool  testFilledDraw(Canvas& can);                           // Unit test for drawing shapes and determining if fill works
     static bool testLine(Canvas& can);                                  // Unit tester for lines
     static bool testAccessors(Canvas& can);                             // Unit tester for accessor methods
     static bool testDrawImage(Canvas& can);                             // Unit tester for drawing images (simultaneously a Unit test for Image)
+
+
 protected:
+
   GLFWwindow*     window;                                             // GLFW window that we will draw to
   bool            isRaster = false;                                   ///< Whether is a RasterCanvas or not.
   std::mutex rasterPointMutex;                                        // Mutex that guards the raster point vec
+
   struct rasterPointStruct {
     float x;
     float y;
@@ -191,7 +190,10 @@ protected:
     int B;
     int A;
   };
+
   std::vector<rasterPointStruct> rasPointVec;                           // Vector to hold raster points waiting to be drawn
+
+
 public:
 
     /*!

@@ -2,6 +2,10 @@
 
 namespace tsgl {
 
+
+  GLfloat light_diffuse[] = {1.0, 0.0, 0.0, 1.0};  /* Red diffuse light. */
+  GLfloat light_position[] = {1.0, 1.0, 1.0, 0.0};  /* Infinite light location. */
+
   // Setup vars
   int Canvas::drawBuffer = GL_FRONT_LEFT;
   bool Canvas::glfwIsReady = false;
@@ -112,7 +116,7 @@ namespace tsgl {
     #endif
 
     // Enable and disable necessary stuff
-    glDisable(GL_DEPTH_TEST);                           // Disable depth testing because we're not drawing in 3d
+    glEnable(GL_DEPTH_TEST);                           // Disable depth testing because we're not drawing in 3d
     glDisable(GL_DITHER);                               // Disable dithering because pixels do not (generally) overlap
     glDisable(GL_CULL_FACE);                            // Disable culling because the camera is stationary
     glEnable(GL_BLEND);                                 // Enable blending
@@ -219,15 +223,31 @@ namespace tsgl {
   }
 
   void Canvas::setupCamera() {
+    printf("Camera changes in the canvas function\n");
     // Set up camera positioning
     // Initialize Projection Matrix
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
-    glOrtho( 0.0, winWidth, winHeight, 0.0, 1.0, -1.0 );
+    glOrtho( 0.0, winWidth, winHeight, 0.0, 100.0, -100.0 );
+
+    // gluPerspective(90.0, (float)winWidth/(float)winHeight, .1, 50000.0);
+    //
+    // gluLookAt((float)winWidth/2, (float)winHeight/2, 500,  /* eye is at (0,0,5) */
+    //   (float)winWidth/2, (float)winHeight/2, .0,      /* center is at (0,0,0) */
+    //   0.0, 1.0, 0.0);      /* up is in positive Y direction */
+    //
+    //   // glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    //   // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    //   // glEnable(GL_LIGHT0);
+    //   // glEnable(GL_LIGHTING);
 
     // Initialize Modelview Matrix
     glMatrixMode( GL_MODELVIEW );
     glLoadIdentity();
+
+  }
+
+  void Canvas::updateCamera() {
 
   }
 
@@ -448,7 +468,7 @@ namespace tsgl {
 
   void Canvas::draw() {
 
-    // bool debugRectIsRed = false;
+    bool debugRectIsRed = true;
     // printf("Note: Canvas is drawing a flashing square in the corner to test whether it remains active during a crash.\n");
     // Rectangle* debugRect = new Rectangle(0, 0, 10, 10, BLACK, BLACK);
     // debugRect->setLayer(100);
@@ -470,6 +490,8 @@ namespace tsgl {
     float lastTime = 0;
     while (!glfwWindowShouldClose(window) && !isFinished) {
 
+      updateCamera();
+
       #ifdef __APPLE__
       windowMutex.lock();
       #endif
@@ -478,7 +500,7 @@ namespace tsgl {
       else { glDrawBuffer(GL_FRONT_AND_BACK); } //TODO causes weird stuff on Pi
 
       // Clear the canvas
-      if( !isRaster ) glClear(GL_COLOR_BUFFER_BIT);
+      if( !isRaster ) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
       // Enable vertex arrays
       glEnableClientState( GL_VERTEX_ARRAY );
@@ -502,14 +524,17 @@ namespace tsgl {
             float rotDeg, rotX, rotY = 0;
             (*it)->getRotation(rotDeg, rotX, rotY);
 
-            glMatrixMode(GL_PROJECTION);
+            glMatrixMode(GL_MODELVIEW);
             glPushMatrix();
             glTranslatef(rotX, rotY, 0.f);
             glRotatef(rotDeg, 0.f, 0.f, 1.f);
             glTranslatef(-rotX, -rotY, 0.f);
           }
 
+          // printf("%s\n", "Entering drawing area...");
+
           if ((*it)->getIsDiscreteRendered()) {
+            printf("%s\n", "Discrete Rendering");
             DiscreteDrawable* rc = *it;
             rc->render();
           } else {
@@ -545,6 +570,12 @@ namespace tsgl {
                 poly->getOutlineColor()->B,
                 poly->getOutlineColor()->A
               );
+              // glColor4f(
+              //   1.f,
+              //   0.f,
+              //   0.f,
+              //   1.f
+              // );
               glDrawArrays(
                 poly->getOutlineGeometryType(), // The type of geometry from the object (eg. GL_TRIANGLES)
                 0, // The starting index of the array
@@ -555,7 +586,7 @@ namespace tsgl {
 
           // Unset rotations
           if (rotationSet) {
-            glMatrixMode(GL_PROJECTION);
+            glMatrixMode(GL_MODELVIEW);
             glPopMatrix();
           }
 
@@ -595,11 +626,35 @@ namespace tsgl {
         objectBuffer.clear();
       }
 
+
+// testing stuff
+      // glMatrixMode(GL_MODELVIEW);
+      glColor4f(1,0,0,1);
+
+      // glPushMatrix();
+      // glRotatef(2, 0.f, .3, 0.f);
+
+
+      // glPopMatrix();
+
+// testing stuff
+
       objectMutex.unlock();
 
 
       // Disable vertex arrays
       glDisableClientState( GL_VERTEX_ARRAY );
+
+
+      // Set the camera rotation
+
+      // glMatrixMode(GL_PROJECTION);
+      // glPushMatrix();
+      // gluLookAt( 100, 100, -100,    // the position of the camera
+      //            0, 0, 0, // the position the camera is pointed to
+      //            0.0, -1.0, 0.0       // for now, the camera remains level with the "ground"
+      //          );
+      // glPopMatrix();
 
 
       // Read pixels into screen buffer
@@ -622,6 +677,7 @@ namespace tsgl {
       counter++;
       // printf("Frame %d finished.\n", counter);
       if (counter==60) {
+        debugRectIsRed = !debugRectIsRed; //TODO DEBUG STUFF, REMOVE ME
         #ifdef __DEBUG__
         printf("Did 60 frames in %f seconds: %f FPS.\n", (glfwGetTime()-lastTime), 60/(glfwGetTime()-lastTime));
         #endif

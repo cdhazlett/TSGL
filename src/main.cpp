@@ -1,4 +1,6 @@
 #include <tsgl.h>
+#include <thread>         // std::this_thread::sleep_for
+#include <chrono>         // std::chrono::seconds
 using namespace tsgl;
 
 /*!
@@ -23,33 +25,33 @@ using namespace tsgl;
 //        return rec;
 //       //  drawShape(rec);                                     // Push it onto our drawing buffer
 // }
-
-void alphaRectangleFunction(Canvas& can) {
+//
+void alphaRectangleFunction(Canvas3D& can) {
     const int WW = can.getWindowWidth(), WH = can.getWindowHeight();
     int a, b, c, d;
     // int counter = 0;
 
-    //  Add a traingle to the test page
-    Triangle* testTri = new Triangle(100, 100, 200, 100, 50, 150, ColorInt(0*MAX_COLOR, 0*MAX_COLOR, 1*MAX_COLOR, 255));
-    testTri->setLayer(5);
-    can.add(testTri);
-
+    // //  Add a triangle to the test page
+    // Triangle* testTri = new Triangle(100, 100, 200, 100, 50, 150, ColorInt(0*MAX_COLOR, 0*MAX_COLOR, 1*MAX_COLOR, 255));
+    // testTri->setLayer(5);
+    // can.add(testTri);
+    //
     // // Testing old rectangle api
     // can.setDefaultLayer(7);
     // can.drawRectangle(200, 200, 250, 250, PURPLE);
     // can.setDefaultLayer(0);
-
-    // Test the points
-    PointLayer* pl = new PointLayer(PURPLE);
-    can.add(pl);
-    pl->setLayer(100);
-    pl->addPoint(100,100);
-
-    int plcounter = 0;
-    for (plcounter = 0; plcounter<10000; plcounter++) {
-      pl->addPoint(plcounter%600,floor(plcounter/600)+10);
-      // printf("Point (%f, %f)\n", (float)plcounter, floor(plcounter/400));
-    }
+    //
+    // // Test the points
+    // PointLayer* pl = new PointLayer(PURPLE);
+    // can.add(pl);
+    // pl->setLayer(100);
+    // pl->addPoint(100,100);
+    //
+    // int plcounter = 0;
+    // for (plcounter = 0; plcounter<10000; plcounter++) {
+    //   pl->addPoint(plcounter%600,floor(plcounter/600)+10);
+    //   // printf("Point (%f, %f)\n", (float)plcounter, floor(plcounter/400));
+    // }
 
     // Add the red and white rects over the top
     Rectangle* topRedRect = new Rectangle(500, 500, 50, 50, ColorInt(1*MAX_COLOR, 0*MAX_COLOR, 0*MAX_COLOR, 255));
@@ -59,30 +61,62 @@ void alphaRectangleFunction(Canvas& can) {
     can.add(topRedRect);
     can.add(topWhiteRect);
 
-    // Test the arrows
-    can.setDefaultLayer(5);
-    Arrow* greenArrow = new Arrow(600, 600, 560, 500, GREEN);
-    Arrow* blueArrow  = new Arrow(500, 600, 540, 250, BLUE, true);
-    can.add(greenArrow);
-    can.add(blueArrow);
+    // // Test the arrows
+    // can.setDefaultLayer(5);
+    // Arrow* greenArrow = new Arrow(600, 600, 560, 500, GREEN);
+    // Arrow* blueArrow  = new Arrow(500, 600, 540, 250, BLUE, true);
+    // can.add(greenArrow);
+    // can.add(blueArrow);
 
     // Circle* c1 = new Circle(300, 500, 50, 100, PURPLE, false);
     // can.add(c1);
 
-    // // Add a blue rectangle at the bottom
-    Rectangle* botBlueRect = new Rectangle(0, 0, 1000, 1000, ColorInt(0*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
-    botBlueRect->setHasOutline(false);
-    botBlueRect->setLayer(0);
-    can.add(botBlueRect);
+    // // // Add a blue rectangle at the bottom
+    // Rectangle* botBlueRect = new Rectangle(0, 0, 1000, 1000, ColorInt(0*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
+    // botBlueRect->setHasOutline(false);
+    // botBlueRect->setLayer(0);
+    // can.add(botBlueRect);
 
 
 
 
 
-    Rectangle* topWhitePointRect = new Rectangle(100, 100, 1, 1, ColorInt(255, 255, 255, 255));
-    topWhitePointRect->setHasOutline(false);
-    topWhitePointRect->setLayer(100);
-    can.add(topWhitePointRect);
+    // Rectangle* topWhitePointRect = new Rectangle(0, 0, 200, 200, ColorInt(255, 255, 255, 255));
+    // // topWhitePointRect->setHasOutline(false);
+    // // topWhitePointRect->setLayer(100);
+    // can.add(topWhitePointRect);
+
+    Cube* testCube = new Cube(0, 0, 0, 200, 200, 200, ColorInt(255, 255, 255, 255));
+    // // // topWhitePointRect->setHasOutline(false);
+    // // // topWhitePointRect->setLayer(100);
+    can.add(testCube);
+
+    Cube* testCube2 = new Cube(250, 0, 0, 200, 200, 200, ColorInt(255, 0, 0, 255));
+    can.add(testCube2);
+
+
+
+    #define PI 3.14159265
+
+    float camX, camZ = 0.f;
+    int degrees = 0;
+
+    while (can.isOpen()) {
+      can.sleep();
+      camX = sin(degrees*PI/180)*1000;
+      camZ = cos(degrees*PI/180)*1000;
+
+      // printf("The circle X is %f, and the circle Y is %f", camX, camZ);
+
+      // can.setCameraPosition(camX, 0, camZ);
+      can.setCameraPosition(camX, 100, camZ);
+      // can.setCameraFocusPoint(200, 200, 0);
+
+      topRedRect->centeredRotation(degrees);
+
+      degrees++;
+      degrees = degrees % 360;
+    }
 
 
 
@@ -108,54 +142,54 @@ void alphaRectangleFunction(Canvas& can) {
     //   can.add(topWhitePointRect);
     // }
 
-    // // Test the text
-    Text* myText = new Text("Testing some more stuff", 200, 200, 26, WHITE);
-    myText->setCenter(100,100);
-    myText->setRotation(-90, 100, 100);
-    can.add(myText);
-    // printf("Text is %d pixels long.\n", myText->getStringWidth());
+    // // // Test the text
+    // Text* myText = new Text("Testing some more stuff", 200, 200, 26, WHITE);
+    // myText->setCenter(100,100);
+    // myText->setRotation(-90, 100, 100);
+    // can.add(myText);
+    // // printf("Text is %d pixels long.\n", myText->getStringWidth());
 
     // Queue to hold the last few rects
-    std::queue<Rectangle *> myQueue;
-
-    can.setDefaultLayer(1);
-    while (can.isOpen()) {
-        can.sleep();
-
-        // Some random widths and heights
-        a = rand() % WW; b = rand() % WH;
-        c = rand() % WW; d = rand() % WH;
-
-        // Make the new rectangle and get the pointer
-        Rectangle* myRectangle = new Rectangle(a, b, abs(a-c), abs(b-d), ColorInt(rand()%MAX_COLOR, rand()%MAX_COLOR, rand()%MAX_COLOR, 50));
-        myRectangle->setHasOutline(false);
-
-        // Push the rectangle onto the queue and onto the canvas so it can render
-        myQueue.push(myRectangle);
-        can.add(myRectangle);
-
-        // Remove old rectangles if there are more than 40 of them
-        if (myQueue.size() >= 50) {
-          can.remove(myQueue.front());  // stop rendering the rectangle each frame
-          delete myQueue.front(); // free memory
-          myQueue.pop(); // remove the rectangle object from the queue
-
-          // can.clear();
-          // myQueue.clear();
-          // std::queue<Rectangle*>().swap(myQueue);
-
-        }
-
-        // Test get pixel value
-        // ColorInt pixTest = can.getPixel(100,100);
-        // printf("R: %d G: %d B: %d A: %d \n", pixTest.R,pixTest.G,pixTest.B,pixTest.A);
-
-        // int i = 0;
-        // for (i=0; i<20; i++) can.drawPoint((float)(rand()%400), (float)(rand()%400), PURPLE, 10.0);
-
-        // ColorInt testPoint = can.getPoint(100,100);
-        // printf("R: %d, G: %d, B: %d, A: %d\n", testPoint.R, testPoint.G, testPoint.B, testPoint.A);
-    }
+    // std::queue<Rectangle *> myQueue;
+    //
+    // can.setDefaultLayer(1);
+    // while (can.isOpen()) {
+    //     can.sleep();
+    //
+    //     // Some random widths and heights
+    //     a = rand() % WW; b = rand() % WH;
+    //     c = rand() % WW; d = rand() % WH;
+    //
+    //     // Make the new rectangle and get the pointer
+    //     Rectangle* myRectangle = new Rectangle(a, b, abs(a-c), abs(b-d), ColorInt(rand()%MAX_COLOR, rand()%MAX_COLOR, rand()%MAX_COLOR, 50));
+    //     myRectangle->setHasOutline(false);
+    //
+    //     // Push the rectangle onto the queue and onto the canvas so it can render
+    //     myQueue.push(myRectangle);
+    //     can.add(myRectangle);
+    //
+    //     // Remove old rectangles if there are more than 40 of them
+    //     if (myQueue.size() >= 50) {
+    //       can.remove(myQueue.front());  // stop rendering the rectangle each frame
+    //       delete myQueue.front(); // free memory
+    //       myQueue.pop(); // remove the rectangle object from the queue
+    //
+    //       // can.clear();
+    //       // myQueue.clear();
+    //       // std::queue<Rectangle*>().swap(myQueue);
+    //
+    //     }
+    //
+    //     // Test get pixel value
+    //     // ColorInt pixTest = can.getPixel(100,100);
+    //     // printf("R: %d G: %d B: %d A: %d \n", pixTest.R,pixTest.G,pixTest.B,pixTest.A);
+    //
+    //     // int i = 0;
+    //     // for (i=0; i<20; i++) can.drawPoint((float)(rand()%400), (float)(rand()%400), PURPLE, 10.0);
+    //
+    //     // ColorInt testPoint = can.getPoint(100,100);
+    //     // printf("R: %d, G: %d, B: %d, A: %d\n", testPoint.R, testPoint.G, testPoint.B, testPoint.A);
+    // }
 }
 
 //Takes command-line arguments for the width and height of the screen
@@ -164,9 +198,12 @@ int main(int argc, char* argv[]) {
     int h = (argc > 2) ? atoi(argv[2]) : w;
     // if (w <= 0 || h <= 0)     //Checked the passed width and height if they are valid
     w = h = 700;            //If not, set the width and height to a default value
-    Canvas c(-1, -1, w, h, "Cool Rectangles");
+    Canvas3D c(-1, -1, w, h, "Cool Rectangles");
     //TODO: why are we not able to set the width and height here? bug?
     // c.setShowFPS(true);
     c.setBackgroundColor(BLACK);
+
+    // std::this_thread::sleep_for(std::chrono::seconds(3));
+
     c.run(alphaRectangleFunction);
 }

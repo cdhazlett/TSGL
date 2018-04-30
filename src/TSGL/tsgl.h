@@ -10,6 +10,7 @@
 #endif
 
 #include "Canvas.h"
+#include "Canvas3D.h"
 #include "RasterCanvas.h"
 #include "CartesianCanvas.h"
 #include "CartesianRasterCanvas.h"
