@@ -52,19 +52,6 @@ class ConcavePolygon : public Polygon {
     ~ConcavePolygon();
 
 
-    /**
-     * \brief Returns a pointer to the vertices array for renderer.
-     * \details Vertices specifies x and y coordinates for the ConcavePolygon.
-     * \return Pointer to vertices.
-     */
-    virtual GLfloat* getPointerToVerticesArray();
-
-    /**
-     * \brief Returns the number of vertices in the Shape for renderer.
-     * \return An int specifying the number of vertices.
-     */
-    virtual int getNumberOfVertices();
-
     /*!
      * \brief Determines if two lines intersect.
      * \details Simulates two lines inside of a ConcavePolygon object and determines whether
@@ -109,22 +96,11 @@ class ConcavePolygon : public Polygon {
     void addVertex(float x, float y);
 
     /**
-     * \brief Returns the geometry type for drawing.
-     */
-    virtual GLenum getGeometryType() { return GL_TRIANGLES; }
-
-    /**
      * \brief Moves the ConcavePolygon to new coordinates.
      * \param x The new center x coordinate.
      * \param y The new center y coordinate.
      */
     virtual void setCenter(float x, float y);
-
-    /*!
-     * \brief Runs the Unit tests.
-     * \details Runs the Unit tests for the ConcavePolygon class. intersects() and pointInTriangle() are tested.
-     */
-    static void runTests();
 };
 
 }

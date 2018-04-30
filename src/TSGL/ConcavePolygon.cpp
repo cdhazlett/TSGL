@@ -19,32 +19,8 @@ ConcavePolygon::~ConcavePolygon() {
   attribMutex.unlock();
 }
 
-GLfloat* ConcavePolygon::getPointerToVerticesArray() {
-  attribMutex.lock();
-  if( dirty )
-    cleanup();
-  GLfloat* result = tarray;
-  attribMutex.unlock();
-  return tarray;
-}
-
-int ConcavePolygon::getNumberOfVertices() {
-  attribMutex.lock();
-  if( dirty ) {
-    cleanup(); }
-  int numVertices = tsize/2;
-  attribMutex.unlock();
-  return numVertices;
-}
-
 void ConcavePolygon::addVertex(float x, float y) {
-  attribMutex.lock();
-  if (init) {
-    TsglDebug("Cannot add anymore vertices.");
-    return;
-  }
-  attribMutex.unlock();
-  Polygon::addVertex(x, y);
+  addVertex(x, y);
   attribMutex.lock();
   dirty = true;
   if (current == size-2) {

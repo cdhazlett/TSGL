@@ -16,6 +16,8 @@ namespace tsgl {
 class Triangle : public ConvexPolygon {
  public:
 
+    Triangle(float x, float y, float width, float height, float pointLocation, const ColorFloat &color = BLACK, const ColorFloat& outlineColor = BLACK);
+
     /*!
      * \brief Explicitly constructs a new Triangle.
      * \details This is the constructor for the Triangle class.

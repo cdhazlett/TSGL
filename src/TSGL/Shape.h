@@ -24,12 +24,12 @@ namespace tsgl {
    */
 class Shape : public Drawable {
 protected:
+    bool hasOutline = false; ///< Whether the shape has an outline. If not implementing methods to get vertices and other information for an outline, this <B>must</B> remain false.
     bool init; ///< Whether the vertex has been initialized completely
-    GLfloat* vertices; ///< Buffer of x, y coordinates
     ColorFloat color; ///< Color of the Shape
-    int size,           ///< Number of floating point numbers in vertices
-        current,        ///< Current number of floating point numbers in vertices
-        length;         ///< Number of vertices in vertices (size / 2)
+    
+    bool hasBeenSetup = false; ///< Whether the data from the object has been copied to the GPU
+    GLuint VAO, VBO;
  public:
 
     /*!
@@ -55,12 +55,6 @@ protected:
      * \return Pointer to vertices.
      */
     virtual GLfloat* getPointerToVerticesArray();
-
-    /**
-     * \brief Returns the number of vertices in the Shape for renderer.
-     * \return An int specifying the number of vertices.
-     */
-    virtual int getNumberOfVertices();
 
     /**
      * \brief Returns the geometry type for drawing.
@@ -120,6 +114,14 @@ protected:
      * \param angle Angle to rotate by, in radians.
      */
     virtual void centeredRotation(float angle);
+
+    void setupShape();
+
+    virtual int getShaderType() {
+      return 1; // 1=2D Shader
+    }
+
+    virtual void render();
 };
 
 }

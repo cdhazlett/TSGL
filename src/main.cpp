@@ -1,172 +1,64 @@
+// #define RANDOMCOLORS
+
 #include <tsgl.h>
 using namespace tsgl;
+#include <thread> // std::this_thread::sleep_for
+#include <chrono> // std::chrono::seconds
+using namespace std;
 
-/*!
- * \brief Draws semi-transparent rectangles on a Canvas.
- * \details
- * - Store the Canvas' width and height in variables for easy reuse.
- * - Set up the internal timer of the Canvas to expire once every \b FRAME / 10 seconds.
- * - While the Canvas is open:
- *   - Sleep the internal timer until the Canvas is ready to draw.
- *   - Select a random position on the Canvas for a corner of a rectangle.
- *   - Draw a rectangle stretching from the specified corner to another corner on the Canvas,
- *     with a random color and a transparency of 16 (~0.06).
- *   .
- * .
- * \param can Reference to the Canvas being drawn to.
- */
+Canvas *canvasPtr;
 
-// Rectangle* drawRectangle(int x1, int y1, int x2, int y2, ColorFloat color) {
-//        if (x2 < x1) { int t = x1; x1 = x2; x2 = t; }
-//        if (y2 < y1) { int t = y1; y1 = y2; y2 = t; }
-//        Rectangle* rec = new Rectangle(x1, y1, x2-x1, y2-y1, color);  // Creates the Rectangle with the specified coordinates and color
-//        return rec;
-//       //  drawShape(rec);                                     // Push it onto our drawing buffer
-// }
 
-void alphaRectangleFunction(Canvas& can) {
+void cube_demo_function(Canvas &can, int numProcs)
+{
     const int WW = can.getWindowWidth(), WH = can.getWindowHeight();
     int a, b, c, d;
-    // int counter = 0;
 
-    //  Add a traingle to the test page
-    Triangle* testTri = new Triangle(100, 100, 200, 100, 50, 150, ColorInt(0*MAX_COLOR, 0*MAX_COLOR, 1*MAX_COLOR, 255));
-    testTri->setLayer(5);
-    can.add(testTri);
+    can.setCameraPosition(0, 0, 10);
+    can.setCameraFocusPoint(0, 0, 0);
+    can.setCameraPerspective(90.0f, 0.f, 10000.0f);
 
-    // // Testing old rectangle api
-    // can.setDefaultLayer(7);
-    // can.drawRectangle(200, 200, 250, 250, PURPLE);
-    // can.setDefaultLayer(0);
-
-    // Test the points
-    PointLayer* pl = new PointLayer(PURPLE);
-    can.add(pl);
-    pl->setLayer(100);
-    pl->addPoint(100,100);
-
-    int plcounter = 0;
-    for (plcounter = 0; plcounter<10000; plcounter++) {
-      pl->addPoint(plcounter%600,floor(plcounter/600)+10);
-      // printf("Point (%f, %f)\n", (float)plcounter, floor(plcounter/400));
-    }
-
-    // Add the red and white rects over the top
-    Rectangle* topRedRect = new Rectangle(500, 500, 50, 50, ColorInt(1*MAX_COLOR, 0*MAX_COLOR, 0*MAX_COLOR, 255));
-    Rectangle* topWhiteRect = new Rectangle(540, 540, 50, 50, ColorInt(1*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
-    topRedRect->setLayer(2);
-    topWhiteRect->setLayer(3);
-    can.add(topRedRect);
-    can.add(topWhiteRect);
-
-    // Test the arrows
-    can.setDefaultLayer(5);
-    Arrow* greenArrow = new Arrow(600, 600, 560, 500, GREEN);
-    Arrow* blueArrow  = new Arrow(500, 600, 540, 250, BLUE, true);
-    can.add(greenArrow);
-    can.add(blueArrow);
-
-    // Circle* c1 = new Circle(300, 500, 50, 100, PURPLE, false);
-    // can.add(c1);
-
-    // // Add a blue rectangle at the bottom
-    Rectangle* botBlueRect = new Rectangle(0, 0, 1000, 1000, ColorInt(0*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
-    botBlueRect->setHasOutline(false);
-    botBlueRect->setLayer(0);
-    can.add(botBlueRect);
+    can.enable2D();
 
 
+    Rectangle* testRect = new Rectangle(0, 0, 100, 100, BLUE, BLUE);
+    // testRect->scale(100,100,1);
+    // Rectangle* testRect2 = new Rectangle(100, 100, 1, 1, GREEN, GREEN);
+    // can.add(testRect);
+    // can.add(testRect2);
 
+    Ellipse* eltest = new Ellipse(20, 20, 20, 40, RED, RED);
+    // can.add(eltest);
 
+    Circle* cltest = new Circle(100,100,50,GREEN,GREEN);
+    can.add(cltest);
 
-    Rectangle* topWhitePointRect = new Rectangle(100, 100, 1, 1, ColorInt(255, 255, 255, 255));
-    topWhitePointRect->setHasOutline(false);
-    topWhitePointRect->setLayer(100);
-    can.add(topWhitePointRect);
+    // Triangle* tatest = new Triangle(0,0,20,20,20,10,RED, PURPLE);
+    Triangle* tatest = new Triangle(10, 10, 50, 50, .5, RED, RED);
+    can.add(tatest);
 
+    // Object3D* cubetest = new Object3D("/Users/christiaanhazlett/TSGL/assets/models/cube.dae");
+    // cubetest->scale(.5,.5,.5);
+    // cubetest->rotate(20, 0,1,0);
+    // cubetest->scale(200,200,200);
+    // cubetest->translate(20,20,0);
+    // can.add(cubetest);
 
-
-    // int i = 0;
-    // for (i=0; i<255; i++) {
-    //   int x = i;
-    //   int y = 0;
-    //
-    //   Rectangle* topWhitePointRect = new Rectangle(x, y, 1, 700, ColorInt(255*(i/255.0), 0, 255, 255));
-    //   topWhitePointRect->setHasOutline(false);
-    //   topWhitePointRect->setLayer(100);
-    //   can.add(topWhitePointRect);
-    // }
-
-    // int i = 0;
-    // for (i=0; i<255; i++) {
-    //   int x = 0;
-    //   int y = 445+i;
-    //
-    //   Rectangle* topWhitePointRect = new Rectangle(x, y, 700, 1, ColorInt(255*(i/255.0), 0, 255, 255));
-    //   topWhitePointRect->setHasOutline(false);
-    //   topWhitePointRect->setLayer(100);
-    //   can.add(topWhitePointRect);
-    // }
-
-    // // Test the text
-    Text* myText = new Text("Testing some more stuff", 200, 200, 26, WHITE);
-    myText->setCenter(100,100);
-    myText->setRotation(-90, 100, 100);
-    can.add(myText);
-    // printf("Text is %d pixels long.\n", myText->getStringWidth());
-
-    // Queue to hold the last few rects
-    std::queue<Rectangle *> myQueue;
-
-    can.setDefaultLayer(1);
-    while (can.isOpen()) {
+    while (can.isOpen())
+    {
         can.sleep();
-
-        // Some random widths and heights
-        a = rand() % WW; b = rand() % WH;
-        c = rand() % WW; d = rand() % WH;
-
-        // Make the new rectangle and get the pointer
-        Rectangle* myRectangle = new Rectangle(a, b, abs(a-c), abs(b-d), ColorInt(rand()%MAX_COLOR, rand()%MAX_COLOR, rand()%MAX_COLOR, 50));
-        myRectangle->setHasOutline(false);
-
-        // Push the rectangle onto the queue and onto the canvas so it can render
-        myQueue.push(myRectangle);
-        can.add(myRectangle);
-
-        // Remove old rectangles if there are more than 40 of them
-        if (myQueue.size() >= 50) {
-          can.remove(myQueue.front());  // stop rendering the rectangle each frame
-          delete myQueue.front(); // free memory
-          myQueue.pop(); // remove the rectangle object from the queue
-
-          // can.clear();
-          // myQueue.clear();
-          // std::queue<Rectangle*>().swap(myQueue);
-
-        }
-
-        // Test get pixel value
-        // ColorInt pixTest = can.getPixel(100,100);
-        // printf("R: %d G: %d B: %d A: %d \n", pixTest.R,pixTest.G,pixTest.B,pixTest.A);
-
-        // int i = 0;
-        // for (i=0; i<20; i++) can.drawPoint((float)(rand()%400), (float)(rand()%400), PURPLE, 10.0);
-
-        // ColorInt testPoint = can.getPoint(100,100);
-        // printf("R: %d, G: %d, B: %d, A: %d\n", testPoint.R, testPoint.G, testPoint.B, testPoint.A);
     }
 }
 
 //Takes command-line arguments for the width and height of the screen
-int main(int argc, char* argv[]) {
-    int w = (argc > 1) ? atoi(argv[1]) : 0.9*Canvas::getDisplayHeight();
-    int h = (argc > 2) ? atoi(argv[2]) : w;
-    // if (w <= 0 || h <= 0)     //Checked the passed width and height if they are valid
-    w = h = 700;            //If not, set the width and height to a default value
-    Canvas c(-1, -1, w, h, "Cool Rectangles");
-    //TODO: why are we not able to set the width and height here? bug?
-    // c.setShowFPS(true);
-    c.setBackgroundColor(BLACK);
-    c.run(alphaRectangleFunction);
+int main(int argc, char *argv[])
+{
+    int numProcs =  (argc > 1) ? atoi(argv[1]) : 1;
+    int w = 0.9 * Canvas::getDisplayHeight();
+    int h = w;
+    w = h = 700; //If not, set the width and height to a default value
+    Canvas c(-1, -1, w, h, "TSGL Demo: Cool Cubes");
+    canvasPtr = &c;
+
+    c.run(&cube_demo_function, numProcs);
 }

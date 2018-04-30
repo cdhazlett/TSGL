@@ -3,6 +3,7 @@ SRCDIR = src
 TSGLSRCDIR = src/TSGL
 VISPRJDIR = visualizations
 TESTDIR = tests
+DEMODIR = talk_demos
 BINDIR = bin
 BLDDIR = build
 
@@ -11,9 +12,15 @@ HEADERS := $(wildcard $(SRCDIR)/*.h) $(wildcard $(TSGLSRCDIR)/*.h)
 # TODO depend on headers!!!
 
 #Library Files
-TSGLSRC := $(wildcard $(TSGLSRCDIR)/*.cpp)  $(SRCDIR)/glad.cpp
+TSGLSRC := $(wildcard $(TSGLSRCDIR)/*.cpp)  $(SRCDIR)/../glad/glad.cpp
 TSGLOBJ := $(addprefix build/, $(TSGLSRC:.cpp=.o))
-TSGLDEP := $(TSGLOBJ:.o=.d)
+TSGLDEP := $(TSGLOBJ:.o=.d) $(SRCDIR)/../build/glad/glad.d
+
+#Demo Programs
+DEMOPRGMS := $(basename $(notdir $(wildcard $(DEMODIR)/*.cpp)))
+DEMOSRC := $(wildcard $(DEMODIR)/*.cpp)
+DEMOOBJ := $(addprefix build/, $(DEMOSRC:.cpp=.o))
+DEMODEP := $(DEMOOBJ:.o=.d)
 
 #Tester Program Files
 PRGMSRC := $(wildcard $(SRCDIR)/main.cpp)
@@ -72,16 +79,16 @@ LFLAGS = \
 	-L/usr/lib \
 	-L/usr/X11/lib/ \
 	-L/opt/AMDAPP/lib/x86_64/ \
-	-fopenmp -lfreetype -ldl -lm -lGLEW -lglfw -lX11 -lGL -lXrandr
+	-fopenmp -lfreetype -ldl -lm -lGLEW -lglfw -lX11 -lGL -lGLU -lXrandr
 endif
 
 
 # MacOS
 ifeq ($(UNAME), Darwin)
 LFLAGS = \
-	-Llib/ -L/usr/local/lib  -L/usr/X11/lib/ \
+	-Llib/ -L/usr/local/lib  -L/usr/X11/lib/   -lassimp\
 	-lfreetype -lGLEW -lglfw -lX11  -lXrandr -fopenmp \
-	-framework Cocoa -framework OpenGl -framework IOKit -framework Corevideo
+	-framework Cocoa -framework OpenGl -lGLU -framework IOKit -framework Corevideo
 endif
 
 #Compiler flags
@@ -113,6 +120,30 @@ CFLAGS = \
 all: tester ReaderWriter DiningPhilosophers ProducerConsumer sftests $(TESTFOLDERS)
 
 vis: ReaderWriter DiningPhilosophers ProducerConsumer
+
+#Library Files (macOS)
+tsgl: $(TSGLOBJ) $(HEADERS)
+	@echo ""
+	@tput setaf 3;
+	@echo "//////////////////// Creating Shared Library ////////////////////"
+	@tput sgr0;
+	@echo ""
+	$(CC) -shared $(TSGLOBJ) $(LFLAGS) -o lib/tsgl.so
+
+
+#Talk Demo Programs
+$(DEMOPRGMS): %: $(BLDDIR)/talk_demos/%.o $(TSGLOBJ) $(HEADERS)
+	@echo ""
+	@tput setaf 3;
+	@echo "//////////////////// Linking Demo Program: $(@) ////////////////////"
+	@tput sgr0;
+	@echo ""
+	$(CC) $(BLDDIR)/talk_demos/$(@).o $(TSGLOBJ) $(LFLAGS) -o $(BINDIR)/$(notdir $(@))
+
+
+#Talk Demos
+demos: mesh_demo $(TSGLOBJ) $(HEADERS)
+
 
 #Test Program
 tester: $(PRGMOBJ) $(TSGLOBJ) $(HEADERS)
@@ -165,9 +196,9 @@ $(TESTPRGMS): %: $(BLDDIR)/tests/%.o $(TSGLOBJ)
 	$(CC) $(BLDDIR)/tests/$(@).o $(TSGLOBJ) $(LFLAGS) -o $(BINDIR)/$(notdir $(@))
 
 
-#Tests with multiple files
-$(TESTFOLDERS): $(TSGLOBJ)
-	cd tests/$@ && make
+# #Tests with multiple files
+# $(TESTFOLDERS): $(TSGLOBJ)
+# 	cd tests/$@ && make
 
 
 # Include header dependencies
