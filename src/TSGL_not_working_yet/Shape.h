@@ -24,6 +24,7 @@ namespace tsgl {
    */
 class Shape : public Drawable {
 protected:
+    bool hasOutline = false; ///< Whether the shape has an outline. If not implementing methods to get vertices and other information for an outline, this <B>must</B> remain false.
     bool init; ///< Whether the vertex has been initialized completely
     GLfloat* vertices; ///< Buffer of x, y coordinates
     ColorFloat color; ///< Color of the Shape

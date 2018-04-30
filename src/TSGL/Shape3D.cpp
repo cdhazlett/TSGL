@@ -2,41 +2,41 @@
 
 namespace tsgl {
 
-  Shape3D::Shape3D(int numVertices, const ColorFloat& c) {
-    attribMutex.lock();
+  // Shape3D::Shape3D(int numVertices, const ColorFloat& c) {
+  //   attribMutex.lock();
+  //
+  //   discreteRender = true; // Render 3D shapes discretely to keep 2D performance at top speed
+  //
+  //   if (numVertices < 1) {
+  //     TsglDebug("Cannot have a shape without a vertex."); }
+  //   length = numVertices;
+  //   size = length * 3;
+  //   current = 0;
+  //   vertices = new float[size];
+  //   init = false;
+  //   color = c;
+  //   attribMutex.unlock();
+  // }
 
-    discreteRender = true; // Render 3D shapes discretely to keep 2D performance at top speed
+  // Shape3D::~Shape3D() {
+  //   attribMutex.lock();
+  //   delete[] vertices;
+  //   attribMutex.unlock();
+  // }
+  //
+  // GLfloat* Shape3D::getPointerToVerticesArray() {
+  //   attribMutex.lock();
+  //   GLfloat* v = vertices;
+  //   attribMutex.unlock();
+  //   return v;
+  // }
 
-    if (numVertices < 1) {
-      TsglDebug("Cannot have a shape without a vertex."); }
-    length = numVertices;
-    size = length * 3;
-    current = 0;
-    vertices = new float[size];
-    init = false;
-    color = c;
-    attribMutex.unlock();
-  }
-
-  Shape3D::~Shape3D() {
-    attribMutex.lock();
-    delete[] vertices;
-    attribMutex.unlock();
-  }
-
-  GLfloat* Shape3D::getPointerToVerticesArray() {
-    attribMutex.lock();
-    GLfloat* v = vertices;
-    attribMutex.unlock();
-    return v;
-  }
-
-  int Shape3D::getNumberOfVertices() {
-    attribMutex.lock();
-    int l = length;
-    attribMutex.unlock();
-    return l;
-  }
+  // int Shape3D::getNumberOfVertices() {
+  //   attribMutex.lock();
+  //   int l = length;
+  //   attribMutex.unlock();
+  //   return l;
+  // }
 
   void Shape3D::addVertex(float x, float y, float z) {
     attribMutex.lock();
