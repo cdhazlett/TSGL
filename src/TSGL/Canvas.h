@@ -18,6 +18,7 @@
 
 
 // #include "Array.h"          // Our own array for buffering drawing operations
+// #include "Shader.h"         // Include the function for loading and compiling shaders
 #include "Color.h"          // Our own interface for converting color types
 #include "TriangleStrip.h" // Our own class for drawing polygons with colored vertices
 #include "Circle.h"         // Our own class for drawing circles
@@ -55,14 +56,16 @@
 #include <mutex>            // Needed for locking the Canvas for thread-safety
 #include <sstream>          // For string building
 #include <string>           // For window titles
+#include <fstream>           // For window titles
 #include <algorithm>
 // #ifdef __APPLE__
 //   #include <pthread.h>
 // #else
   #include <thread>           // For spawning rendering in a different thread
+  #include <chrono>         // std::chrono::seconds
 // #endif
 
-// #include <GL/glew.h>        // Needed for GL function calls
+#include <GL/glew.h>        // Needed for GL function calls
 #include <GLFW/glfw3.h>     // For window creation and management
 
 #ifdef _WIN32
@@ -926,6 +929,9 @@ GLuint VertexArrayID;
      * \return A ColorInt containing the color of the pixel at (x, y).
      */
     ColorInt getPoint(int x, int y);
+
+    GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
+
 };
 
 }

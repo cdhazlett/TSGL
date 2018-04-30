@@ -29,10 +29,19 @@ using namespace tsgl;
 void alphaRectangleFunction(Canvas3D& can) {
     const int WW = can.getWindowWidth(), WH = can.getWindowHeight();
     int a, b, c, d;
+
+
+    while (can.isOpen()) {
+      can.sleep();
+    }
+
+
+
+
     // int counter = 0;
 
-    // //  Add a triangle to the test page
-    // Triangle* testTri = new Triangle(100, 100, 200, 100, 50, 150, ColorInt(0*MAX_COLOR, 0*MAX_COLOR, 1*MAX_COLOR, 255));
+    //  Add a triangle to the test page
+    // Triangle* testTri = new Triangle(0, 0, 0, 100, 50, 150, ColorInt(0*MAX_COLOR, 0*MAX_COLOR, 1*MAX_COLOR, 255));
     // testTri->setLayer(5);
     // can.add(testTri);
     //
@@ -54,12 +63,12 @@ void alphaRectangleFunction(Canvas3D& can) {
     // }
 
     // Add the red and white rects over the top
-    Rectangle* topRedRect = new Rectangle(500, 500, 50, 50, ColorInt(1*MAX_COLOR, 0*MAX_COLOR, 0*MAX_COLOR, 255));
-    Rectangle* topWhiteRect = new Rectangle(540, 540, 50, 50, ColorInt(1*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
-    topRedRect->setLayer(2);
-    topWhiteRect->setLayer(3);
-    can.add(topRedRect);
-    can.add(topWhiteRect);
+    // Rectangle* topRedRect = new Rectangle(500, 500, 50, 50, ColorInt(1*MAX_COLOR, 0*MAX_COLOR, 0*MAX_COLOR, 255));
+    // Rectangle* topWhiteRect = new Rectangle(540, 540, 50, 50, ColorInt(1*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
+    // topRedRect->setLayer(2);
+    // topWhiteRect->setLayer(3);
+    // can.add(topRedRect);
+    // can.add(topWhiteRect);
 
     // // Test the arrows
     // can.setDefaultLayer(5);
@@ -86,37 +95,37 @@ void alphaRectangleFunction(Canvas3D& can) {
     // // topWhitePointRect->setLayer(100);
     // can.add(topWhitePointRect);
 
-    Cube* testCube = new Cube(0, 0, 0, 200, 200, 200, ColorInt(255, 255, 255, 255));
-    // // // topWhitePointRect->setHasOutline(false);
-    // // // topWhitePointRect->setLayer(100);
-    can.add(testCube);
-
-    Cube* testCube2 = new Cube(250, 0, 0, 200, 200, 200, ColorInt(255, 0, 0, 255));
-    can.add(testCube2);
-
-
-
-    #define PI 3.14159265
-
-    float camX, camZ = 0.f;
-    int degrees = 0;
-
-    while (can.isOpen()) {
-      can.sleep();
-      camX = sin(degrees*PI/180)*1000;
-      camZ = cos(degrees*PI/180)*1000;
-
-      // printf("The circle X is %f, and the circle Y is %f", camX, camZ);
-
-      // can.setCameraPosition(camX, 0, camZ);
-      can.setCameraPosition(camX, 100, camZ);
-      // can.setCameraFocusPoint(200, 200, 0);
-
-      topRedRect->centeredRotation(degrees);
-
-      degrees++;
-      degrees = degrees % 360;
-    }
+    // Cube* testCube = new Cube(0, 0, 0, 200, 200, 200, ColorInt(255, 255, 255, 255));
+    // // // // topWhitePointRect->setHasOutline(false);
+    // // // // topWhitePointRect->setLayer(100);
+    // can.add(testCube);
+    //
+    // Cube* testCube2 = new Cube(250, 0, 0, 200, 200, 200, ColorInt(255, 0, 0, 255));
+    // can.add(testCube2);
+    //
+    //
+    //
+    // #define PI 3.14159265
+    //
+    // float camX, camZ = 0.f;
+    // int degrees = 0;
+    //
+    // while (can.isOpen()) {
+    //   can.sleep();
+    //   camX = sin(degrees*PI/180)*1000;
+    //   camZ = cos(degrees*PI/180)*1000;
+    //
+    //   // printf("The circle X is %f, and the circle Y is %f", camX, camZ);
+    //
+    //   // can.setCameraPosition(camX, 0, camZ);
+    //   can.setCameraPosition(camX, 100, camZ);
+    //   // can.setCameraFocusPoint(200, 200, 0);
+    //
+    //   // topRedRect->centeredRotation(degrees);
+    //
+    //   degrees++;
+    //   degrees = degrees % 360;
+    // }
 
 
 
@@ -201,7 +210,7 @@ int main(int argc, char* argv[]) {
     Canvas3D c(-1, -1, w, h, "Cool Rectangles");
     //TODO: why are we not able to set the width and height here? bug?
     // c.setShowFPS(true);
-    c.setBackgroundColor(BLACK);
+    // c.setBackgroundColor(BLACK);
 
     // std::this_thread::sleep_for(std::chrono::seconds(3));
 

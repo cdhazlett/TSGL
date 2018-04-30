@@ -116,7 +116,7 @@ namespace tsgl {
     #endif
 
     // Enable and disable necessary stuff
-    glEnable(GL_DEPTH_TEST);                           // Disable depth testing because we're not drawing in 3d
+    glEnable(GL_DEPTH_TEST);                            // TODO: Disable depth testing because we're not drawing in 3d
     glDisable(GL_DITHER);                               // Disable dithering because pixels do not (generally) overlap
     glDisable(GL_CULL_FACE);                            // Disable culling because the camera is stationary
     glEnable(GL_BLEND);                                 // Enable blending
@@ -160,15 +160,28 @@ namespace tsgl {
 
   void Canvas::initWindow() {
 
+    int glfw_maj, glfw_min, glfw_rev = 0;
+
+    // Print the version of GLFW
+    glfwGetVersion(&glfw_maj, &glfw_min, &glfw_rev);
+
+    printf("GLFW Version: %d.%d.%d\n", glfw_maj, glfw_min, glfw_rev);
+
+
     // Set the error callback for GLFW, ie. when an error happens, call this function!
     glfwSetErrorCallback(errorCallback);
 
-    // Ask for a specific version of OpenGL - 2.1.  Usually GLFW will just give
-    // a newer one, and thus never functions will work.  But we're targeting 2.1,
-    //so we need that as a min.  It's up to the programmer to not use anything
-    // that is not supported on 2.1!
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 2);                  // Set target GL major version to 3
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);                  // Set target GL minor version to 3.2
+    // Ask for a specific version of OpenGL - 3.3.  Usually GLFW will just give
+    // a newer one, and thus never functions will work.  But we're targeting 3.3,
+    // so we need that as a min.  It's up to the programmer to not use anything
+    // that is not supported on 3.3!
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);                  // Set target GL major version to 3
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);                  // Set target GL minor version to 3.3
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // Target the core profile, as MacOS only supports that on 3.3 and newer
+    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // To make MacOS happy
+
+    // Tell GLFW to use 4x AA
+    // glfwWindowHint(GLFW_SAMPLES, 4);
 
     // Pass some other options to GLFW
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);                       // Do not let the user resize the window
@@ -468,232 +481,325 @@ namespace tsgl {
 
   void Canvas::draw() {
 
-    bool debugRectIsRed = true;
-    // printf("Note: Canvas is drawing a flashing square in the corner to test whether it remains active during a crash.\n");
-    // Rectangle* debugRect = new Rectangle(0, 0, 10, 10, BLACK, BLACK);
-    // debugRect->setLayer(100);
-    // add(debugRect);
+    // std::this_thread::sleep_for(std::chrono::seconds(3));
 
-    // printf("%s\n", "Drawing stuff.");
-
-    glfwMakeContextCurrent(window);  // We're drawing to window as soon as it's created
-
+    glfwMakeContextCurrent(window);  // Select the OpenGL contex that we want to draw to
+    // glGetError();
     glfwSwapInterval(1);  // Enable VSYNC
 
-    // Reset the window close flag, so that the window stays open for this frame
-    glfwSetWindowShouldClose(window, GL_FALSE);
+    // temp shader shit
 
-    setupCamera();  //Camera transformations
+
+    GLuint VertexArrayID;
+  	glGenVertexArrays(1, &VertexArrayID);
+  	glBindVertexArray(VertexArrayID);
+
+  	// Create and compile our GLSL program from the shaders
+    GLuint programID = LoadShaders( "src/shaders/shader1.vert", "src/shaders/shader1.frag" );
+
+
+  	static const GLfloat g_vertex_buffer_data[] = {
+  		-1.0f, -1.0f, 0.0f,
+  		 1.0f, -1.0f, 0.0f,
+  		 0.0f,  1.0f, 0.0f,
+  	};
+
+  	GLuint vertexbuffer;
+  	glGenBuffers(1, &vertexbuffer);
+  	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+  	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+    // end testing
+
 
     // Count number of frames
     int counter = 0;
     float lastTime = 0;
+
     while (!glfwWindowShouldClose(window) && !isFinished) {
-
-      updateCamera();
-
-      #ifdef __APPLE__
-      windowMutex.lock();
-      #endif
-
-      if( !isRaster ) { glDrawBuffer(GL_BACK); }
-      else { glDrawBuffer(GL_FRONT_AND_BACK); } //TODO causes weird stuff on Pi
-
-      // Clear the canvas
-      if( !isRaster ) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-      // Enable vertex arrays
-      glEnableClientState( GL_VERTEX_ARRAY );
-
-      // Iterate through objects, render them
-      objectMutex.lock();
-
-      // printf("%s\n", "WAZZUP?????");
-      glfwGetCursorPos(window, &mouseX, &mouseY); //TODO: decide if this is the right place. This does keep it within the lock, which is good.
-      //TODO: also lock the accessors for this so we can't be reading them as they change here. Might want to use a less vital mutex though so we don't hold up drawing so much
-      //TODO: does this work on OSX?
-
-      for(std::vector<Drawable *>::iterator it = objectBuffer.begin(); it != objectBuffer.end(); ++it) {
-        // if( isRaster && (*it)->getIsRendered() ) continue;
-        try {
-
-          // Set rotations for object
-          bool rotationSet = false;
-          if ((*it)->shouldBeRotated()) {
-            rotationSet = true;
-            float rotDeg, rotX, rotY = 0;
-            (*it)->getRotation(rotDeg, rotX, rotY);
-
-            glMatrixMode(GL_MODELVIEW);
-            glPushMatrix();
-            glTranslatef(rotX, rotY, 0.f);
-            glRotatef(rotDeg, 0.f, 0.f, 1.f);
-            glTranslatef(-rotX, -rotY, 0.f);
-          }
-
-          // printf("%s\n", "Entering drawing area...");
-
-          if ((*it)->getIsDiscreteRendered()) {
-            printf("%s\n", "Discrete Rendering");
-            DiscreteDrawable* rc = *it;
-            rc->render();
-          } else {
-            Shape* rc = *it;
-            glVertexPointer(
-              2,  // how many points per vertex (for us, that's x and y)
-              GL_FLOAT, // the type of data being passed
-              0, // byte offset between vertices
-              rc->getPointerToVerticesArray()  // pointer to the array of vertices
-            );
-            glColor4f(
-              rc->getObjectColor()->R,
-              rc->getObjectColor()->G,
-              rc->getObjectColor()->B,
-              rc->getObjectColor()->A
-            );
-            glDrawArrays(
-              rc->getGeometryType(), // The type of geometry from the object (eg. GL_TRIANGLES)
-              0, // The starting index of the array
-              rc->getNumberOfVertices() // The number of vertices from the object
-            );
-            if( (*it)->getHasOutline() ) {
-              Polygon* poly = *it; //TODO too hackey?
-              glVertexPointer(
-                2,  // how many points per vertex (for us, that's x and y)
-                GL_FLOAT, // the type of data being passed
-                0, // byte offset between vertices
-                poly->getPointerToOutlineVerticesArray()  // pointer to the array of vertices
-              );
-              glColor4f(
-                poly->getOutlineColor()->R,
-                poly->getOutlineColor()->G,
-                poly->getOutlineColor()->B,
-                poly->getOutlineColor()->A
-              );
-              // glColor4f(
-              //   1.f,
-              //   0.f,
-              //   0.f,
-              //   1.f
-              // );
-              glDrawArrays(
-                poly->getOutlineGeometryType(), // The type of geometry from the object (eg. GL_TRIANGLES)
-                0, // The starting index of the array
-                poly->getOutlineNumberOfVertices() // The number of vertices from the object
-              );
-            }
-          }
-
-          // Unset rotations
-          if (rotationSet) {
-            glMatrixMode(GL_MODELVIEW);
-            glPopMatrix();
-          }
-
-        }
-        catch (std::exception& e) {
-          std::cerr << "Caught an exception!!!" << e.what() << std::endl;
-        }
-      }
-
-      // Draw the raster points on the canvas
-      rasterPointMutex.lock();
-      for(std::vector<rasterPointStruct>::iterator it = rasPointVec.begin(); it != rasPointVec.end(); ++it) {
-        glPointSize(it->size);
-        glColor4f(
-          it->R/255.0,
-          it->G/255.0,
-          it->B/255.0,
-          it->A/255.0
-        );
-        float verts[2] = {it->x, it->y};
-        glVertexPointer(
-          2,  // how many points per vertex (for us, that's x and y)
-          GL_FLOAT, // the type of data being passed
-          0, // byte offset between vertices
-          &verts[0]
-        );
-        glDrawArrays(
-          GL_POINTS,
-          0, // The starting index of the array
-          1
-        );
-      }
-      rasPointVec.clear();
-      rasterPointMutex.unlock();
-
-      if( isRaster ) {
-        objectBuffer.clear();
-      }
+      // Dark blue background
+      glClearColor(0.0f, 0.0f, 1.f, 1.f);
+      // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-// testing stuff
-      // glMatrixMode(GL_MODELVIEW);
-      glColor4f(1,0,0,1);
+      //testing again
+      // Use our shader
+		  // glUseProgram(programID);
+      // 1rst attribute buffer : vertices
+  		glEnableVertexAttribArray(0);
+  		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+  		glVertexAttribPointer(
+  			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+  			3,                  // size
+  			GL_FLOAT,           // type
+  			GL_FALSE,           // normalized?
+  			0,                  // stride
+  			(void*)0            // array buffer offset
+  		);
 
-      // glPushMatrix();
-      // glRotatef(2, 0.f, .3, 0.f);
+  		// Draw the triangle !
+  		glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle
 
-
-      // glPopMatrix();
-
-// testing stuff
-
-      objectMutex.unlock();
-
-
-      // Disable vertex arrays
-      glDisableClientState( GL_VERTEX_ARRAY );
-
-
-      // Set the camera rotation
-
-      // glMatrixMode(GL_PROJECTION);
-      // glPushMatrix();
-      // gluLookAt( 100, 100, -100,    // the position of the camera
-      //            0, 0, 0, // the position the camera is pointed to
-      //            0.0, -1.0, 0.0       // for now, the camera remains level with the "ground"
-      //          );
-      // glPopMatrix();
+  		glDisableVertexAttribArray(0);
+      //testing again
 
 
-      // Read pixels into screen buffer
-      frameBufferMutex.lock();
-      glReadPixels(	0, 0, winWidthPadded, winHeight,
-        GL_RGBA, GL_UNSIGNED_BYTE, screenBuffer);
-      frameBufferMutex.unlock();
-
-      // Swap the buffer and handle IO
-      // glFinish();
+      // When we're done drawing, swap in the new frame
       glfwSwapBuffers(window);
 
+      // Poll for events
       #ifndef __APPLE__
       glfwPollEvents();
       #endif
 
-
       // Framerate debug stuff
       frameCounter++;
       counter++;
-      // printf("Frame %d finished.\n", counter);
       if (counter==60) {
-        debugRectIsRed = !debugRectIsRed; //TODO DEBUG STUFF, REMOVE ME
         #ifdef __DEBUG__
         printf("Did 60 frames in %f seconds: %f FPS.\n", (glfwGetTime()-lastTime), 60/(glfwGetTime()-lastTime));
         #endif
         counter = 0;
         lastTime = glfwGetTime();
       }
-
-      #ifdef __APPLE__
-      windowMutex.unlock();
-      #endif
     }
+
+
+
+//     bool debugRectIsRed = true;
+//     // printf("Note: Canvas is drawing a flashing square in the corner to test whether it remains active during a crash.\n");
+//     // Rectangle* debugRect = new Rectangle(0, 0, 10, 10, BLACK, BLACK);
+//     // debugRect->setLayer(100);
+//     // add(debugRect);
+//
+//     // printf("%s\n", "Drawing stuff.");
+//
+//     glfwMakeContextCurrent(window);  // We're drawing to window as soon as it's created
+//
+//     glfwSwapInterval(1);  // Enable VSYNC
+//
+//     // Reset the window close flag, so that the window stays open for this frame
+//     glfwSetWindowShouldClose(window, GL_FALSE);
+//
+//     setupCamera();  //Camera transformations
+//
+//     // Count number of frames
+//     int counter = 0;
+//     float lastTime = 0;
+//     while (!glfwWindowShouldClose(window) && !isFinished) {
+//
+//       // updateCamera();
+//
+//       #ifdef __APPLE__
+//       windowMutex.lock();
+//       #endif
+//
+//       if( !isRaster ) { glDrawBuffer(GL_BACK); }
+//       else { glDrawBuffer(GL_FRONT_AND_BACK); } //TODO causes weird stuff on Pi
+//
+//       // Clear the canvas
+//       if( !isRaster ) glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//
+//       // Enable vertex arrays
+//       glEnableClientState( GL_VERTEX_ARRAY );
+//
+//       // Iterate through objects, render them
+//       objectMutex.lock();
+//
+//       // printf("%s\n", "WAZZUP?????");
+//       glfwGetCursorPos(window, &mouseX, &mouseY); //TODO: decide if this is the right place. This does keep it within the lock, which is good.
+//       //TODO: also lock the accessors for this so we can't be reading them as they change here. Might want to use a less vital mutex though so we don't hold up drawing so much
+//       //TODO: does this work on OSX?
+//
+//       for(std::vector<Drawable *>::iterator it = objectBuffer.begin(); it != objectBuffer.end(); ++it) {
+//         // if( isRaster && (*it)->getIsRendered() ) continue;
+//         try {
+//
+//           // Set rotations for object
+//           bool rotationSet = false;
+//           if ((*it)->shouldBeRotated()) {
+//             rotationSet = true;
+//             float rotDeg, rotX, rotY = 0;
+//             (*it)->getRotation(rotDeg, rotX, rotY);
+//
+//             glMatrixMode(GL_MODELVIEW);
+//             glPushMatrix();
+//             glTranslatef(rotX, rotY, 0.f);
+//             glRotatef(rotDeg, 0.f, 0.f, 1.f);
+//             glTranslatef(-rotX, -rotY, 0.f);
+//           }
+//
+//           // printf("%s\n", "Entering drawing area...");
+//
+//           if ((*it)->getIsDiscreteRendered()) {
+//             printf("%s\n", "Discrete Rendering");
+//             DiscreteDrawable* rc = *it;
+//             rc->render();
+//           } else {
+//             Shape* rc = *it;
+//             glVertexPointer(
+//               2,  // how many points per vertex (for us, that's x and y)
+//               GL_FLOAT, // the type of data being passed
+//               0, // byte offset between vertices
+//               rc->getPointerToVerticesArray()  // pointer to the array of vertices
+//             );
+//             glColor4f(
+//               rc->getObjectColor()->R,
+//               rc->getObjectColor()->G,
+//               rc->getObjectColor()->B,
+//               rc->getObjectColor()->A
+//             );
+//             glDrawArrays(
+//               rc->getGeometryType(), // The type of geometry from the object (eg. GL_TRIANGLES)
+//               0, // The starting index of the array
+//               rc->getNumberOfVertices() // The number of vertices from the object
+//             );
+//             if( (*it)->getHasOutline() ) {
+//               Polygon* poly = *it; //TODO too hackey?
+//               glVertexPointer(
+//                 2,  // how many points per vertex (for us, that's x and y)
+//                 GL_FLOAT, // the type of data being passed
+//                 0, // byte offset between vertices
+//                 poly->getPointerToOutlineVerticesArray()  // pointer to the array of vertices
+//               );
+//               glColor4f(
+//                 poly->getOutlineColor()->R,
+//                 poly->getOutlineColor()->G,
+//                 poly->getOutlineColor()->B,
+//                 poly->getOutlineColor()->A
+//               );
+//               // glColor4f(
+//               //   1.f,
+//               //   0.f,
+//               //   0.f,
+//               //   1.f
+//               // );
+//               glDrawArrays(
+//                 poly->getOutlineGeometryType(), // The type of geometry from the object (eg. GL_TRIANGLES)
+//                 0, // The starting index of the array
+//                 poly->getOutlineNumberOfVertices() // The number of vertices from the object
+//               );
+//             }
+//           }
+//
+//           // Unset rotations
+//           if (rotationSet) {
+//             glMatrixMode(GL_MODELVIEW);
+//             glPopMatrix();
+//           }
+//
+//         }
+//         catch (std::exception& e) {
+//           std::cerr << "Caught an exception!!!" << e.what() << std::endl;
+//         }
+//       }
+//
+//       // Draw the raster points on the canvas
+//       rasterPointMutex.lock();
+//       for(std::vector<rasterPointStruct>::iterator it = rasPointVec.begin(); it != rasPointVec.end(); ++it) {
+//         glPointSize(it->size);
+//         glColor4f(
+//           it->R/255.0,
+//           it->G/255.0,
+//           it->B/255.0,
+//           it->A/255.0
+//         );
+//         float verts[2] = {it->x, it->y};
+//         glVertexPointer(
+//           2,  // how many points per vertex (for us, that's x and y)
+//           GL_FLOAT, // the type of data being passed
+//           0, // byte offset between vertices
+//           &verts[0]
+//         );
+//         glDrawArrays(
+//           GL_POINTS,
+//           0, // The starting index of the array
+//           1
+//         );
+//       }
+//       rasPointVec.clear();
+//       rasterPointMutex.unlock();
+//
+//       if( isRaster ) {
+//         objectBuffer.clear();
+//       }
+//
+//
+// // testing stuff
+//       // glMatrixMode(GL_MODELVIEW);
+//       glColor4f(1,0,0,1);
+//
+//       // glPushMatrix();
+//       // glRotatef(2, 0.f, .3, 0.f);
+//       //
+//       glBegin(GL_TRIANGLES); //starts drawing of points
+//         glVertex3f(0.0f,0.0f,0.0f);
+//         glVertex3f(1.0f,0.0f,0.0f);
+//         glVertex3f(1.0f,1.0f,0.0f);
+//       glEnd();//end drawing of points
+//
+//
+//       // glPopMatrix();
+//
+// // testing stuff
+//
+//       objectMutex.unlock();
+//
+//
+//       // Disable vertex arrays
+//       glDisableClientState( GL_VERTEX_ARRAY );
+//
+//
+//       // Set the camera rotation
+//
+//       // glMatrixMode(GL_PROJECTION);
+//       // glPushMatrix();
+//       // gluLookAt( 100, 100, -100,    // the position of the camera
+//       //            0, 0, 0, // the position the camera is pointed to
+//       //            0.0, -1.0, 0.0       // for now, the camera remains level with the "ground"
+//       //          );
+//       // glPopMatrix();
+//
+//
+//       // Read pixels into screen buffer
+//       frameBufferMutex.lock();
+//       glReadPixels(	0, 0, winWidthPadded, winHeight,
+//         GL_RGBA, GL_UNSIGNED_BYTE, screenBuffer);
+//       frameBufferMutex.unlock();
+//
+//       // Swap the buffer and handle IO
+//       // glFinish();
+//       glfwSwapBuffers(window);
+//
+//       #ifndef __APPLE__
+//       glfwPollEvents();
+//       #endif
+//
+//
+//       // Framerate debug stuff
+//       frameCounter++;
+//       counter++;
+//       // printf("Frame %d finished.\n", counter);
+//       if (counter==60) {
+//         debugRectIsRed = !debugRectIsRed; //TODO DEBUG STUFF, REMOVE ME
+//         #ifdef __DEBUG__
+//         printf("Did 60 frames in %f seconds: %f FPS.\n", (glfwGetTime()-lastTime), 60/(glfwGetTime()-lastTime));
+//         #endif
+//         counter = 0;
+//         lastTime = glfwGetTime();
+//       }
+//
+//       #ifdef __APPLE__
+//       windowMutex.unlock();
+//       #endif
+//     }
 
 
     // Print any OpenGL errors, if there are any
     int glError = glGetError();
-    if (glError) printf("OpenGL Error code: %d\n", glError);
+    if (glError) {
+      printf("OpenGL Error code: %d\n", glError);
+      printf("OpenGL Error: %s\n", gluErrorString(glError));
+    }
 
 
   }
@@ -1068,4 +1174,101 @@ namespace tsgl {
   //       End the old API stuff
   ////////////////////////////////////////////////////////////////////////////////
   ////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////////////////////////
+
+
+  GLuint Canvas::LoadShaders(const char * vertex_file_path,const char * fragment_file_path){
+
+  	// Create the shaders
+  	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+  	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+  	// Read the Vertex Shader code from the file
+  	std::string VertexShaderCode;
+  	std::ifstream VertexShaderStream(vertex_file_path, std::ios::in);
+  	if(VertexShaderStream.is_open()){
+  		std::stringstream sstr;
+  		sstr << VertexShaderStream.rdbuf();
+  		VertexShaderCode = sstr.str();
+  		VertexShaderStream.close();
+  	}else{
+  		printf("Impossible to open %s. Are you in the right directory ? Don't forget to read the FAQ !\n", vertex_file_path);
+  		getchar();
+  		return 0;
+  	}
+
+  	// Read the Fragment Shader code from the file
+  	std::string FragmentShaderCode;
+  	std::ifstream FragmentShaderStream(fragment_file_path, std::ios::in);
+  	if(FragmentShaderStream.is_open()){
+  		std::stringstream sstr;
+  		sstr << FragmentShaderStream.rdbuf();
+  		FragmentShaderCode = sstr.str();
+  		FragmentShaderStream.close();
+  	}
+
+  	GLint Result = GL_FALSE;
+  	int InfoLogLength;
+
+
+  	// Compile Vertex Shader
+  	printf("Compiling shader : %s\n", vertex_file_path);
+  	char const * VertexSourcePointer = VertexShaderCode.c_str();
+  	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
+  	glCompileShader(VertexShaderID);
+
+  	// Check Vertex Shader
+  	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
+  	glGetShaderiv(VertexShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  	if ( InfoLogLength > 0 ){
+  		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
+  		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
+  		printf("%s\n", &VertexShaderErrorMessage[0]);
+  	}
+
+
+
+  	// Compile Fragment Shader
+  	printf("Compiling shader : %s\n", fragment_file_path);
+  	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
+  	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
+  	glCompileShader(FragmentShaderID);
+
+  	// Check Fragment Shader
+  	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
+  	glGetShaderiv(FragmentShaderID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  	if ( InfoLogLength > 0 ){
+  		std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
+  		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
+  		printf("%s\n", &FragmentShaderErrorMessage[0]);
+  	}
+
+
+
+  	// Link the program
+  	printf("Linking program\n");
+  	GLuint ProgramID = glCreateProgram();
+  	glAttachShader(ProgramID, VertexShaderID);
+  	glAttachShader(ProgramID, FragmentShaderID);
+  	glLinkProgram(ProgramID);
+
+  	// Check the program
+  	glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
+  	glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  	if ( InfoLogLength > 0 ){
+  		std::vector<char> ProgramErrorMessage(InfoLogLength+1);
+  		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+  		printf("%s\n", &ProgramErrorMessage[0]);
+  	}
+
+
+  	glDetachShader(ProgramID, VertexShaderID);
+  	glDetachShader(ProgramID, FragmentShaderID);
+
+  	glDeleteShader(VertexShaderID);
+  	glDeleteShader(FragmentShaderID);
+
+  	return ProgramID;
+  }
+
 }
