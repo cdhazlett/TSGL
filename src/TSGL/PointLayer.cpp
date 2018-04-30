@@ -34,24 +34,24 @@ namespace tsgl {
   }
 
   void PointLayer::render() {
-    // glPointSize(2.0f);
-    glColor4f(
-      color.R,
-      color.G,
-      color.B,
-      color.A
-    );
-    glVertexPointer(
-      2,  // how many points per vertex (for us, that's x and y)
-      GL_FLOAT, // the type of data being passed
-      0, // byte offset between vertices
-      &pointVertices[0]
-    );
-    glDrawArrays(
-      GL_POINTS,
-      0, // The starting index of the array
-      numPoints
-    );
+    // // glPointSize(2.0f);
+    // glColor4f(
+    //   color.R,
+    //   color.G,
+    //   color.B,
+    //   color.A
+    // );
+    // glVertexPointer(
+    //   2,  // how many points per vertex (for us, that's x and y)
+    //   GL_FLOAT, // the type of data being passed
+    //   0, // byte offset between vertices
+    //   &pointVertices[0]
+    // );
+    // glDrawArrays(
+    //   GL_POINTS,
+    //   0, // The starting index of the array
+    //   numPoints
+    // );
   }
 
   void PointLayer::setColor(const ColorFloat& c) {

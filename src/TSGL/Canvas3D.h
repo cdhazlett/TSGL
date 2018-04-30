@@ -83,9 +83,11 @@ public:
 
   }
 
-  // Sets up the perspective of the camera on the 3D canvas.
-  void setCameraPerspective() {
-
+  // Change the data for the camera perspective on the canvas
+  void setCameraPerspective(float FieldOfView, float nearClipDist, float farClipDist) {
+    FOV = FieldOfView;
+    nearClip = nearClipDist;
+    farClip = farClipDist;
   }
 
 private:
@@ -94,65 +96,33 @@ private:
   float eyeX, eyeY, eyeZ = 0.0;     // the eye position coordinates for the camera
   float lookX, lookY, lookZ = 0.0;  // the lookat point coordinates for the camera
 
+  // FOV data
+  float nearClip = .1f;
+  float farClip = 100.f;
+  float FOV = 45.0f;
 
-  void Canvas3D::updateCamera() {
-    printf("Updating the Canvas3D camera...\n");
+  glm::mat4 getCameraMatrix() {
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
+    // Calculate the projection matrix:
+    glm::mat4 Projection = glm::perspective(
+      glm::radians(FOV),                    // FOV
+      (float) getWindowHeight() / (float) getWindowWidth(),  // Aspect ratio
+      nearClip,                             // Near clipping plane
+      farClip                               // Far clipping plane
+    );
 
-    // Camera perspective
-    gluPerspective(120.0, (float)getWindowWidth() / (float)getWindowHeight(), .1, 50000.0);
+    // Calculate the camera matrix:
+    glm::mat4 View = glm::lookAt(
+        glm::vec3(eyeX, eyeY, eyeZ),    // Camera position
+        glm::vec3(lookX, lookY, lookZ), // Lookat point
+        glm::vec3(0,1,0)      // Head position, for now always up
+    );
 
-    // Camera position
-    gluLookAt( eyeX, eyeY, eyeZ,    // the position of the camera
-               lookX, lookY, lookZ, // the position the camera is pointed to
-               0.0, -1.0, 0.0       // for now, the camera remains level with the "ground"
-             );
+    // Multiply the matricies:
+    return Projection * View; // Matrix mults always seem the other way around
 
-    // Initialize Modelview Matrix
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
   }
 
-  void Canvas3D::setupCamera() override {
-
-    // // Set up camera positioning
-    // // Initialize Projection Matrix
-    // glMatrixMode(GL_PROJECTION);
-    // // glMatrixMode( GL_MODELVIEW );
-    // glLoadIdentity();
-    // // glOrtho( 0.0, winWidth, winHeight, 0.0, 100.0, -100.0 );
-    //
-    // gluPerspective(120.0, (float)getWindowWidth() / (float)getWindowHeight(),
-    //                .1, 50000.0);
-    //
-    // setCameraPosition(
-    //   0,
-    //   0,
-    //   -1000
-    // );
-    //
-    // // setCameraFocusPoint(
-    // //   (float)getWindowWidth() / 2, (float)getWindowHeight() / 2, .0
-    // // );
-    //
-    // // gluLookAt((float)getWindowWidth() / 2, (float)getWindowHeight() / 2,
-    // //           -500, /* eye position */
-    // //           (float)getWindowWidth() / 2, (float)getWindowHeight() / 2,
-    // //           .0,            /* center position */
-    // //           0.0, -1.0, 0.0 /* up direction */
-    // // );
-    //
-    // // glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
-    // // glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-    // // glEnable(GL_LIGHT0);
-    // // glEnable(GL_LIGHTING);
-    //
-    // // Initialize Modelview Matrix
-    // glMatrixMode(GL_MODELVIEW);
-    // glLoadIdentity();
-  }
 };
 
 } // namespace tsgl

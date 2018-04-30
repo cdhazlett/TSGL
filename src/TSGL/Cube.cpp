@@ -61,27 +61,43 @@ namespace tsgl {
 
   void Cube::render() {
 
+    glEnableVertexAttribArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+    glVertexAttribPointer(
+      0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+      3,                  // size
+      GL_FLOAT,           // type
+      GL_FALSE,           // normalized?
+      0,                  // stride
+      (void*)0            // array buffer offset
+    );
 
-    // give opengl some info about the array of point we are about to pass into it
-    glVertexPointer(
-      3,  // how many points per vertex (for us, that's x,y,z)
-      GL_FLOAT, // the type of data being passed
-      0, // byte offset between vertices
-      getPointerToVerticesArray()  // pointer to the array of vertices
-    );
-    // set the color of the object
-    glColor4f(
-      getObjectColor()->R,
-      getObjectColor()->G,
-      getObjectColor()->B,
-      getObjectColor()->A
-    );
-    // draw the array of vertices
-    glDrawArrays(
-      GL_TRIANGLES,
-      0, // The starting index of the array
-      getNumberOfVertices() // The number of vertices from the object
-    );
+    // Draw the triangle !
+    glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle
+
+    glDisableVertexAttribArray(0);
+
+
+    // // give opengl some info about the array of point we are about to pass into it
+    // glVertexPointer(
+    //   3,  // how many points per vertex (for us, that's x,y,z)
+    //   GL_FLOAT, // the type of data being passed
+    //   0, // byte offset between vertices
+    //   getPointerToVerticesArray()  // pointer to the array of vertices
+    // );
+    // // set the color of the object
+    // glColor4f(
+    //   getObjectColor()->R,
+    //   getObjectColor()->G,
+    //   getObjectColor()->B,
+    //   getObjectColor()->A
+    // );
+    // // draw the array of vertices
+    // glDrawArrays(
+    //   GL_TRIANGLES,
+    //   0, // The starting index of the array
+    //   getNumberOfVertices() // The number of vertices from the object
+    // );
 
 
   }

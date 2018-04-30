@@ -16,6 +16,13 @@
 
 #include <OpenGL/glu.h> // TODO works on mac, change to GL on linux!!
 
+// GLM Library
+#include <glm/vec3.hpp> // glm::vec3
+#include <glm/vec4.hpp> // glm::vec4
+#include <glm/mat4x4.hpp> // glm::mat4
+#include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
+
+
 
 // #include "Array.h"          // Our own array for buffering drawing operations
 // #include "Shader.h"         // Include the function for loading and compiling shaders
@@ -65,7 +72,7 @@
   #include <chrono>         // std::chrono::seconds
 // #endif
 
-#include <GL/glew.h>        // Needed for GL function calls
+// #include <GL/glew.h>        // Needed for GL function calls
 #include <GLFW/glfw3.h>     // For window creation and management
 
 #ifdef _WIN32
@@ -169,7 +176,7 @@ private:
                    double ypos);                                        // GLFW callback for scrolling
     static void  setDrawBuffer(int buffer);                             // Sets the buffer used for drawing
     virtual void         setupCamera();                                         // Setup the 2D camera for smooth rendering //TODO remove me
-    virtual void updateCamera();
+    virtual glm::mat4 getCameraMatrix();
     static void  startDrawing(Canvas *c);                               // Static method that is called by the render thread
     void         textureShaders(bool state);                            // Turn textures on or off
     static bool  testFilledDraw(Canvas& can);                           // Unit test for drawing shapes and determining if fill works

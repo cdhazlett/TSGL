@@ -120,7 +120,7 @@ namespace tsgl {
     glDisable(GL_DITHER);                               // Disable dithering because pixels do not (generally) overlap
     glDisable(GL_CULL_FACE);                            // Disable culling because the camera is stationary
     glEnable(GL_BLEND);                                 // Enable blending
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // Set blending mode to standard alpha blending
+    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // Set blending mode to standard alpha blending
 
     bindToButton(TSGL_KEY_ESCAPE, TSGL_PRESS, [this]() {
       glfwSetWindowShouldClose(window, GL_TRUE);
@@ -131,7 +131,7 @@ namespace tsgl {
     int aux[1] = {5};
     glGetBooleanv(GL_STEREO,stereo);
     glGetBooleanv(GL_DOUBLEBUFFER,dbuff);
-    glGetIntegerv(GL_AUX_BUFFERS,aux);
+    // glGetIntegerv(GL_AUX_BUFFERS,aux);
     hasStereo = ((int)stereo[0] > 0);
     hasBackbuffer = ((int)dbuff[0] > 0);
 
@@ -180,8 +180,8 @@ namespace tsgl {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);  // Target the core profile, as MacOS only supports that on 3.3 and newer
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);            // To make MacOS happy
 
-    // Tell GLFW to use 4x AA
-    // glfwWindowHint(GLFW_SAMPLES, 4);
+    // Tell GLFW to use 8x AA
+    glfwWindowHint(GLFW_SAMPLES, 8);
 
     // Pass some other options to GLFW
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);                       // Do not let the user resize the window
@@ -190,7 +190,6 @@ namespace tsgl {
     // else { glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE); }
     glfwWindowHint(GLFW_DOUBLEBUFFER, GL_TRUE);
     glfwWindowHint(GLFW_VISIBLE, GL_FALSE);                         // Don't show the window at first
-    glfwWindowHint(GLFW_SAMPLES,4);
 
     // GLFW must be done with making a window before we start making another one
     // This mutex ensures that only one window is created at a time
@@ -239,9 +238,9 @@ namespace tsgl {
     printf("Camera changes in the canvas function\n");
     // Set up camera positioning
     // Initialize Projection Matrix
-    glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
-    glOrtho( 0.0, winWidth, winHeight, 0.0, 100.0, -100.0 );
+    // glMatrixMode( GL_PROJECTION );
+    // glLoadIdentity();
+    // glOrtho( 0.0, winWidth, winHeight, 0.0, 100.0, -100.0 );
 
     // gluPerspective(90.0, (float)winWidth/(float)winHeight, .1, 50000.0);
     //
@@ -255,12 +254,14 @@ namespace tsgl {
     //   // glEnable(GL_LIGHTING);
 
     // Initialize Modelview Matrix
-    glMatrixMode( GL_MODELVIEW );
-    glLoadIdentity();
+    // glMatrixMode( GL_MODELVIEW );
+    // glLoadIdentity();
 
   }
 
-  void Canvas::updateCamera() {
+  glm::mat4 Canvas::getCameraMatrix() {
+
+    return glm::mat4(1.0f);
 
   }
 
@@ -489,13 +490,17 @@ namespace tsgl {
 
     // temp shader shit
 
-
+    // Default vertex array
     GLuint VertexArrayID;
   	glGenVertexArrays(1, &VertexArrayID);
   	glBindVertexArray(VertexArrayID);
 
   	// Create and compile our GLSL program from the shaders
     GLuint programID = LoadShaders( "src/shaders/shader1.vert", "src/shaders/shader1.frag" );
+
+    // Get a handle for our "MVP" uniform
+    // Only during the initialisation
+    GLuint MatrixID = glGetUniformLocation(programID, "MVP");
 
 
   	static const GLfloat g_vertex_buffer_data[] = {
@@ -516,14 +521,28 @@ namespace tsgl {
     float lastTime = 0;
 
     while (!glfwWindowShouldClose(window) && !isFinished) {
+
+      // Get the camera matrix from the Canvas
+      glm::mat4 cameraMat = getCameraMatrix();
+
+      // Load the model's matrix
+      glm::mat4 Model = glm::mat4(1.0f);
+
+      // Multiply the Model by the Camera to get the proper transform
+      glm::mat4 mvp = cameraMat * Model;
+
+      // Send the MVP matrix to the shaders
+      glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
+
+
       // Dark blue background
-      glClearColor(0.0f, 0.0f, 1.f, 1.f);
-      // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      glClearColor(0.0f, 0.0f, 3.f, 1.f);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
       //testing again
       // Use our shader
-		  // glUseProgram(programID);
+		  glUseProgram(programID);
       // 1rst attribute buffer : vertices
   		glEnableVertexAttribArray(0);
   		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
@@ -561,7 +580,18 @@ namespace tsgl {
         counter = 0;
         lastTime = glfwGetTime();
       }
+
+      // Print any OpenGL errors, if there are any
+      int glError = glGetError();
+      if (glError) {
+        printf("OpenGL Error code: %d\n", glError);
+        printf("Frame: %d OpenGL Error: %s\n", frameCounter, gluErrorString(glError));
+      }
+
+      // break;
     }
+
+    // std::this_thread::sleep_for(std::chrono::seconds(3));
 
 
 

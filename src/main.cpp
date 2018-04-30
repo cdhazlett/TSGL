@@ -31,9 +31,9 @@ void alphaRectangleFunction(Canvas3D& can) {
     int a, b, c, d;
 
 
-    while (can.isOpen()) {
-      can.sleep();
-    }
+    // while (can.isOpen()) {
+    //   can.sleep();
+    // }
 
 
 
@@ -105,27 +105,27 @@ void alphaRectangleFunction(Canvas3D& can) {
     //
     //
     //
-    // #define PI 3.14159265
-    //
-    // float camX, camZ = 0.f;
-    // int degrees = 0;
-    //
-    // while (can.isOpen()) {
-    //   can.sleep();
-    //   camX = sin(degrees*PI/180)*1000;
-    //   camZ = cos(degrees*PI/180)*1000;
-    //
-    //   // printf("The circle X is %f, and the circle Y is %f", camX, camZ);
-    //
-    //   // can.setCameraPosition(camX, 0, camZ);
-    //   can.setCameraPosition(camX, 100, camZ);
-    //   // can.setCameraFocusPoint(200, 200, 0);
-    //
-    //   // topRedRect->centeredRotation(degrees);
-    //
-    //   degrees++;
-    //   degrees = degrees % 360;
-    // }
+    #define PI 3.14159265
+
+    float camX, camZ = 0.f;
+    int degrees = 0;
+
+    while (can.isOpen()) {
+      can.sleep();
+      camX = sin(degrees*PI/180)*10;
+      camZ = cos(degrees*PI/180)*10;
+
+      // printf("The circle X is %f, and the circle Y is %f", camX, camZ);
+
+      can.setCameraPosition(camX, 0, camZ);
+      can.setCameraFocusPoint(0, 0, 0);
+      can.setCameraPerspective(45.0f, 0.1f, 100.0f);
+
+      // topRedRect->centeredRotation(degrees);
+
+      degrees++;
+      degrees = degrees % 360;
+    }
 
 
 
