@@ -14,6 +14,8 @@
 
 #include "../glad/glad.h"      // New loader for GL function calls TODO: fix the path here
 
+#include <vector>
+
 #include <OpenGL/glu.h> // TODO works on mac, change to GL on linux!!
 
 // GLM Library
@@ -27,32 +29,33 @@
 // #include "Array.h"          // Our own array for buffering drawing operations
 // #include "Shader.h"         // Include the function for loading and compiling shaders
 #include "Color.h"          // Our own interface for converting color types
-#include "TriangleStrip.h" // Our own class for drawing polygons with colored vertices
-#include "Circle.h"         // Our own class for drawing circles
-#include "RegularPolygon.h" //Our own class for drawing regular polygons
-#include "ConcavePolygon.h" // Our own class for concave polygons with colored vertices
-#include "ConvexPolygon.h"  // Our own class for convex polygons with colored vertices
-#include "Circle.h" // Our own class for concave polygons with colored vertices
-#include "UnfilledCircle.h" //Our own class for unfilled circles
-#include "Ellipse.h"        //Our own class for drawing ellipses
-#include "UnfilledEllipse.h" //Our own class for unfilled ellipses
-#include "UnfilledRegularPolygon.h" //Our own class for unfilled regular polygons
-#include "Image.h"          // Our own class for drawing images / textured quads
+// #include "TriangleStrip.h" // Our own class for drawing polygons with colored vertices
+// #include "Circle.h"         // Our own class for drawing circles
+// #include "RegularPolygon.h" //Our own class for drawing regular polygons
+// #include "ConcavePolygon.h" // Our own class for concave polygons with colored vertices
+// #include "ConvexPolygon.h"  // Our own class for convex polygons with colored vertices
+// #include "Circle.h" // Our own class for concave polygons with colored vertices
+// #include "UnfilledCircle.h" //Our own class for unfilled circles
+// #include "Ellipse.h"        //Our own class for drawing ellipses
+// #include "UnfilledEllipse.h" //Our own class for unfilled ellipses
+// #include "UnfilledRegularPolygon.h" //Our own class for unfilled regular polygons
+// #include "Image.h"          // Our own class for drawing images / textured quads
 #include "Keynums.h"        // Our enums for key presses
-#include "Line.h"           // Our own class for drawing straight lines
-#include "Arrow.h"          // Our own class for drawing arrows
-#include "PointLayer.h"     // Class that adds a layer for drawing raster points
-#include "Polygon.h"        // Our own class for drawing polygons
-#include "Polyline.h"       // Our own class for drawing polylines
-#include "ProgressBar.h"    // Our own class for drawing progress bars
-#include "Rectangle.h"      // Our own class for drawing rectangles
-#include "UnfilledRectangle.h" //Our own class for drawing unfilled rectangles
-#include "Star.h"           //Our own class for drawing stars
-#include "UnfilledStar.h" //Our own class for drawing unfilled stars
-#include "Text.h"           // Our own class for drawing text
+// #include "Line.h"           // Our own class for drawing straight lines
+// #include "Arrow.h"          // Our own class for drawing arrows
+// #include "PointLayer.h"     // Class that adds a layer for drawing raster points
+// #include "Polygon.h"        // Our own class for drawing polygons
+// #include "Polyline.h"       // Our own class for drawing polylines
+// #include "ProgressBar.h"    // Our own class for drawing progress bars
+// #include "Rectangle.h"      // Our own class for drawing rectangles
+// #include "UnfilledRectangle.h" //Our own class for drawing unfilled rectangles
+// #include "Star.h"           //Our own class for drawing stars
+// #include "UnfilledStar.h" //Our own class for drawing unfilled stars
+#include "TextureHandler.h"     // TextureHandler class
+// #include "Text.h"           // Our own class for drawing text
 #include "Timer.h"          // Our own timer for steady FPS
-#include "Triangle.h"       // Our own class for drawing triangles
-#include "UnfilledTriangle.h" //Our own class for drawing unfilled triangles
+// #include "Triangle.h"       // Our own class for drawing triangles
+// #include "UnfilledTriangle.h" //Our own class for drawing unfilled triangles
 #include "Util.h"           // Needed constants and has cmath for performing math operations
 
 // 3D Primitives
@@ -177,6 +180,8 @@ private:
     static void  setDrawBuffer(int buffer);                             // Sets the buffer used for drawing
     virtual void         setupCamera();                                         // Setup the 2D camera for smooth rendering //TODO remove me
     virtual glm::mat4 getCameraMatrix();
+    virtual glm::mat4 Canvas::getViewMatrix();
+    virtual glm::mat4 Canvas::getProjectionMatrix();
     static void  startDrawing(Canvas *c);                               // Static method that is called by the render thread
     void         textureShaders(bool state);                            // Turn textures on or off
     static bool  testFilledDraw(Canvas& can);                           // Unit test for drawing shapes and determining if fill works
@@ -388,180 +393,180 @@ GLuint VertexArrayID;
 //NOTE: we're keeing these here to be backwards compaitble with the old version
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
-
-
-
-    /*!
-     * \brief Draws a circle.
-     * \details This function draws a circle with the given center, radius, resolution
-     *   (number of sides), color, and fill status.
-     *   \param x The x coordinate of the circle's center.
-     *   \param y The y coordinate of the circle's center.
-     *   \param radius The radius of the circle in pixels.
-     *   \param sides The number of sides to use in the circle.
-     *   \param color The color of the circle
-     *     (set to BLACK by default).
-     *   \param filled Whether the circle should be filled
-     *     (set to true by default).
-     */
-    virtual void drawCircle(int x, int y, int radius, int sides, ColorFloat color = BLACK, bool filled = true);
-
-    /*!
-     * \brief Draws a concave polygon with colored vertices.
-     * \details This function draws a ConcavePolygon with the given vertex data, specified as the
-     *   outer perimeter of the polygon.
-     *   \param size The number of vertices in the polygon.
-     *   \param xverts An array of x positions of said vertices.
-     *   \param yverts An array of y positions of said vertices.
-     *   \param color An array of colors for the said vertices.
-     *   \param filled Whether the Concave polygon should be filled in or not
-     *     (set to true by default).
-     * \warning <b>This function is significantly slower than drawConvexPolygon().</b> It is not recommended
-     *   that you draw convex polygons with this function.
-     * \see drawConvexPolygon().
-     */
-    virtual void drawConcavePolygon(int size, int xverts[], int yverts[], ColorFloat color[], bool filled = true);
-
-    /*!
-     * \brief Draws a convex polygon with colored vertices.
-     * \details This function draws a ConvexPolygon with the given vertex data, specified as the
-     *   outer perimeter of the polygon.
-     *   \param size The number of vertices in the polygon.
-     *   \param xverts An array of the x positions of said vertices.
-     *   \param yverts An array of the y positions of said vertices.
-     *   \param color An array of colors for the said vertices.
-     *   \param filled Whether the ConvexPolygon should be filled in or not
-     *     (set to true by default).
-     * \note The difference between a convex polygon and a concave polygon
-     *   is that a convex polygon has all interior angles less than
-     *   180 degrees ( see http://www.mathopenref.com/polygonconvex.html ).
-     */
-    virtual void drawConvexPolygon(int size, int xverts[], int yverts[], ColorFloat color[], bool filled = true);
-
-    /*!
-     * \brief Draws an image.
-     * \details This function draws an Image with the given coordinates and dimensions.
-     *   \param filename The name of the file to load the image from.
-     *   \param x The x coordinate of the Image's left edge.
-     *   \param y The y coordinate of the Image's top edge.
-     *   \param width The width of the Image.
-     *   \param height The height of the Image.
-     *   \param alpha The alpha with which to draw the Image
-     */
-    virtual void drawImage(std::string filename, int x, int y, int width, int height, float alpha = 1.0f);
-
-    /*!
-     * \brief Draws a line.
-     * \details This function draws a Line at the given coordinates with the given color.
-     *   \param x1 The x position of the start of the line.
-     *   \param y1 The y position of the start of the line.
-     *   \param x2 The x position of the end of the line.
-     *   \param y2 The y position of the end of the line.
-     *   \param color The color of the line
-     *     (set to BLACK by default).
-     */
-    virtual void drawLine(int x1, int y1, int x2, int y2, ColorFloat color = BLACK);
-
-    /*!
-     * \brief Draws a single pixel, specified in row,column format.
-     * \details This function draws a pixel at the given screen coordinates with the given color.
-     * \note (0,0) signifies the <b>top-left</b> of the screen when working with a Canvas object.
-     * \note (0,0) signifies the <b>bottom-left</b> of the screen when working with a CartesianCanvas object.
-     *   \param row The row (y-position) of the pixel.
-     *   \param col The column (x-position) of the pixel.
-     *   \param color The color of the point (set to BLACK by default).
-     * \see drawPoint()
-     */
-    virtual void drawPixel(int row, int col, ColorFloat color = BLACK);
-
-    /*!
-     * \brief Draws a single pixel, specified in x,y format.
-     * \details This function draws a pixel at the given Cartesian coordinates with the given color.
-     * \note (0,0) signifies the <b>left-top</b> of the screen when working with a Canvas object.
-     * \note (0,0) signifies the <b>left-bottom</b> of the screen when working with a CartesianCanvas object.
-     *   \param x The x position of the point.
-     *   \param y The y position of the point.
-     *   \param color The color of the point (set to BLACK by default).
-     * \see drawPixel()
-     */
-    virtual void drawPoint(int x, int y, ColorFloat color = BLACK);
-
-    /*!
-     * \brief Draws a progress bar.
-     * \details This function draws a previously created ProgressBar to the Canvas, as
-     *   specified in that ProgressBar's constructor.
-     *   \param p A pointer to a ProgressBar.
-     * \note There is no equivalent function for CartesianCanvas. If you'd like to draw
-     *   a ProgressBar on a CartesianCanvas, you can still use this function, but you must
-     *   use absolute Canvas coordinates rather than the scaled CartesianCanvas coordinates.
-     */
-    virtual void drawProgress(ProgressBar* p);
-
-    /*!
-     * \brief Draws a rectangle.
-     * \details This function draws a Rectangle with the given coordinates, dimensions, and color.
-     *   \param x1 The x coordinate of the Rectangle's left edge.
-     *   \param y1 The y coordinate of the Rectangle's top edge.
-     *   \param x2 The x coordinate of the Rectangle's right edge.
-     *   \param y2 The y coordinate of the Rectangle's bottom edge.
-     *   \param color The color of the rectangle
-     *     (set to BLACK by default).
-     *   \param filled Whether the rectangle should be filled
-     *     (set to true by default).
-     * \bug The bottom-right pixel of a non-filled rectangle may not get drawn on some machines.
-     */
-    virtual void drawRectangle(int x1, int y1, int x2, int y2, ColorFloat color = BLACK, bool filled = true);
-
-    /*!
-     * \brief Draw a string of text.
-     * \details This function draws a given string of Text at the given coordinates with the given color.
-     *   \param text The string to draw.
-     *   \param x The x coordinate of the text's left bound.
-     *   \param y The y coordinate of the text's left bound.
-     *   \param size The size of the text in pixels.
-     *   \param color The color of the Text (set to BLACK by default).
-     */
-    virtual void drawText(std::string text, int x, int y, unsigned size, ColorFloat color = BLACK);
-
-     /*!
-     * \brief Draws a string of text.
-     * \details This function draws a given string of Text at the given coordinates with the given color.
-     *   \param text The UTF8-encoded string to draw.
-     *   \param x The x coordinate of the text's left bound.
-     *   \param y The y coordinate of the text's left bound.
-     *   \param size The size of the text in pixels.
-     *   \param color The color of the Text (set to BLACK by default).
-     * \note Identical to the drawText(std::string, ...) aside from the first parameter.
-     * \see drawText(std::string s, int x, int y, unsigned size, ColorFloat color = BLACK)
-     */
-    virtual void drawText(std::wstring text, int x, int y, unsigned int size, ColorFloat color = BLACK);
-
-    /*!
-     * \brief Draws a triangle.
-     * \details This function draws a Triangle with the given vertices.
-     *   \param x1 The x coordinate of the first vertex of the Triangle.
-     *   \param y1 The y coordinate of the first vertex of the Triangle.
-     *   \param x2 The x coordinate of the second vertex of the Triangle.
-     *   \param y2 The y coordinate of the second vertex of the Triangle.
-     *   \param x3 The x coordinate of the third vertex of the Triangle.
-     *   \param y3 The y coordinate of the third vertex of the Triangle.
-     *   \param color The color of the Triangle (set to BLACK by default).
-     *   \param filled Whether the Triangle should be filled (set to true by default).
-     */
-    virtual void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, ColorFloat color = BLACK,
-                              bool filled = true);
-
-    /*!
-     * \brief Draws an arbitrary triangle strip with colored vertices.
-     * \details This function draws a TriangleStrip with the given vertex data, specified as
-     *   a triangle strip.
-     *   \param size The number of vertices in the polygon.
-     *   \param xverts An array of x positions of the vertices.
-     *   \param yverts An array of y positions of the vertices.
-     *   \param color An array of colors for the vertices.
-     *   \param filled Whether the triangle strip should be filled (true) or not (false).
-     */
-    virtual void drawTriangleStrip(int size, int xverts[], int yverts[], ColorFloat color[], bool filled = true);
+    //
+    //
+    //
+    // /*!
+    //  * \brief Draws a circle.
+    //  * \details This function draws a circle with the given center, radius, resolution
+    //  *   (number of sides), color, and fill status.
+    //  *   \param x The x coordinate of the circle's center.
+    //  *   \param y The y coordinate of the circle's center.
+    //  *   \param radius The radius of the circle in pixels.
+    //  *   \param sides The number of sides to use in the circle.
+    //  *   \param color The color of the circle
+    //  *     (set to BLACK by default).
+    //  *   \param filled Whether the circle should be filled
+    //  *     (set to true by default).
+    //  */
+    // virtual void drawCircle(int x, int y, int radius, int sides, ColorFloat color = BLACK, bool filled = true);
+    //
+    // /*!
+    //  * \brief Draws a concave polygon with colored vertices.
+    //  * \details This function draws a ConcavePolygon with the given vertex data, specified as the
+    //  *   outer perimeter of the polygon.
+    //  *   \param size The number of vertices in the polygon.
+    //  *   \param xverts An array of x positions of said vertices.
+    //  *   \param yverts An array of y positions of said vertices.
+    //  *   \param color An array of colors for the said vertices.
+    //  *   \param filled Whether the Concave polygon should be filled in or not
+    //  *     (set to true by default).
+    //  * \warning <b>This function is significantly slower than drawConvexPolygon().</b> It is not recommended
+    //  *   that you draw convex polygons with this function.
+    //  * \see drawConvexPolygon().
+    //  */
+    // virtual void drawConcavePolygon(int size, int xverts[], int yverts[], ColorFloat color[], bool filled = true);
+    //
+    // /*!
+    //  * \brief Draws a convex polygon with colored vertices.
+    //  * \details This function draws a ConvexPolygon with the given vertex data, specified as the
+    //  *   outer perimeter of the polygon.
+    //  *   \param size The number of vertices in the polygon.
+    //  *   \param xverts An array of the x positions of said vertices.
+    //  *   \param yverts An array of the y positions of said vertices.
+    //  *   \param color An array of colors for the said vertices.
+    //  *   \param filled Whether the ConvexPolygon should be filled in or not
+    //  *     (set to true by default).
+    //  * \note The difference between a convex polygon and a concave polygon
+    //  *   is that a convex polygon has all interior angles less than
+    //  *   180 degrees ( see http://www.mathopenref.com/polygonconvex.html ).
+    //  */
+    // virtual void drawConvexPolygon(int size, int xverts[], int yverts[], ColorFloat color[], bool filled = true);
+    //
+    // /*!
+    //  * \brief Draws an image.
+    //  * \details This function draws an Image with the given coordinates and dimensions.
+    //  *   \param filename The name of the file to load the image from.
+    //  *   \param x The x coordinate of the Image's left edge.
+    //  *   \param y The y coordinate of the Image's top edge.
+    //  *   \param width The width of the Image.
+    //  *   \param height The height of the Image.
+    //  *   \param alpha The alpha with which to draw the Image
+    //  */
+    // virtual void drawImage(std::string filename, int x, int y, int width, int height, float alpha = 1.0f);
+    //
+    // /*!
+    //  * \brief Draws a line.
+    //  * \details This function draws a Line at the given coordinates with the given color.
+    //  *   \param x1 The x position of the start of the line.
+    //  *   \param y1 The y position of the start of the line.
+    //  *   \param x2 The x position of the end of the line.
+    //  *   \param y2 The y position of the end of the line.
+    //  *   \param color The color of the line
+    //  *     (set to BLACK by default).
+    //  */
+    // virtual void drawLine(int x1, int y1, int x2, int y2, ColorFloat color = BLACK);
+    //
+    // /*!
+    //  * \brief Draws a single pixel, specified in row,column format.
+    //  * \details This function draws a pixel at the given screen coordinates with the given color.
+    //  * \note (0,0) signifies the <b>top-left</b> of the screen when working with a Canvas object.
+    //  * \note (0,0) signifies the <b>bottom-left</b> of the screen when working with a CartesianCanvas object.
+    //  *   \param row The row (y-position) of the pixel.
+    //  *   \param col The column (x-position) of the pixel.
+    //  *   \param color The color of the point (set to BLACK by default).
+    //  * \see drawPoint()
+    //  */
+    // virtual void drawPixel(int row, int col, ColorFloat color = BLACK);
+    //
+    // /*!
+    //  * \brief Draws a single pixel, specified in x,y format.
+    //  * \details This function draws a pixel at the given Cartesian coordinates with the given color.
+    //  * \note (0,0) signifies the <b>left-top</b> of the screen when working with a Canvas object.
+    //  * \note (0,0) signifies the <b>left-bottom</b> of the screen when working with a CartesianCanvas object.
+    //  *   \param x The x position of the point.
+    //  *   \param y The y position of the point.
+    //  *   \param color The color of the point (set to BLACK by default).
+    //  * \see drawPixel()
+    //  */
+    // virtual void drawPoint(int x, int y, ColorFloat color = BLACK);
+    //
+    // /*!
+    //  * \brief Draws a progress bar.
+    //  * \details This function draws a previously created ProgressBar to the Canvas, as
+    //  *   specified in that ProgressBar's constructor.
+    //  *   \param p A pointer to a ProgressBar.
+    //  * \note There is no equivalent function for CartesianCanvas. If you'd like to draw
+    //  *   a ProgressBar on a CartesianCanvas, you can still use this function, but you must
+    //  *   use absolute Canvas coordinates rather than the scaled CartesianCanvas coordinates.
+    //  */
+    // virtual void drawProgress(ProgressBar* p);
+    //
+    // /*!
+    //  * \brief Draws a rectangle.
+    //  * \details This function draws a Rectangle with the given coordinates, dimensions, and color.
+    //  *   \param x1 The x coordinate of the Rectangle's left edge.
+    //  *   \param y1 The y coordinate of the Rectangle's top edge.
+    //  *   \param x2 The x coordinate of the Rectangle's right edge.
+    //  *   \param y2 The y coordinate of the Rectangle's bottom edge.
+    //  *   \param color The color of the rectangle
+    //  *     (set to BLACK by default).
+    //  *   \param filled Whether the rectangle should be filled
+    //  *     (set to true by default).
+    //  * \bug The bottom-right pixel of a non-filled rectangle may not get drawn on some machines.
+    //  */
+    // virtual void drawRectangle(int x1, int y1, int x2, int y2, ColorFloat color = BLACK, bool filled = true);
+    //
+    // /*!
+    //  * \brief Draw a string of text.
+    //  * \details This function draws a given string of Text at the given coordinates with the given color.
+    //  *   \param text The string to draw.
+    //  *   \param x The x coordinate of the text's left bound.
+    //  *   \param y The y coordinate of the text's left bound.
+    //  *   \param size The size of the text in pixels.
+    //  *   \param color The color of the Text (set to BLACK by default).
+    //  */
+    // virtual void drawText(std::string text, int x, int y, unsigned size, ColorFloat color = BLACK);
+    //
+    //  /*!
+    //  * \brief Draws a string of text.
+    //  * \details This function draws a given string of Text at the given coordinates with the given color.
+    //  *   \param text The UTF8-encoded string to draw.
+    //  *   \param x The x coordinate of the text's left bound.
+    //  *   \param y The y coordinate of the text's left bound.
+    //  *   \param size The size of the text in pixels.
+    //  *   \param color The color of the Text (set to BLACK by default).
+    //  * \note Identical to the drawText(std::string, ...) aside from the first parameter.
+    //  * \see drawText(std::string s, int x, int y, unsigned size, ColorFloat color = BLACK)
+    //  */
+    // virtual void drawText(std::wstring text, int x, int y, unsigned int size, ColorFloat color = BLACK);
+    //
+    // /*!
+    //  * \brief Draws a triangle.
+    //  * \details This function draws a Triangle with the given vertices.
+    //  *   \param x1 The x coordinate of the first vertex of the Triangle.
+    //  *   \param y1 The y coordinate of the first vertex of the Triangle.
+    //  *   \param x2 The x coordinate of the second vertex of the Triangle.
+    //  *   \param y2 The y coordinate of the second vertex of the Triangle.
+    //  *   \param x3 The x coordinate of the third vertex of the Triangle.
+    //  *   \param y3 The y coordinate of the third vertex of the Triangle.
+    //  *   \param color The color of the Triangle (set to BLACK by default).
+    //  *   \param filled Whether the Triangle should be filled (set to true by default).
+    //  */
+    // virtual void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, ColorFloat color = BLACK,
+    //                           bool filled = true);
+    //
+    // /*!
+    //  * \brief Draws an arbitrary triangle strip with colored vertices.
+    //  * \details This function draws a TriangleStrip with the given vertex data, specified as
+    //  *   a triangle strip.
+    //  *   \param size The number of vertices in the polygon.
+    //  *   \param xverts An array of x positions of the vertices.
+    //  *   \param yverts An array of y positions of the vertices.
+    //  *   \param color An array of colors for the vertices.
+    //  *   \param filled Whether the triangle strip should be filled (true) or not (false).
+    //  */
+    // virtual void drawTriangleStrip(int size, int xverts[], int yverts[], ColorFloat color[], bool filled = true);
 
     ////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////////

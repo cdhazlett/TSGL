@@ -101,7 +101,18 @@ private:
   float farClip = 100.f;
   float FOV = 45.0f;
 
-  glm::mat4 getCameraMatrix() {
+  glm::mat4 getViewMatrix() {
+    // Calculate the view matrix:
+    glm::mat4 View = glm::lookAt(
+        glm::vec3(eyeX, eyeY, eyeZ),    // Camera position
+        glm::vec3(lookX, lookY, lookZ), // Lookat point
+        glm::vec3(0,1,0)      // Head position, for now always up
+    );
+
+    return View;
+  }
+
+  glm::mat4 getProjectionMatrix() {
 
     // Calculate the projection matrix:
     glm::mat4 Projection = glm::perspective(
@@ -111,15 +122,14 @@ private:
       farClip                               // Far clipping plane
     );
 
-    // Calculate the camera matrix:
-    glm::mat4 View = glm::lookAt(
-        glm::vec3(eyeX, eyeY, eyeZ),    // Camera position
-        glm::vec3(lookX, lookY, lookZ), // Lookat point
-        glm::vec3(0,1,0)      // Head position, for now always up
-    );
+    return Projection;
+  }
+
+
+  glm::mat4 getCameraMatrix() {
 
     // Multiply the matricies:
-    return Projection * View; // Matrix mults always seem the other way around
+    return getProjectionMatrix() * getViewMatrix(); // Matrix mults always seem the other way around
 
   }
 

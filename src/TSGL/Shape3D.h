@@ -6,30 +6,14 @@
 #define SHAPE3D_H_
 
 #include "Drawable.h"       // For extending our Drawable object
-#include "TsglAssert.h"  // For unit testing purposes
 
 namespace tsgl {
 
   /*! \class Shape3D //TODO
-   *  \brief A class for drawing 3D shapes onto a Canvas.
-   *  \details Shape provides a base class for drawing shapes to a Canvas.
-   *  \note Shape3D is abstract, and must be extended.
-   *  \details All Shape subclasses must override the getGeometryType() method. Something like the following should be used:
-   *  \details <code>vertices</code> should be an array of floating point values in TSGL's vertex format.
-   *  One vertex consists of 2 floating point values, signifying x and y components respectively.
-   *  E.g., to draw a triangle, you would need 3 vertices = 6 floats -> vertices should be an array of length 6.
-   *  \details <code>numVertices</code> should be the actual integer number of vertices to be drawn (e.g., *3* for a triangle).
-   *  \details <code>drawingmode</code> should be one of GL's primitive drawing modes.
-   *  See https://www.opengl.org/sdk/docs/man2/xhtml/glBegin.xml for further information.
    */
-class Shape3D : public DiscreteDrawable {
+class Shape3D : public Drawable {
 protected:
-    bool init; ///< Whether the vertex has been initialized completely
-    GLfloat* vertices; ///< Buffer of x, y, z coordinates
     ColorFloat color; ///< Color of the Shape
-    int size,           ///< Number of floating point numbers in vertices
-        current,        ///< Current number of floating point numbers in vertices
-        length;         ///< Number of vertices in vertices (size / 3)
  public:
 
     /*!
@@ -40,32 +24,18 @@ protected:
      * \warning An invariant is held where if numVertices is less than 2 then an error message is given.
      * \return A new Shape with a buffer for storing the specified numbered of vertices.
      */
-    Shape3D(int numVertices, const ColorFloat& c);
+    Shape3D(int numVertices, const ColorFloat& c) : Drawable(numVertices) {
+      attribMutex.lock();
+      color = c;
+      attribMutex.unlock();
+    };
 
     /*!
      * \brief Destroys a Shape object.
      * \details Destructor for a Shape.
      * \details Frees up memory that was allocated to a Shape object.
      */
-    virtual ~Shape3D();
-
-    /**
-     * \brief Returns a pointer to the vertices array for renderer.
-     * \details Vertices specifies x and y coordinates for the Shape.
-     * \return Pointer to vertices.
-     */
-    virtual GLfloat* getPointerToVerticesArray();
-
-    /**
-     * \brief Returns the number of vertices in the Shape for renderer.
-     * \return An int specifying the number of vertices.
-     */
-    virtual int getNumberOfVertices();
-
-    /**
-     * \brief Returns the geometry type for drawing.
-     */
-    virtual GLenum getGeometryType() = 0;
+    virtual ~Shape3D() { return; }
 
     /*!
      * \brief Adds another vertex to a Shape.
@@ -76,25 +46,31 @@ protected:
      * \note This function does nothing if the vertex buffer is already full.
      * \note A message is given indicating when the vertex buffer is full.
      */
-    virtual void addVertex(float x, float y, float z);
+    virtual void addVertex(float x, float y, float z) {
+      addVertexWithRGBA(x, y, z, color.R, color.G, color.B, color.A);
+    }
 
     /**
      * \brief Accessor for the current color of the Shape.
      * \return The ColorFloat of the Shape.
      */
-    virtual ColorFloat getColor();
-
-    /**
-     * \brief Accessor for the pointer to the color of the Shape for renderer.
-     * \return Pointer to ColorFloat of Shape
-     */
-    ColorFloat* getObjectColor();
+    virtual ColorFloat getColor() {
+      attribMutex.lock();
+      ColorFloat c = color;
+      attribMutex.unlock();
+      return c;
+    }
 
     /**
      * \brief Sets the Shape to a new color.
      * \param c The new ColorFloat.
      */
-    virtual void setColor(const ColorFloat& c);
+    virtual void setColor(const ColorFloat& c) {
+      attribMutex.lock();
+      color = c;
+      attribMutex.unlock();
+      setColorForAllVertices(c);
+    }
 
     /**
      * \brief Moves the Shape to new coordinates.
@@ -102,32 +78,44 @@ protected:
      * \param y The new center y coordinate.
      * \param z The new center z coordinate.
      */
-    virtual void setCenter(float x, float y, float z);
+    virtual void setCenter(float x, float y, float z) {
+      glm::vec3 trans = getTranslation();
+      translate(-trans.x, -trans.y, -trans.z);
+      translate(x, y, z);
+    }
 
     /**
      * \brief Returns the x coordinate of the Shape.
      * \return A float, the center x coordinate.
      */
-    virtual float getX();
+    virtual float getX() {
+      return getTranslation().x;
+    }
 
     /**
      * \brief Returns the y coordinate of the Shape.
      * \return A float, the center y coordinate.
      */
-    virtual float getY();
+    virtual float getY() {
+      return getTranslation().y;
+    }
 
     /**
      * \brief Returns the z coordinate of the Shape.
      * \return A float, the center z coordinate.
      */
-    virtual float getZ();
+    virtual float getZ() {
+      return getTranslation().z;
+    }
 
     /**
      * \brief Rotates the Shape by an angle.
      * \details Rotates clockwise around the center of the shape.
      * \param angle Angle to rotate by, in radians.
      */
-    virtual void centeredRotation(float angle);
+    virtual void centeredRotation(float angle) {
+      fprintf(stderr, "Tried to use centeredRotation in Shape3D.%s\n");
+    };
 };
 
 }

@@ -259,9 +259,39 @@ namespace tsgl {
 
   }
 
+  glm::mat4 Canvas::getViewMatrix() {
+    // // Calculate the view matrix:
+    // glm::mat4 View = glm::lookAt(
+    //     glm::vec3(eyeX, eyeY, eyeZ),    // Camera position
+    //     glm::vec3(lookX, lookY, lookZ), // Lookat point
+    //     glm::vec3(0,1,0)      // Head position, for now always up
+    // );
+    //
+    // return View;
+    return glm::mat4();
+  }
+
+  glm::mat4 Canvas::getProjectionMatrix() {
+    //
+    // // Calculate the projection matrix:
+    // glm::mat4 Projection = glm::perspective(
+    //   glm::radians(FOV),                    // FOV
+    //   (float) getWindowHeight() / (float) getWindowWidth(),  // Aspect ratio
+    //   nearClip,                             // Near clipping plane
+    //   farClip                               // Far clipping plane
+    // );
+    //
+    // return Projection;
+    return glm::mat4();
+  }
+
+
   glm::mat4 Canvas::getCameraMatrix() {
 
-    return glm::mat4(1.0f);
+    // // Multiply the matricies:
+    // return getProjectionMatrix() * getViewMatrix(); // Matrix mults always seem the other way around
+    //
+    return glm::mat4();
 
   }
 
@@ -335,13 +365,13 @@ namespace tsgl {
     //TODO: check that the shapes will change layer if layer is changed after addition.
 
     // Set the default current layer if layer not explicitly set
-    if (shapePtr->getLayer() < 0) shapePtr->setLayer(currentNewShapeLayerDefault);
+    // if (shapePtr->getLayer() < 0) shapePtr->setLayer(currentNewShapeLayerDefault);
 
     objectMutex.lock();
     objectBuffer.push_back(shapePtr);
-    std::stable_sort(objectBuffer.begin(), objectBuffer.end(), [](Drawable * a, Drawable * b)->bool {
-      return (a->getLayer() < b->getLayer());  // true if A's layer is higher than B's layer
-    });
+    // std::stable_sort(objectBuffer.begin(), objectBuffer.end(), [](Drawable * a, Drawable * b)->bool {
+    //   return (a->getLayer() < b->getLayer());  // true if A's layer is higher than B's layer
+    // });
     objectMutex.unlock();
 
   }
@@ -482,84 +512,90 @@ namespace tsgl {
 
   void Canvas::draw() {
 
-    // std::this_thread::sleep_for(std::chrono::seconds(3));
-
     glfwMakeContextCurrent(window);  // Select the OpenGL contex that we want to draw to
-    // glGetError();
     glfwSwapInterval(1);  // Enable VSYNC
 
-    // temp shader shit
-
-    // Default vertex array
+    // Init a VBO
     GLuint VertexArrayID;
   	glGenVertexArrays(1, &VertexArrayID);
   	glBindVertexArray(VertexArrayID);
 
-  	// Create and compile our GLSL program from the shaders
+  	// Load and compile the shader program from the source files
     GLuint programID = LoadShaders( "src/shaders/shader1.vert", "src/shaders/shader1.frag" );
 
-    // Get a handle for our "MVP" uniform
-    // Only during the initialisation
-    GLuint MatrixID = glGetUniformLocation(programID, "MVP");
+    // Create handles for the model, view, projection transformation matrices
+    // that are used to transform each vertex
+    GLuint MVPMatrixID = glGetUniformLocation(programID, "MVP");
+    GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
+    GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
 
-
-  	static const GLfloat g_vertex_buffer_data[] = {
-  		-1.0f, -1.0f, 0.0f,
-  		 1.0f, -1.0f, 0.0f,
-  		 0.0f,  1.0f, 0.0f,
-  	};
-
+    // Create the vertex buffer
   	GLuint vertexbuffer;
   	glGenBuffers(1, &vertexbuffer);
-  	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-  	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-    // end testing
 
+    // Create the color buffer
+  	GLuint colorbuffer;
+  	glGenBuffers(1, &colorbuffer);
+
+    // Create the surface normal buffer
+  	GLuint normalbuffer;
+  	glGenBuffers(1, &normalbuffer);
+
+    // Use the shader program
+    glUseProgram(programID);
+
+    // Get the location of the Light object
+    GLuint LightID = glGetUniformLocation(programID, "Light_Coord");
 
     // Count number of frames
     int counter = 0;
     float lastTime = 0;
-
+    // Loop for each frame
     while (!glfwWindowShouldClose(window) && !isFinished) {
 
-      // Get the camera matrix from the Canvas
-      glm::mat4 cameraMat = getCameraMatrix();
-
-      // Load the model's matrix
-      glm::mat4 Model = glm::mat4(1.0f);
-
-      // Multiply the Model by the Camera to get the proper transform
-      glm::mat4 mvp = cameraMat * Model;
-
-      // Send the MVP matrix to the shaders
-      glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &mvp[0][0]);
-
-
-      // Dark blue background
-      glClearColor(0.0f, 0.0f, 3.f, 1.f);
+      // Clear the frame
+      glClearColor(0.1f, 0.1f, 0.1f, 1.f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+      // Get the camera matrices from the Canvas
+      glm::mat4 cameraMat = getCameraMatrix();
+      glm::mat4 viewMat = getViewMatrix();
+      glm::mat4 projectionMat = getProjectionMatrix();
 
-      //testing again
-      // Use our shader
-		  glUseProgram(programID);
-      // 1rst attribute buffer : vertices
-  		glEnableVertexAttribArray(0);
-  		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-  		glVertexAttribPointer(
-  			0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-  			3,                  // size
-  			GL_FLOAT,           // type
-  			GL_FALSE,           // normalized?
-  			0,                  // stride
-  			(void*)0            // array buffer offset
-  		);
+      // Send the lighting location to the shaders
+      glm::vec3 lightPos = glm::vec3(4,4,4); //TODO move me
+      glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
 
-  		// Draw the triangle !
-  		glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle
+      // // // // // // // // // // // // // // // // // // // // // // // // //
+      // Iterate through objects, render them
+      objectMutex.lock();
 
-  		glDisableVertexAttribArray(0);
-      //testing again
+      glfwGetCursorPos(window, &mouseX, &mouseY); //TODO: decide if this is the right place. This does keep it within the lock, which is good.
+
+      for(std::vector<Drawable *>::iterator it = objectBuffer.begin(); it != objectBuffer.end(); ++it) {
+        try {
+          // Load the model's matrix
+          glm::mat4 Model = (*it)->getModelMatrix();
+
+          // Multiply the Model by the Camera to get the proper MVP transform
+          glm::mat4 mvp = cameraMat * Model;
+
+          // Send the matrices to the shaders
+          glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &mvp[0][0]);
+          glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &viewMat[0][0]);
+          glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &projectionMat[0][0]);
+
+          (*it)->render(vertexbuffer, colorbuffer, normalbuffer);
+
+        }
+        catch (std::exception& e) {
+          std::cerr << "Caught an exception!!!" << e.what() << std::endl;
+        }
+      }
+
+      objectMutex.unlock();
+      // // // // // // // // // // // // // // // // // // // // // // // // //
+
 
 
       // When we're done drawing, swap in the new frame
@@ -587,8 +623,6 @@ namespace tsgl {
         printf("OpenGL Error code: %d\n", glError);
         printf("Frame: %d OpenGL Error: %s\n", frameCounter, gluErrorString(glError));
       }
-
-      // break;
     }
 
     // std::this_thread::sleep_for(std::chrono::seconds(3));
@@ -844,35 +878,35 @@ namespace tsgl {
   }
 
   void Canvas::pauseDrawing() {
-    #pragma omp critical (pauseResume)
-    {
-      if (syncMutexLocked == 0 && syncMutexOwner == -1) {
-        syncMutex.lock();
-        syncMutexOwner = omp_get_thread_num();
-      }
-      #pragma omp critical (syncMutLock)
-      {
-        ++syncMutexLocked;
-      }
-    }
+    // #pragma omp critical (pauseResume)
+    // {
+    //   if (syncMutexLocked == 0 && syncMutexOwner == -1) {
+    //     syncMutex.lock();
+    //     syncMutexOwner = omp_get_thread_num();
+    //   }
+    //   #pragma omp critical (syncMutLock)
+    //   {
+    //     ++syncMutexLocked;
+    //   }
+    // }
   }
 
   void Canvas::resumeDrawing() {
-    #pragma omp critical (syncMutLock)
-    {
-      --syncMutexLocked;
-    }
-    #pragma omp critical (pauseResume)
-    {
-      if (syncMutexOwner == omp_get_thread_num()) {
-        while (syncMutexLocked > 0)
-        sleepFor(FRAME/2);
-        syncMutex.unlock();
-        syncMutexOwner = -1;
-      }
-    }
-    while (syncMutexOwner != -1)
-    sleepFor(FRAME/2);
+    // #pragma omp critical (syncMutLock)
+    // {
+    //   --syncMutexLocked;
+    // }
+    // #pragma omp critical (pauseResume)
+    // {
+    //   if (syncMutexOwner == omp_get_thread_num()) {
+    //     while (syncMutexLocked > 0)
+    //     sleepFor(FRAME/2);
+    //     syncMutex.unlock();
+    //     syncMutexOwner = -1;
+    //   }
+    // }
+    // while (syncMutexOwner != -1)
+    // sleepFor(FRAME/2);
   }
 
   void Canvas::sleep() {
@@ -1069,133 +1103,133 @@ namespace tsgl {
   ////////////////////////////////////////////////////////////////////////////////
 
 
-  void Canvas::drawCircle(int xverts, int yverts, int radius, int sides, ColorFloat color, bool filled) {
-    float delta = 2.0f / sides * PI;
-    if (filled) {
-      RegularPolygon *c = new RegularPolygon(xverts, yverts, radius, sides, color);
-      c->setHasOutline(false);
-      this->add(c);
-    } else {
-      UnfilledRegularPolygon *c = new UnfilledRegularPolygon(xverts, yverts, radius, sides, color);
-      this->add(c);
-    }
-  }
-
-  void Canvas::drawConcavePolygon(int size, int xverts[], int yverts[], ColorFloat color[], bool filled) {
-    if (filled) {
-      ConcavePolygon* p = new ConcavePolygon(size, color[0]);
-      for (int i = 0; i < size; i++) {
-        p->addVertex(xverts[i], yverts[i]);
-      }
-      p->setHasOutline(false);
-      this->add(p);  // Push it onto our drawing buffer
-    }
-    else {
-      Polyline* p = new Polyline(size, color[0]);
-      for (int i = 0; i < size; i++) {
-        p->addVertex(xverts[i], yverts[i]);
-      }
-      this->add(p);  // Push it onto our drawing buffer
-    }
-  }
-
-  void Canvas::drawConvexPolygon(int size, int x[], int y[], ColorFloat color[], bool filled) {
-    if (filled) {
-      ConvexPolygon* p = new ConvexPolygon(size, color[0]);
-      for (int i = 0; i < size; i++) {
-        p->addVertex(x[i], y[i]);
-      }
-      p->setHasOutline(false);
-      this->add(p);  // Push it onto our drawing buffer
-    }
-    else {
-      Polyline* p = new Polyline(size, color[0]);
-      for (int i = 0; i < size; i++) {
-        p->addVertex(x[i], y[i]);
-      }
-      this->add(p);  // Push it onto our drawing buffer
-    }
-  }
-
-  void Canvas::drawImage(std::string filename, int x, int y, int width, int height, float alpha) {
-    Image* im = new Image(filename, loader, x, y, width, height, alpha);  // Creates the Image with the specified coordinates
-    this->add(im);                                        // Push it onto our drawing buffer
-  }
-
-  void Canvas::drawLine(int x1, int y1, int x2, int y2, ColorFloat color) {
-    Line* l = new Line(x1, y1, x2, y2, color);  // Creates the Line with the specified coordinates and color
-    this->add(l);                               // Push it onto our drawing buffer
-  }
-
-  inline void Canvas::drawPixel(int row, int col, ColorFloat color) {
-    // int(col, row, color); //TODO: update with new api
-  }
-
-  void Canvas::drawPoint(int x, int y, ColorFloat color) {
-    //TODO convert to point layer
-    // Point* p = new Point(x, y, color);
-    // this->add(p);  //TODO test thread safety
-  }
-
-  //TODO: change to just add the ProgressBar as one item (rather than rect and border)
-  void Canvas::drawProgress(ProgressBar* p) {
-    for (int i = 0; i < p->getSegs(); ++i) {
-      drawText(to_string(i),p->getSegX(i)+8,p->getSegY()-8,32,BLACK);
-      this->add(p->getRect(i));
-      this->add(p->getBorder(i));
-    }
-  }
-
-  //TODO: maye works with the new backend
-  void Canvas::drawRectangle(int x1, int y1, int x2, int y2, ColorFloat color, bool filled) {
-    if (x2 < x1) { int t = x1; x1 = x2; x2 = t; }
-    if (y2 < y1) { int t = y1; y1 = y2; y2 = t; }
-    if (filled) {
-      Rectangle* rec = new Rectangle(x1, y1, x2-x1, y2-y1, color);  // Creates the Rectangle with the specified coordinates and color
-      rec->setHasOutline(false);
-      this->add(rec);                                     // Push it onto our drawing buffer
-    }
-    else {
-      UnfilledRectangle* rec = new UnfilledRectangle(x1, y1, x2-x1, y2-y1, color);  // Creates the Rectangle with the specified coordinates and color
-      this->add(rec);                                     // Push it onto our drawing buffer
-    }
-  }
-
-  void Canvas::drawText(std::string text, int x, int y, unsigned size, ColorFloat color) {
-    Text* t = new Text(text, x, y, size, color);  // Creates the Point with the specified coordinates and color
-    this->add(t);                                // Push it onto our drawing buffer
-  }
-
-  void Canvas::drawText(std::wstring text, int x, int y, unsigned size, ColorFloat color) {
-    drawText( to_string("text"), x, y, size, color); //TODO: add conversion from std::wstring to std::string
-  }
-
-  void Canvas::drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, ColorFloat color, bool filled) {
-    if (filled) {
-      Triangle* t = new Triangle(x1, y1, x2, y2, x3, y3, color);  // Creates the Triangle with the specified vertices and color
-      t->setHasOutline(false);
-      this->add(t);                                               // Push it onto our drawing buffer
-    } else {
-      UnfilledTriangle* t = new UnfilledTriangle(x1, y1, x2, y2, x3, y3, color);  // Creates the Triangle with the specified vertices and color
-      this->add(t);                                               // Push it onto our drawing buffer
-    }
-  }
-
-  void Canvas::drawTriangleStrip(int size, int xverts[], int yverts[], ColorFloat color[], bool filled) {
-    if (filled) {
-      TriangleStrip* p = new TriangleStrip(size, color[0]);
-      for (int i = 0; i < size; i++) {
-        p->addVertex(xverts[i], yverts[i]);
-      }
-      this->add(p);  // Push it onto our drawing buffer
-    } else {
-      Polyline* p = new Polyline(size, color[0]);
-      for (int i = 0; i < size; i++) {
-        p->addVertex(xverts[i], yverts[i]);
-      }
-      this->add(p);  // Push it onto our drawing buffer
-    }
-  }
+  // void Canvas::drawCircle(int xverts, int yverts, int radius, int sides, ColorFloat color, bool filled) {
+  //   float delta = 2.0f / sides * PI;
+  //   if (filled) {
+  //     RegularPolygon *c = new RegularPolygon(xverts, yverts, radius, sides, color);
+  //     c->setHasOutline(false);
+  //     this->add(c);
+  //   } else {
+  //     UnfilledRegularPolygon *c = new UnfilledRegularPolygon(xverts, yverts, radius, sides, color);
+  //     this->add(c);
+  //   }
+  // }
+  //
+  // void Canvas::drawConcavePolygon(int size, int xverts[], int yverts[], ColorFloat color[], bool filled) {
+  //   if (filled) {
+  //     ConcavePolygon* p = new ConcavePolygon(size, color[0]);
+  //     for (int i = 0; i < size; i++) {
+  //       p->addVertex(xverts[i], yverts[i]);
+  //     }
+  //     p->setHasOutline(false);
+  //     this->add(p);  // Push it onto our drawing buffer
+  //   }
+  //   else {
+  //     Polyline* p = new Polyline(size, color[0]);
+  //     for (int i = 0; i < size; i++) {
+  //       p->addVertex(xverts[i], yverts[i]);
+  //     }
+  //     this->add(p);  // Push it onto our drawing buffer
+  //   }
+  // }
+  //
+  // void Canvas::drawConvexPolygon(int size, int x[], int y[], ColorFloat color[], bool filled) {
+  //   if (filled) {
+  //     ConvexPolygon* p = new ConvexPolygon(size, color[0]);
+  //     for (int i = 0; i < size; i++) {
+  //       p->addVertex(x[i], y[i]);
+  //     }
+  //     p->setHasOutline(false);
+  //     this->add(p);  // Push it onto our drawing buffer
+  //   }
+  //   else {
+  //     Polyline* p = new Polyline(size, color[0]);
+  //     for (int i = 0; i < size; i++) {
+  //       p->addVertex(x[i], y[i]);
+  //     }
+  //     this->add(p);  // Push it onto our drawing buffer
+  //   }
+  // }
+  //
+  // void Canvas::drawImage(std::string filename, int x, int y, int width, int height, float alpha) {
+  //   Image* im = new Image(filename, loader, x, y, width, height, alpha);  // Creates the Image with the specified coordinates
+  //   this->add(im);                                        // Push it onto our drawing buffer
+  // }
+  //
+  // void Canvas::drawLine(int x1, int y1, int x2, int y2, ColorFloat color) {
+  //   Line* l = new Line(x1, y1, x2, y2, color);  // Creates the Line with the specified coordinates and color
+  //   this->add(l);                               // Push it onto our drawing buffer
+  // }
+  //
+  // inline void Canvas::drawPixel(int row, int col, ColorFloat color) {
+  //   // int(col, row, color); //TODO: update with new api
+  // }
+  //
+  // void Canvas::drawPoint(int x, int y, ColorFloat color) {
+  //   //TODO convert to point layer
+  //   // Point* p = new Point(x, y, color);
+  //   // this->add(p);  //TODO test thread safety
+  // }
+  //
+  // //TODO: change to just add the ProgressBar as one item (rather than rect and border)
+  // void Canvas::drawProgress(ProgressBar* p) {
+  //   for (int i = 0; i < p->getSegs(); ++i) {
+  //     drawText(to_string(i),p->getSegX(i)+8,p->getSegY()-8,32,BLACK);
+  //     this->add(p->getRect(i));
+  //     this->add(p->getBorder(i));
+  //   }
+  // }
+  //
+  // //TODO: maye works with the new backend
+  // void Canvas::drawRectangle(int x1, int y1, int x2, int y2, ColorFloat color, bool filled) {
+  //   if (x2 < x1) { int t = x1; x1 = x2; x2 = t; }
+  //   if (y2 < y1) { int t = y1; y1 = y2; y2 = t; }
+  //   if (filled) {
+  //     Rectangle* rec = new Rectangle(x1, y1, x2-x1, y2-y1, color);  // Creates the Rectangle with the specified coordinates and color
+  //     rec->setHasOutline(false);
+  //     this->add(rec);                                     // Push it onto our drawing buffer
+  //   }
+  //   else {
+  //     UnfilledRectangle* rec = new UnfilledRectangle(x1, y1, x2-x1, y2-y1, color);  // Creates the Rectangle with the specified coordinates and color
+  //     this->add(rec);                                     // Push it onto our drawing buffer
+  //   }
+  // }
+  //
+  // void Canvas::drawText(std::string text, int x, int y, unsigned size, ColorFloat color) {
+  //   Text* t = new Text(text, x, y, size, color);  // Creates the Point with the specified coordinates and color
+  //   this->add(t);                                // Push it onto our drawing buffer
+  // }
+  //
+  // void Canvas::drawText(std::wstring text, int x, int y, unsigned size, ColorFloat color) {
+  //   drawText( to_string("text"), x, y, size, color); //TODO: add conversion from std::wstring to std::string
+  // }
+  //
+  // void Canvas::drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, ColorFloat color, bool filled) {
+  //   if (filled) {
+  //     Triangle* t = new Triangle(x1, y1, x2, y2, x3, y3, color);  // Creates the Triangle with the specified vertices and color
+  //     t->setHasOutline(false);
+  //     this->add(t);                                               // Push it onto our drawing buffer
+  //   } else {
+  //     UnfilledTriangle* t = new UnfilledTriangle(x1, y1, x2, y2, x3, y3, color);  // Creates the Triangle with the specified vertices and color
+  //     this->add(t);                                               // Push it onto our drawing buffer
+  //   }
+  // }
+  //
+  // void Canvas::drawTriangleStrip(int size, int xverts[], int yverts[], ColorFloat color[], bool filled) {
+  //   if (filled) {
+  //     TriangleStrip* p = new TriangleStrip(size, color[0]);
+  //     for (int i = 0; i < size; i++) {
+  //       p->addVertex(xverts[i], yverts[i]);
+  //     }
+  //     this->add(p);  // Push it onto our drawing buffer
+  //   } else {
+  //     Polyline* p = new Polyline(size, color[0]);
+  //     for (int i = 0; i < size; i++) {
+  //       p->addVertex(xverts[i], yverts[i]);
+  //     }
+  //     this->add(p);  // Push it onto our drawing buffer
+  //   }
+  // }
 
 
 

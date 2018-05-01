@@ -110,16 +110,27 @@ void alphaRectangleFunction(Canvas3D& can) {
     float camX, camZ = 0.f;
     int degrees = 0;
 
+    can.setCameraPosition(10, 0, 10);
+    can.setCameraFocusPoint(0, 0, 0);
+    can.setCameraPerspective(90.0f, 0.1f, 100.0f);
+
+    Cube *testCube = new Cube(0,0,0,10,10,10, ColorFloat(1.f,1.f,1.f,1.f));
+    testCube->scale(2,2,2);
+    can.add(testCube);
+
+
     while (can.isOpen()) {
       can.sleep();
       camX = sin(degrees*PI/180)*10;
       camZ = cos(degrees*PI/180)*10;
 
+      testCube->rotate(-1, 0, 1, 0);
+
       // printf("The circle X is %f, and the circle Y is %f", camX, camZ);
 
-      can.setCameraPosition(camX, 0, camZ);
-      can.setCameraFocusPoint(0, 0, 0);
-      can.setCameraPerspective(45.0f, 0.1f, 100.0f);
+      // can.setCameraPosition(camX, 0, camZ);
+      // can.setCameraFocusPoint(0, 0, 0);
+      // can.setCameraPerspective(45.0f, 0.1f, 100.0f);
 
       // topRedRect->centeredRotation(degrees);
 

@@ -11,16 +11,16 @@
 
 #include "Canvas.h"
 #include "Canvas3D.h"
-#include "RasterCanvas.h"
-#include "CartesianCanvas.h"
-#include "CartesianRasterCanvas.h"
+// #include "RasterCanvas.h"
+// #include "CartesianCanvas.h"
+// #include "CartesianRasterCanvas.h"
 #include "Color.h"
 #include "Error.h"
-#include "IntegralViewer.h"
+// #include "IntegralViewer.h"
 #include "Keynums.h"
-#include "Spectrogram.h"
+// #include "Spectrogram.h"
 #include "Timer.h"
 #include "Util.h"
-#include "VisualTaskQueue.h"
+// #include "VisualTaskQueue.h"
 
 #endif /* TSGL_H_ */

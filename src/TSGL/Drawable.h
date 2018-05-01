@@ -10,10 +10,14 @@
 #include <glm/vec4.hpp> // glm::vec4
 #include <glm/mat4x4.hpp> // glm::mat4
 #include <glm/gtc/matrix_transform.hpp> // glm::translate, glm::rotate, glm::scale, glm::perspective
-#include <glm/gtx/decomposition.hpp>
+
+#define GLM_ENABLE_EXPERIMENTAL
+#include <glm/gtx/normal.hpp>
+#include <glm/gtx/matrix_decompose.hpp>
 
 #include <../glad/glad.h>       // Loader for OpenGL function calls
 #include <mutex>                // Needed for locking the attribute mutex for thread-safety
+#include <algorithm>            // std::min
 #include "Color.h"              // TSGL Color Definitions
 
 namespace tsgl {
@@ -28,9 +32,15 @@ namespace tsgl {
     std::mutex      attribMutex;  ///< Protects the attributes of the Drawable from being accessed while simultaneously being changed
     glm::mat4       modelMatrix;  ///< The transformation matrix for this model
     double          *vertexArray; ///< The array which holds (x,y,z) values for each vertex
-    double          *vertexColorArray; ///< The array which holds (x,y,z) values for each vertex
+    float           *vertexColorArray; ///< The array which holds (r,g,b,a) color values for each vertex
+    double          *vertexNormalArray; ///< The array which holds (x,y,z) normals for each vertex
     int             numVertices = 0;  ///< The number of vertices in the model
     int             currentVertex = 0;  ///< The current number of initted vertices
+
+  private:
+    float deg2rad(float deg) {
+      return(deg*3.14159265/180);
+    }
 
   public:
 
@@ -50,8 +60,11 @@ namespace tsgl {
       currentVertex = 0;
       vertexArray = new double[numVertices*3];
       memset(vertexArray, 0, sizeof(double)*numVertices*3);
-      vertexColorArray = new double[numVertices*4];
-      memset(vertexColorArray, 0, sizeof(double)*numVertices*4);
+      vertexColorArray = new float[numVertices*4];
+      memset(vertexColorArray, 0, sizeof(float)*numVertices*4);
+      vertexNormalArray = new double[numVertices*3];
+      memset(vertexNormalArray, 0, sizeof(double)*numVertices*3);
+
 
       modelMatrix = glm::mat4(1.0f);
 
@@ -75,7 +88,7 @@ namespace tsgl {
     */
     void rotate(float degrees, float x, float y, float z) {
       attribMutex.lock();
-      modelMatrix = glm::rotate(modelMatrix, degrees, x, y, z);
+      modelMatrix = glm::rotate(modelMatrix, deg2rad(degrees), glm::vec3(x, y, z));
       attribMutex.unlock();
     }
 
@@ -98,7 +111,7 @@ namespace tsgl {
     }
 
     void setColorForAllVertices(const ColorFloat& color) {
-      attribMutex.lock()
+      attribMutex.lock();
       int i;
       for(i=0; i<currentVertex; i++) {
         vertexColorArray[i*4] = color.R;
@@ -106,7 +119,7 @@ namespace tsgl {
         vertexColorArray[i*4 +2] = color.B;
         vertexColorArray[i*4 +3] = color.A;
       }
-      attribMutex.unlock()
+      attribMutex.unlock();
     }
 
     int getNumberOfVertices() {
@@ -129,9 +142,9 @@ namespace tsgl {
     /**
     * \brief Returns a pointer to the array of colors
     */
-    const double* getVertexColorArrayPointer() {
+    const float* getVertexColorArrayPointer() {
       attribMutex.lock();
-      double* retVal = vertexColorArray;
+      float* retVal = vertexColorArray;
       attribMutex.unlock();
       return retVal;
     }
@@ -140,7 +153,7 @@ namespace tsgl {
     * \brief Adds another vertex to a Drawable.
     * \details This function initializes the next vertex in the Drawable.
     */
-    virtual void addVertex(float x, float y, float z, ColorFloat color) {
+    void addVertexWithRGBA(float x, float y, float z, float r, float g, float b, float a) {
       attribMutex.lock();
 
       if (currentVertex == numVertices) {
@@ -153,35 +166,105 @@ namespace tsgl {
       vertexArray[currentVertex*3 +1] = y;
       vertexArray[currentVertex*3 +2] = z;
 
-      vertexColorArray[currentVertex*4] = color.R;
-      vertexColorArray[currentVertex*4 +1] = color.G;
-      vertexColorArray[currentVertex*4 +2] = color.B;
-      vertexColorArray[currentVertex*4 +3] = color.A;
+      vertexColorArray[currentVertex*4] = r;
+      vertexColorArray[currentVertex*4 +1] = g;
+      vertexColorArray[currentVertex*4 +2] = b;
+      vertexColorArray[currentVertex*4 +3] = a;
 
       currentVertex++;
 
       attribMutex.unlock();
+
+      if (currentVertex%3 == 0) {
+        computeNormals(); // Recompute the normal data when a new triangle is added
+        // TODO this might be really slow, may need to speed this up some
+      }
+
+    }
+
+    glm::vec3 getVertexPosition(int i) {
+      attribMutex.lock();
+      if (i > currentVertex) {
+        fprintf(stderr, "Vertex index %d out of bounds.\n", i);
+        attribMutex.unlock();
+        return glm::vec3(0.f,0.f,0.f);
+      }
+      glm::vec3 retval = glm::vec3(vertexArray[i*3], vertexArray[i*3+1], vertexArray[i*3+2]);
+      attribMutex.unlock();
+      return retval;
+    }
+
+    void writeNormalForVertexPosition(int i, glm::vec3 normal) {
+      attribMutex.lock();
+      if (i > currentVertex) {
+        fprintf(stderr, "Vertex index %d out of bounds.\n", i);
+        attribMutex.unlock();
+        return;
+      }
+      vertexNormalArray[i*3] = (double)normal.x;
+      vertexNormalArray[i*3+1] = (double)normal.y;
+      vertexNormalArray[i*3+2] = (double)normal.z;
+      attribMutex.unlock();
+    }
+
+    void computeNormals() {
+      // Reset the normal vector array
+      attribMutex.lock();
+      memset(vertexNormalArray, 0, sizeof(double)*numVertices*3);
+      attribMutex.unlock();
+
+      // For each triangle, find the normal, apply to all vertex in triangle
+      int i;
+      for (i=0; i<currentVertex/3; i++) {
+        // Get the vertices for the current triangle
+        glm::vec3 t1, t2, t3;
+        t1 = getVertexPosition(i*3);
+        t2 = getVertexPosition(i*3+1);
+        t3 = getVertexPosition(i*3+2);
+
+        // Compute the surface normal
+        glm::vec3 normal = glm::triangleNormal(t1, t2, t3);
+
+        writeNormalForVertexPosition(i*3, normal);
+        writeNormalForVertexPosition(i*3+1, normal);
+        writeNormalForVertexPosition(i*3+2, normal);
+      }
+
     }
 
     void changeCapacity(int newNumVertices) {
       attribMutex.lock();
       double *oldVertexArray = vertexArray;
-      double *oldVertexColorArray = vertexColorArray;
+      float *oldVertexColorArray = vertexColorArray;
+      double *oldVertexNormalArray = vertexNormalArray;
+
 
       vertexArray = new double[newNumVertices*3];
       memset(vertexArray, 0, sizeof(double)*newNumVertices*3);
-      vertexColorArray = new double[newNumVertices*4];
-      memset(vertexColorArray, 0, sizeof(double)*newNumVertices*4);
+      vertexColorArray = new float[newNumVertices*4];
+      memset(vertexColorArray, 0, sizeof(float)*newNumVertices*4);
+      vertexNormalArray = new double[newNumVertices*3];
+      memset(vertexNormalArray, 0, sizeof(double)*newNumVertices*3);
 
-      memcpy(vertexArray, oldVertexArray, sizeof(double)*min(numVertices, newNumVertices)*3);
-      memcpy(vertexColorArray, oldVertexColorArray, sizeof(double)*min(numVertices, newNumVertices)*4);
+
+      memcpy(vertexArray, oldVertexArray, sizeof(double)*std::min(numVertices, newNumVertices)*3);
+      memcpy(vertexColorArray, oldVertexColorArray, sizeof(float)*std::min(numVertices, newNumVertices)*4);
+      memcpy(vertexNormalArray, oldVertexNormalArray, sizeof(double)*std::min(numVertices, newNumVertices)*3);
 
       numVertices = newNumVertices;
-      currentVertex = min(currentVertex, newNumVertices);
+      currentVertex = std::min(currentVertex, newNumVertices);
 
       delete[] oldVertexArray;
       delete[] oldVertexColorArray;
+      delete[] oldVertexNormalArray;
       attribMutex.unlock();
+    }
+
+    glm::mat4 getModelMatrix() {
+      attribMutex.lock();
+      glm::mat4 retVal = modelMatrix;
+      attribMutex.unlock();
+      return retVal;
     }
 
     glm::vec3 getTranslation() {
@@ -249,6 +332,11 @@ namespace tsgl {
     * \brief Renders the class to the display
     */
     virtual void render() = 0;
+
+    /**
+    * \brief Renders the class to the display
+    */
+    virtual void render(GLuint &vertexbuffer, GLuint &colorbuffer, GLuint &normalbuffer) = 0;
   };
 };
 
