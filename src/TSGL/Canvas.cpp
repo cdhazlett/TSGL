@@ -583,7 +583,7 @@ namespace tsgl {
           // Send the matrices to the shaders
           glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &mvp[0][0]);
           glUniformMatrix4fv(ViewMatrixID, 1, GL_FALSE, &viewMat[0][0]);
-          glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &projectionMat[0][0]);
+          glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &Model[0][0]);
 
           (*it)->render(vertexbuffer, colorbuffer, normalbuffer);
 

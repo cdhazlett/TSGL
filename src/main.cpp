@@ -25,7 +25,34 @@ using namespace tsgl;
 //        return rec;
 //       //  drawShape(rec);                                     // Push it onto our drawing buffer
 // }
-//
+
+Canvas3D* canvasPtr;
+
+#define PI 3.14159265
+
+
+int degrees = 0;
+int distanceX, distanceY = 0;
+float zoomLevel = 10.0;
+int startX, stopX, startY, stopY = 0;
+float camX, camZ = 10.f;
+void updateCameraTrack() {
+  camX = sin(degrees*PI/180)*zoomLevel;
+  camZ = cos(degrees*PI/180)*zoomLevel;
+
+  degrees = degrees % 360;
+}
+void mouseDown() {
+  startX = canvasPtr->getMouseX();
+  startY = canvasPtr->getMouseY();
+}
+void mouseUp() {
+  stopX = canvasPtr->getMouseX();
+  stopY = canvasPtr->getMouseY();
+  distanceX = (stopX - startX)/10;
+  distanceY = (stopY - startY)/10;
+}
+
 void alphaRectangleFunction(Canvas3D& can) {
     const int WW = can.getWindowWidth(), WH = can.getWindowHeight();
     int a, b, c, d;
@@ -105,37 +132,75 @@ void alphaRectangleFunction(Canvas3D& can) {
     //
     //
     //
-    #define PI 3.14159265
 
-    float camX, camZ = 0.f;
-    int degrees = 0;
 
-    can.setCameraPosition(10, 0, 10);
+    can.setCameraPosition(0, 0, 10);
     can.setCameraFocusPoint(0, 0, 0);
     can.setCameraPerspective(90.0f, 0.1f, 100.0f);
 
-    Cube *testCube = new Cube(0,0,0,10,10,10, ColorFloat(1.f,1.f,1.f,1.f));
-    testCube->scale(2,2,2);
-    can.add(testCube);
+    can.bindToButton(TSGL_MOUSE_LEFT, TSGL_PRESS, mouseDown);
+    can.bindToButton(TSGL_MOUSE_LEFT, TSGL_RELEASE, mouseUp);
 
 
+
+    int numCubes = 9;
+    Cube* cubeArr[numCubes];
+    float rotArr[numCubes*3];
+
+    srand (static_cast <unsigned> (time(0)));
+
+    int j;
+    for(j=0; j<numCubes*3; j++) {
+      rotArr[j] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
+    }
+
+    int k;
+    for (k=0; k<numCubes; k++) {
+      cubeArr[k] = new Cube(0,0,0,10,10,10, ColorFloat(1.f,1.f,1.f,1.f));
+
+      cubeArr[k]->scale(.5,.5,.5);
+      cubeArr[k]->translate(k*2, 0, 0);
+      cubeArr[k]->translate(-8, 0, 0);
+
+      can.add(cubeArr[k]);
+    }
+
+
+
+    // Cube *testCube = new Cube(0,0,0,10,10,10, ColorFloat(1.f,1.f,1.f,1.f));
+    // testCube->rotate(-30, 0, 1, 1);
+    // testCube->scale(3,.5,2);
+    // can.add(testCube);
+    //
+    //
     while (can.isOpen()) {
       can.sleep();
-      camX = sin(degrees*PI/180)*10;
-      camZ = cos(degrees*PI/180)*10;
+      if (distanceX > 0) {
+        distanceX--;
+        degrees--;
+        updateCameraTrack();
+      }
+      if (distanceX < 0) {
+        distanceX++;
+        degrees++;
+        updateCameraTrack();
+      }
+      if (distanceY > 0) {
+        distanceY--;
+        zoomLevel += 0.1;
+        updateCameraTrack();
+      }
+      if (distanceY < 0) {
+        distanceY++;
+        zoomLevel -= 0.1;
+        updateCameraTrack();
+      }
 
-      testCube->rotate(-1, 0, 1, 0);
+      can.setCameraPosition(camX, 0, camZ);
 
-      // printf("The circle X is %f, and the circle Y is %f", camX, camZ);
-
-      // can.setCameraPosition(camX, 0, camZ);
-      // can.setCameraFocusPoint(0, 0, 0);
-      // can.setCameraPerspective(45.0f, 0.1f, 100.0f);
-
-      // topRedRect->centeredRotation(degrees);
-
-      degrees++;
-      degrees = degrees % 360;
+      for (k=0; k<numCubes; k++) {
+        cubeArr[k]->rotate(-5*rotArr[k*3], rotArr[k*3],rotArr[k*3+1],rotArr[k*3+2]);
+      }
     }
 
 
@@ -219,6 +284,8 @@ int main(int argc, char* argv[]) {
     // if (w <= 0 || h <= 0)     //Checked the passed width and height if they are valid
     w = h = 700;            //If not, set the width and height to a default value
     Canvas3D c(-1, -1, w, h, "Cool Rectangles");
+    canvasPtr = &c;
+
     //TODO: why are we not able to set the width and height here? bug?
     // c.setShowFPS(true);
     // c.setBackgroundColor(BLACK);

@@ -30,7 +30,9 @@ namespace tsgl {
   class Drawable {
   protected:
     std::mutex      attribMutex;  ///< Protects the attributes of the Drawable from being accessed while simultaneously being changed
-    glm::mat4       modelMatrix;  ///< The transformation matrix for this model
+    glm::mat4       rotateMatrix;  ///< The transformation matrix for this model
+    glm::mat4       scaleMatrix;  ///< The transformation matrix for this model
+    glm::mat4       translateMatrix;  ///< The transformation matrix for this model
     double          *vertexArray; ///< The array which holds (x,y,z) values for each vertex
     float           *vertexColorArray; ///< The array which holds (r,g,b,a) color values for each vertex
     double          *vertexNormalArray; ///< The array which holds (x,y,z) normals for each vertex
@@ -66,7 +68,9 @@ namespace tsgl {
       memset(vertexNormalArray, 0, sizeof(double)*numVertices*3);
 
 
-      modelMatrix = glm::mat4(1.0f);
+      rotateMatrix = glm::mat4(1.0f);
+      scaleMatrix = glm::mat4(1.0f);
+      translateMatrix = glm::mat4(1.0f);
 
       attribMutex.unlock();
     }
@@ -88,7 +92,16 @@ namespace tsgl {
     */
     void rotate(float degrees, float x, float y, float z) {
       attribMutex.lock();
-      modelMatrix = glm::rotate(modelMatrix, deg2rad(degrees), glm::vec3(x, y, z));
+      rotateMatrix  = glm::rotate(rotateMatrix, deg2rad(degrees), glm::vec3(x, y, z));
+      attribMutex.unlock();
+    }
+
+    /**
+    * \brief Resets the rotation of an object
+    */
+    void resetRotation() {
+      attribMutex.lock();
+      rotateMatrix = glm::mat4(1.0f);
       attribMutex.unlock();
     }
 
@@ -97,7 +110,16 @@ namespace tsgl {
     */
     void scale(float x, float y, float z) {
       attribMutex.lock();
-      modelMatrix = glm::scale(modelMatrix, glm::vec3(x, y, z));
+      scaleMatrix = glm::scale(scaleMatrix, glm::vec3(x, y, z));
+      attribMutex.unlock();
+    }
+
+    /**
+    * \brief Resets the scale of an object
+    */
+    void resetScale() {
+      attribMutex.lock();
+      scaleMatrix = glm::mat4(1.0f);
       attribMutex.unlock();
     }
 
@@ -106,7 +128,16 @@ namespace tsgl {
     */
     void translate(float x, float y, float z) {
       attribMutex.lock();
-      modelMatrix = glm::translate(modelMatrix, glm::vec3(x, y, z));
+      translateMatrix = glm::translate(translateMatrix, glm::vec3(x, y, z));
+      attribMutex.unlock();
+    }
+
+    /**
+    * \brief Resets the translation of an object
+    */
+    void resetTranslation() {
+      attribMutex.lock();
+      translateMatrix = glm::mat4(1.0f);
       attribMutex.unlock();
     }
 
@@ -262,57 +293,41 @@ namespace tsgl {
 
     glm::mat4 getModelMatrix() {
       attribMutex.lock();
-      glm::mat4 retVal = modelMatrix;
+      glm::mat4 retVal = translateMatrix * rotateMatrix * scaleMatrix;
       attribMutex.unlock();
       return retVal;
     }
 
     glm::vec3 getTranslation() {
-      // decompose (tmat4x4< T, P > const &modelMatrix, tvec3< T, P > &scale, tquat< T, P > &orientation, tvec3< T, P > &translation, tvec3< T, P > &skew, tvec4< T, P > &perspective)
-
-      glm::vec3 scale;
-      glm::quat orientation;
-      glm::vec3 translation;
-      glm::vec3 skew;
-      glm::vec4 perspective;
-
       attribMutex.lock();
-      glm::decompose(modelMatrix, scale, orientation, translation, skew, perspective);
+      glm::vec3 retVal = glm::vec3(translateMatrix[0][3], translateMatrix[1][3], translateMatrix[2][3]);
       attribMutex.unlock();
 
-      return translation;
+      return retVal;
     }
 
-    glm::quat getRotation() {
-      // decompose (tmat4x4< T, P > const &modelMatrix, tvec3< T, P > &scale, tquat< T, P > &orientation, tvec3< T, P > &translation, tvec3< T, P > &skew, tvec4< T, P > &perspective)
-
-      glm::vec3 scale;
-      glm::quat orientation;
-      glm::vec3 translation;
-      glm::vec3 skew;
-      glm::vec4 perspective;
-
-      attribMutex.lock();
-      glm::decompose(modelMatrix, scale, orientation, translation, skew, perspective);
-      attribMutex.unlock();
-
-      return orientation;
-    }
+    // glm::quat getRotation() {
+    //   // decompose (tmat4x4< T, P > const &modelMatrix, tvec3< T, P > &scale, tquat< T, P > &orientation, tvec3< T, P > &translation, tvec3< T, P > &skew, tvec4< T, P > &perspective)
+    //
+    //   glm::vec3 scale;
+    //   glm::quat orientation;
+    //   glm::vec3 translation;
+    //   glm::vec3 skew;
+    //   glm::vec4 perspective;
+    //
+    //   attribMutex.lock();
+    //   glm::decompose(modelMatrix, scale, orientation, translation, skew, perspective);
+    //   attribMutex.unlock();
+    //
+    //   return orientation;
+    // }
 
     glm::vec3 getScale() {
-      // decompose (tmat4x4< T, P > const &modelMatrix, tvec3< T, P > &scale, tquat< T, P > &orientation, tvec3< T, P > &translation, tvec3< T, P > &skew, tvec4< T, P > &perspective)
-
-      glm::vec3 scale;
-      glm::quat orientation;
-      glm::vec3 translation;
-      glm::vec3 skew;
-      glm::vec4 perspective;
-
       attribMutex.lock();
-      glm::decompose(modelMatrix, scale, orientation, translation, skew, perspective);
+      glm::vec3 retVal = glm::vec3(scaleMatrix[0][0], scaleMatrix[1][1], scaleMatrix[2][2]);
       attribMutex.unlock();
 
-      return scale;
+      return retVal;
     }
 
     // /**

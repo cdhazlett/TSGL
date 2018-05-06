@@ -66,6 +66,11 @@ namespace tsgl {
       addVertex(-1.0f, 1.0f, 1.0f);
       addVertex(1.0f,-1.0f, 1.0f);
 
+      int i;
+      for (i=0; i<numVertices*4; i++) {
+        vertexColorArray[i] = (float)(rand()%100)/100;
+      }
+
     }
 
     void render() {
