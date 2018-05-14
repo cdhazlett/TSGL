@@ -326,7 +326,6 @@ namespace tsgl {
       attribMutex.lock();
       glm::vec3 retVal = glm::vec3(scaleMatrix[0][0], scaleMatrix[1][1], scaleMatrix[2][2]);
       attribMutex.unlock();
-
       return retVal;
     }
 

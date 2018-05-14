@@ -1,9 +1,9 @@
 #version 330 core
 
 // Interpolated values from the vertex shaders
-in vec4 colorData;
 in vec3 pos;  // Position in world space
 in vec3 normal;  // Normal vector to surface
+in vec4 colorData;
 in vec3 eye_dir;
 in vec3 cameraLightDir;
 

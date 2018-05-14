@@ -1,32 +1,12 @@
+#define RANDOMCOLORS
+
 #include <tsgl.h>
-#include <thread>         // std::this_thread::sleep_for
-#include <chrono>         // std::chrono::seconds
 using namespace tsgl;
+#include <thread> // std::this_thread::sleep_for
+#include <chrono> // std::chrono::seconds
+using namespace std;
 
-/*!
- * \brief Draws semi-transparent rectangles on a Canvas.
- * \details
- * - Store the Canvas' width and height in variables for easy reuse.
- * - Set up the internal timer of the Canvas to expire once every \b FRAME / 10 seconds.
- * - While the Canvas is open:
- *   - Sleep the internal timer until the Canvas is ready to draw.
- *   - Select a random position on the Canvas for a corner of a rectangle.
- *   - Draw a rectangle stretching from the specified corner to another corner on the Canvas,
- *     with a random color and a transparency of 16 (~0.06).
- *   .
- * .
- * \param can Reference to the Canvas being drawn to.
- */
-
-// Rectangle* drawRectangle(int x1, int y1, int x2, int y2, ColorFloat color) {
-//        if (x2 < x1) { int t = x1; x1 = x2; x2 = t; }
-//        if (y2 < y1) { int t = y1; y1 = y2; y2 = t; }
-//        Rectangle* rec = new Rectangle(x1, y1, x2-x1, y2-y1, color);  // Creates the Rectangle with the specified coordinates and color
-//        return rec;
-//       //  drawShape(rec);                                     // Push it onto our drawing buffer
-// }
-
-Canvas3D* canvasPtr;
+Canvas *canvasPtr;
 
 #define PI 3.14159265
 
@@ -36,261 +16,96 @@ int distanceX, distanceY = 0;
 float zoomLevel = 10.0;
 int startX, stopX, startY, stopY = 0;
 float camX, camZ = 10.f;
-void updateCameraTrack() {
-  camX = sin(degrees*PI/180)*zoomLevel;
-  camZ = cos(degrees*PI/180)*zoomLevel;
+void updateCameraTrack()
+{
+    camX = sin(degrees * PI / 180) * zoomLevel;
+    camZ = cos(degrees * PI / 180) * zoomLevel;
 
-  degrees = degrees % 360;
+    degrees = degrees % 360;
 }
-void mouseDown() {
-  startX = canvasPtr->getMouseX();
-  startY = canvasPtr->getMouseY();
+void mouseDown()
+{
+    startX = canvasPtr->getMouseX();
+    startY = canvasPtr->getMouseY();
 }
-void mouseUp() {
-  stopX = canvasPtr->getMouseX();
-  stopY = canvasPtr->getMouseY();
-  distanceX = (stopX - startX)/10;
-  distanceY = (stopY - startY)/10;
+void mouseUp()
+{
+    stopX = canvasPtr->getMouseX();
+    stopY = canvasPtr->getMouseY();
+    distanceX = (stopX - startX) / 10;
+    distanceY = (stopY - startY) / 10;
 }
 
-void alphaRectangleFunction(Canvas3D& can) {
+void cube_demo_function(Canvas &can, int numProcs)
+{
     const int WW = can.getWindowWidth(), WH = can.getWindowHeight();
     int a, b, c, d;
 
-
-    // while (can.isOpen()) {
-    //   can.sleep();
-    // }
-
-
-
-
-    // int counter = 0;
-
-    //  Add a triangle to the test page
-    // Triangle* testTri = new Triangle(0, 0, 0, 100, 50, 150, ColorInt(0*MAX_COLOR, 0*MAX_COLOR, 1*MAX_COLOR, 255));
-    // testTri->setLayer(5);
-    // can.add(testTri);
-    //
-    // // Testing old rectangle api
-    // can.setDefaultLayer(7);
-    // can.drawRectangle(200, 200, 250, 250, PURPLE);
-    // can.setDefaultLayer(0);
-    //
-    // // Test the points
-    // PointLayer* pl = new PointLayer(PURPLE);
-    // can.add(pl);
-    // pl->setLayer(100);
-    // pl->addPoint(100,100);
-    //
-    // int plcounter = 0;
-    // for (plcounter = 0; plcounter<10000; plcounter++) {
-    //   pl->addPoint(plcounter%600,floor(plcounter/600)+10);
-    //   // printf("Point (%f, %f)\n", (float)plcounter, floor(plcounter/400));
-    // }
-
-    // Add the red and white rects over the top
-    // Rectangle* topRedRect = new Rectangle(500, 500, 50, 50, ColorInt(1*MAX_COLOR, 0*MAX_COLOR, 0*MAX_COLOR, 255));
-    // Rectangle* topWhiteRect = new Rectangle(540, 540, 50, 50, ColorInt(1*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
-    // topRedRect->setLayer(2);
-    // topWhiteRect->setLayer(3);
-    // can.add(topRedRect);
-    // can.add(topWhiteRect);
-
-    // // Test the arrows
-    // can.setDefaultLayer(5);
-    // Arrow* greenArrow = new Arrow(600, 600, 560, 500, GREEN);
-    // Arrow* blueArrow  = new Arrow(500, 600, 540, 250, BLUE, true);
-    // can.add(greenArrow);
-    // can.add(blueArrow);
-
-    // Circle* c1 = new Circle(300, 500, 50, 100, PURPLE, false);
-    // can.add(c1);
-
-    // // // Add a blue rectangle at the bottom
-    // Rectangle* botBlueRect = new Rectangle(0, 0, 1000, 1000, ColorInt(0*MAX_COLOR, 1*MAX_COLOR, 1*MAX_COLOR, 255));
-    // botBlueRect->setHasOutline(false);
-    // botBlueRect->setLayer(0);
-    // can.add(botBlueRect);
-
-
-
-
-
-    // Rectangle* topWhitePointRect = new Rectangle(0, 0, 200, 200, ColorInt(255, 255, 255, 255));
-    // // topWhitePointRect->setHasOutline(false);
-    // // topWhitePointRect->setLayer(100);
-    // can.add(topWhitePointRect);
-
-    // Cube* testCube = new Cube(0, 0, 0, 200, 200, 200, ColorInt(255, 255, 255, 255));
-    // // // // topWhitePointRect->setHasOutline(false);
-    // // // // topWhitePointRect->setLayer(100);
-    // can.add(testCube);
-    //
-    // Cube* testCube2 = new Cube(250, 0, 0, 200, 200, 200, ColorInt(255, 0, 0, 255));
-    // can.add(testCube2);
-    //
-    //
-    //
-
-
-    can.setCameraPosition(0, 0, 10);
+    can.setCameraPosition(10, 0, 10);
     can.setCameraFocusPoint(0, 0, 0);
     can.setCameraPerspective(90.0f, 0.1f, 100.0f);
 
-    can.bindToButton(TSGL_MOUSE_LEFT, TSGL_PRESS, mouseDown);
-    can.bindToButton(TSGL_MOUSE_LEFT, TSGL_RELEASE, mouseUp);
+    int numCubes = 9*9*9;
+    Object3D *cubeArr[numCubes];
 
-
-
-    int numCubes = 9;
-    Cube* cubeArr[numCubes];
-    float rotArr[numCubes*3];
-
-    srand (static_cast <unsigned> (time(0)));
-
-    int j;
-    for(j=0; j<numCubes*3; j++) {
-      rotArr[j] = static_cast <float> (rand()) / static_cast <float> (RAND_MAX);
-    }
 
     int k;
-    for (k=0; k<numCubes; k++) {
-      cubeArr[k] = new Cube(0,0,0,10,10,10, ColorFloat(1.f,1.f,1.f,1.f));
+    for (k = 0; k < numCubes; k++)
+    {
+        cubeArr[k] = new Object3D("/Users/christiaanhazlett/TSGL/assets/models/cube.dae");
+        cubeArr[k]->scale(.5, .5, .5);
+        cubeArr[k]->translate(k%9 * 1.5, -(float)(int)((k/81)%81) * 1.5, -(float)(int)((k/9)%9) * 1.5);
+        cubeArr[k]->translate(-8, 0, 0);
 
-      cubeArr[k]->scale(.5,.5,.5);
-      cubeArr[k]->translate(k*2, 0, 0);
-      cubeArr[k]->translate(-8, 0, 0);
-
-      can.add(cubeArr[k]);
+        // can.add(cubeArr[k]);
     }
 
 
+    // int numProcs = 9;
+    k = 0;
+    while (can.isOpen())
+    {
 
-    // Cube *testCube = new Cube(0,0,0,10,10,10, ColorFloat(1.f,1.f,1.f,1.f));
-    // testCube->rotate(-30, 0, 1, 1);
-    // testCube->scale(3,.5,2);
-    // can.add(testCube);
-    //
-    //
-    while (can.isOpen()) {
-      can.sleep();
-      if (distanceX > 0) {
-        distanceX--;
-        degrees--;
-        updateCameraTrack();
-      }
-      if (distanceX < 0) {
-        distanceX++;
-        degrees++;
-        updateCameraTrack();
-      }
-      if (distanceY > 0) {
-        distanceY--;
-        zoomLevel += 0.1;
-        updateCameraTrack();
-      }
-      if (distanceY < 0) {
-        distanceY++;
-        zoomLevel -= 0.1;
-        updateCameraTrack();
-      }
+        int z = 0;
+        int perProc = (numCubes / numProcs);
+        for (z=0; z<numProcs; z++) {
+            int cur = perProc*z + k;
+            if (cur < numCubes) can.add(cubeArr[cur]);
+        }
 
-      can.setCameraPosition(camX, 0, camZ);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
 
-      for (k=0; k<numCubes; k++) {
-        cubeArr[k]->rotate(-5*rotArr[k*3], rotArr[k*3],rotArr[k*3+1],rotArr[k*3+2]);
-      }
+        k++;
+
+        // if (k<numCubes) {
+        //     can.add(cubeArr[k]);
+        //     k++;
+        // }
+
+
+
+        // for (i = 0; i<numCubes; i++) {
+
+        // }
+
+
+        can.sleep();
+        // for (k = 0; k < numCubes; k++)
+        // {
+        //     cubeArr[k]->rotate(-5 * rotArr[k * 3], rotArr[k * 3], rotArr[k * 3 + 1], rotArr[k * 3 + 2]);
+        // }
     }
-
-
-
-    // int i = 0;
-    // for (i=0; i<255; i++) {
-    //   int x = i;
-    //   int y = 0;
-    //
-    //   Rectangle* topWhitePointRect = new Rectangle(x, y, 1, 700, ColorInt(255*(i/255.0), 0, 255, 255));
-    //   topWhitePointRect->setHasOutline(false);
-    //   topWhitePointRect->setLayer(100);
-    //   can.add(topWhitePointRect);
-    // }
-
-    // int i = 0;
-    // for (i=0; i<255; i++) {
-    //   int x = 0;
-    //   int y = 445+i;
-    //
-    //   Rectangle* topWhitePointRect = new Rectangle(x, y, 700, 1, ColorInt(255*(i/255.0), 0, 255, 255));
-    //   topWhitePointRect->setHasOutline(false);
-    //   topWhitePointRect->setLayer(100);
-    //   can.add(topWhitePointRect);
-    // }
-
-    // // // Test the text
-    // Text* myText = new Text("Testing some more stuff", 200, 200, 26, WHITE);
-    // myText->setCenter(100,100);
-    // myText->setRotation(-90, 100, 100);
-    // can.add(myText);
-    // // printf("Text is %d pixels long.\n", myText->getStringWidth());
-
-    // Queue to hold the last few rects
-    // std::queue<Rectangle *> myQueue;
-    //
-    // can.setDefaultLayer(1);
-    // while (can.isOpen()) {
-    //     can.sleep();
-    //
-    //     // Some random widths and heights
-    //     a = rand() % WW; b = rand() % WH;
-    //     c = rand() % WW; d = rand() % WH;
-    //
-    //     // Make the new rectangle and get the pointer
-    //     Rectangle* myRectangle = new Rectangle(a, b, abs(a-c), abs(b-d), ColorInt(rand()%MAX_COLOR, rand()%MAX_COLOR, rand()%MAX_COLOR, 50));
-    //     myRectangle->setHasOutline(false);
-    //
-    //     // Push the rectangle onto the queue and onto the canvas so it can render
-    //     myQueue.push(myRectangle);
-    //     can.add(myRectangle);
-    //
-    //     // Remove old rectangles if there are more than 40 of them
-    //     if (myQueue.size() >= 50) {
-    //       can.remove(myQueue.front());  // stop rendering the rectangle each frame
-    //       delete myQueue.front(); // free memory
-    //       myQueue.pop(); // remove the rectangle object from the queue
-    //
-    //       // can.clear();
-    //       // myQueue.clear();
-    //       // std::queue<Rectangle*>().swap(myQueue);
-    //
-    //     }
-    //
-    //     // Test get pixel value
-    //     // ColorInt pixTest = can.getPixel(100,100);
-    //     // printf("R: %d G: %d B: %d A: %d \n", pixTest.R,pixTest.G,pixTest.B,pixTest.A);
-    //
-    //     // int i = 0;
-    //     // for (i=0; i<20; i++) can.drawPoint((float)(rand()%400), (float)(rand()%400), PURPLE, 10.0);
-    //
-    //     // ColorInt testPoint = can.getPoint(100,100);
-    //     // printf("R: %d, G: %d, B: %d, A: %d\n", testPoint.R, testPoint.G, testPoint.B, testPoint.A);
-    // }
 }
 
 //Takes command-line arguments for the width and height of the screen
-int main(int argc, char* argv[]) {
-    int w = (argc > 1) ? atoi(argv[1]) : 0.9*Canvas::getDisplayHeight();
-    int h = (argc > 2) ? atoi(argv[2]) : w;
-    // if (w <= 0 || h <= 0)     //Checked the passed width and height if they are valid
-    w = h = 700;            //If not, set the width and height to a default value
-    Canvas3D c(-1, -1, w, h, "Cool Rectangles");
+int main(int argc, char *argv[])
+{
+    int numProcs =  (argc > 1) ? atoi(argv[1]) : 1;
+    int w = 0.9 * Canvas::getDisplayHeight();
+    int h = w;
+    w = h = 700; //If not, set the width and height to a default value
+    Canvas c(-1, -1, w, h, "TSGL Demo: Cool Cubes");
     canvasPtr = &c;
 
-    //TODO: why are we not able to set the width and height here? bug?
-    // c.setShowFPS(true);
-    // c.setBackgroundColor(BLACK);
-
-    // std::this_thread::sleep_for(std::chrono::seconds(3));
-
-    c.run(alphaRectangleFunction);
+    c.run(&cube_demo_function, numProcs);
 }

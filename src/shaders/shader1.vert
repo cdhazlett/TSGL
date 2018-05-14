@@ -2,8 +2,8 @@
 
 // Input vertex data, different for all executions of this shader.
 layout(location = 0) in vec3 modelVertexPos;
-layout(location = 1) in vec4 colorVec;
-layout(location = 2) in vec3 modelVertexNormal;
+layout(location = 1) in vec3 modelVertexNormal;
+layout(location = 2) in vec4 colorVec;
 
 // Output data ; will be interpolated for each fragment.
 out vec4 colorData;
