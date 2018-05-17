@@ -70,14 +70,14 @@ class Object3D : public Drawable
             // if (i%2 == 0) colorVector = glm::vec4(.5, 0.f, 1.f, 1.f);
             // if (mesh->HasVertexColors(i))
             // {
-                const aiMaterial *mtl = scene->mMaterials[mesh->mMaterialIndex];
-                aiColor4D diffuse;
-                if (AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
-                    colorVector = glm::vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
-            // }
+            const aiMaterial *mtl = scene->mMaterials[mesh->mMaterialIndex];
+            aiColor4D diffuse;
+            if (AI_SUCCESS == aiGetMaterialColor(mtl, AI_MATKEY_COLOR_DIFFUSE, &diffuse))
+                colorVector = glm::vec4(diffuse.r, diffuse.g, diffuse.b, diffuse.a);
+                // }
 
 #ifdef RANDOMCOLORS
-colorVector = glm::vec4((float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, 1);
+            colorVector = glm::vec4((float)(rand() % 100) / 100, (float)(rand() % 100) / 100, (float)(rand() % 100) / 100, 1);
 #endif
 
             vertex.Color = colorVector;
@@ -125,6 +125,16 @@ colorVector = glm::vec4((float)(rand() % 100) / 100, (float)(rand() % 100) / 100
         processNode(scene->mRootNode, scene);
     }
 
+    void setColorForAllVertices(const ColorFloat &color)
+    {
+        for (std::vector<Mesh>::iterator it = meshes.begin(); it != meshes.end(); ++it)
+        {
+            for (std::vector<Mesh::Vertex>::iterator vit = (it)->vertices.begin(); vit != (it)->vertices.end(); ++vit) {
+                (vit)->Color = glm::vec4(color.R, color.G, color.B, color.A);
+            }
+        }
+    }
+
     void render()
     {
         for (unsigned int i = 0; i < meshes.size(); i++)
@@ -134,6 +144,6 @@ colorVector = glm::vec4((float)(rand() % 100) / 100, (float)(rand() % 100) / 100
         }
     }
 };
-}
+} // namespace tsgl
 
 #endif /* OBJECT3D_H_ */

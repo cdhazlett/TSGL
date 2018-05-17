@@ -529,7 +529,7 @@ void Canvas::draw()
   {
 
     // Check for camera movement
-    if (/* canvas3DView && */ cameraMovementEnabled)
+    if (canvas3DView && cameraMovementEnabled)
     {
       // Compute the change in X and Y mouse coordinates
       int deltaX = getMouseX() - lastX;

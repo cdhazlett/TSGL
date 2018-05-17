@@ -56,11 +56,6 @@ protected:
      */
     virtual GLfloat* getPointerToVerticesArray();
 
-    /**
-     * \brief Returns the geometry type for drawing.
-     */
-    virtual GLenum getGeometryType() = 0;
-
     /*!
      * \brief Adds another vertex to a Shape.
      * \details This function initializes the next vertex in the Shape.

@@ -40,7 +40,7 @@
 // #include "Image.h"          // Our own class for drawing images / textured quads
 #include "Keynums.h" // Our enums for key presses
 // #include "Line.h"           // Our own class for drawing straight lines
-#include "Arrow.h"          // Our own class for drawing arrows
+// #include "Arrow.h"          // Our own class for drawing arrows
 // #include "PointLayer.h"     // Class that adds a layer for drawing raster points
 // #include "Polygon.h"        // Our own class for drawing polygons
 // #include "Polyline.h"       // Our own class for drawing polylines

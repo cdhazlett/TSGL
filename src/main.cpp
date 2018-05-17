@@ -16,33 +16,36 @@ void cube_demo_function(Canvas &can, int numProcs)
 
     can.setCameraPosition(0, 0, 10);
     can.setCameraFocusPoint(0, 0, 0);
-    can.setCameraPerspective(90.0f, 0.f, 10000.0f);
+    can.setCameraPerspective(90.0f, 0.1f, 1000.0f);
 
-    can.enable2D();
+    // can.enable2D();
 
 
-    Rectangle* testRect = new Rectangle(0, 0, 100, 100, BLUE, BLUE);
-    // testRect->scale(100,100,1);
-    // Rectangle* testRect2 = new Rectangle(100, 100, 1, 1, GREEN, GREEN);
-    // can.add(testRect);
-    // can.add(testRect2);
+    // Rectangle* testRect = new Rectangle(0, 0, 100, 100, BLUE, BLUE);
+    // // testRect->scale(100,100,1);
+    // // Rectangle* testRect2 = new Rectangle(100, 100, 1, 1, GREEN, GREEN);
+    // // can.add(testRect);
+    // // can.add(testRect2);
 
-    Ellipse* eltest = new Ellipse(20, 20, 20, 40, RED, RED);
+    // Ellipse* eltest = new Ellipse(20, 20, 20, 40, RED, RED);
     // can.add(eltest);
 
-    Circle* cltest = new Circle(100,100,50,GREEN,GREEN);
-    can.add(cltest);
+    // Circle* cltest = new Circle(100,100,50,GREEN,GREEN);
+    // can.add(cltest);
 
-    // Triangle* tatest = new Triangle(0,0,20,20,20,10,RED, PURPLE);
-    Triangle* tatest = new Triangle(10, 10, 50, 50, .5, RED, RED);
-    can.add(tatest);
+    // // Triangle* tatest = new Triangle(0,0,20,20,20,10,RED, PURPLE);
+    // Triangle* tatest = new Triangle(10, 10, 50, 50, .5, RED, RED);
+    // can.add(tatest);
 
-    // Object3D* cubetest = new Object3D("/Users/christiaanhazlett/TSGL/assets/models/cube.dae");
-    // cubetest->scale(.5,.5,.5);
-    // cubetest->rotate(20, 0,1,0);
+
+    Cube* cubetest = new Cube(2,.2,.2,1,1,.5,RED);
+
+    // Object3D* cubetest = new Object3D("assets/models/cube.dae");
+    // cubetest->scale(100,100,100);
+    // cubetest->rotate(45, 0,1,0);
     // cubetest->scale(200,200,200);
-    // cubetest->translate(20,20,0);
-    // can.add(cubetest);
+    // cubetest->translate(200,200,0);
+    can.add(cubetest);
 
     while (can.isOpen())
     {
