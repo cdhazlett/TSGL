@@ -15,7 +15,7 @@
 
 namespace tsgl {
 
-class Text : public DiscreteDrawable {
+class Text : public Drawable {
  private:
 
     float scaleFactor = 1.0;

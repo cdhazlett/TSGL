@@ -133,8 +133,6 @@ colorVector = glm::vec4((float)(rand() % 100) / 100, (float)(rand() % 100) / 100
             // printf("rendering %d", i);
         }
     }
-
-    virtual void render(GLuint &vertexbuffer, GLuint &colorbuffer, GLuint &normalbuffer) { render(); }
 };
 }
 

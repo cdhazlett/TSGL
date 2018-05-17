@@ -13,15 +13,12 @@ Polygon::Polygon(int numVertices, const ColorFloat& c, const ColorFloat& outline
 }
 
 GLfloat* Polygon::getPointerToOutlineVerticesArray() {
-  attribMutex.lock();
-  GLfloat* result = vertices;
-  attribMutex.unlock();
-  return result;
+  return getPointerToVerticesArray();
 }
 
 int Polygon::getOutlineNumberOfVertices() {
   attribMutex.lock();
-  int l = length;
+  int l = getNumberOfVertices();
   attribMutex.unlock();
   return l;
 }

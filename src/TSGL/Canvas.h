@@ -28,31 +28,31 @@
 // #include "Shader.h"         // Include the function for loading and compiling shaders
 #include "Color.h" // Our own interface for converting color types
 // #include "TriangleStrip.h" // Our own class for drawing polygons with colored vertices
-// #include "Circle.h"         // Our own class for drawing circles
+#include "Circle.h"         // Our own class for drawing circles
 // #include "RegularPolygon.h" //Our own class for drawing regular polygons
 // #include "ConcavePolygon.h" // Our own class for concave polygons with colored vertices
 // #include "ConvexPolygon.h"  // Our own class for convex polygons with colored vertices
 // #include "Circle.h" // Our own class for concave polygons with colored vertices
 // #include "UnfilledCircle.h" //Our own class for unfilled circles
-// #include "Ellipse.h"        //Our own class for drawing ellipses
+#include "Ellipse.h"        //Our own class for drawing ellipses
 // #include "UnfilledEllipse.h" //Our own class for unfilled ellipses
 // #include "UnfilledRegularPolygon.h" //Our own class for unfilled regular polygons
 // #include "Image.h"          // Our own class for drawing images / textured quads
 #include "Keynums.h" // Our enums for key presses
 // #include "Line.h"           // Our own class for drawing straight lines
-// #include "Arrow.h"          // Our own class for drawing arrows
+#include "Arrow.h"          // Our own class for drawing arrows
 // #include "PointLayer.h"     // Class that adds a layer for drawing raster points
 // #include "Polygon.h"        // Our own class for drawing polygons
 // #include "Polyline.h"       // Our own class for drawing polylines
 // #include "ProgressBar.h"    // Our own class for drawing progress bars
-// #include "Rectangle.h"      // Our own class for drawing rectangles
+#include "Rectangle.h"      // Our own class for drawing rectangles
 // #include "UnfilledRectangle.h" //Our own class for drawing unfilled rectangles
 // #include "Star.h"           //Our own class for drawing stars
 // #include "UnfilledStar.h" //Our own class for drawing unfilled stars
 #include "TextureHandler.h" // TextureHandler class
 // #include "Text.h"           // Our own class for drawing text
 #include "Timer.h" // Our own timer for steady FPS
-// #include "Triangle.h"       // Our own class for drawing triangles
+#include "Triangle.h"       // Our own class for drawing triangles
 // #include "UnfilledTriangle.h" //Our own class for drawing unfilled triangles
 #include "Util.h" // Needed constants and has cmath for performing math operations
 
@@ -305,6 +305,9 @@ public:
 
   // Change the data for the camera perspective on the canvas
   void setCameraPerspective(float FieldOfView, float nearClipDist, float farClipDist);
+
+  void enable3D() { canvas3DView = true; };
+  void enable2D() { canvas3DView = false; };
 
 
   ////////////////////////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-#define RANDOMCOLORS
+// #define RANDOMCOLORS
 
 #include <tsgl.h>
 using namespace tsgl;
@@ -8,92 +8,45 @@ using namespace std;
 
 Canvas *canvasPtr;
 
-#define PI 3.14159265
-
-
-int degrees = 0;
-int distanceX, distanceY = 0;
-float zoomLevel = 10.0;
-int startX, stopX, startY, stopY = 0;
-float camX, camZ = 10.f;
-void updateCameraTrack()
-{
-    camX = sin(degrees * PI / 180) * zoomLevel;
-    camZ = cos(degrees * PI / 180) * zoomLevel;
-
-    degrees = degrees % 360;
-}
-void mouseDown()
-{
-    startX = canvasPtr->getMouseX();
-    startY = canvasPtr->getMouseY();
-}
-void mouseUp()
-{
-    stopX = canvasPtr->getMouseX();
-    stopY = canvasPtr->getMouseY();
-    distanceX = (stopX - startX) / 10;
-    distanceY = (stopY - startY) / 10;
-}
 
 void cube_demo_function(Canvas &can, int numProcs)
 {
     const int WW = can.getWindowWidth(), WH = can.getWindowHeight();
     int a, b, c, d;
 
-    can.setCameraPosition(10, 0, 10);
+    can.setCameraPosition(0, 0, 10);
     can.setCameraFocusPoint(0, 0, 0);
-    can.setCameraPerspective(90.0f, 0.1f, 100.0f);
+    can.setCameraPerspective(90.0f, 0.f, 10000.0f);
 
-    int numCubes = 9*9*9;
-    Object3D *cubeArr[numCubes];
-
-
-    int k;
-    for (k = 0; k < numCubes; k++)
-    {
-        cubeArr[k] = new Object3D("/Users/christiaanhazlett/TSGL/assets/models/cube.dae");
-        cubeArr[k]->scale(.5, .5, .5);
-        cubeArr[k]->translate(k%9 * 1.5, -(float)(int)((k/81)%81) * 1.5, -(float)(int)((k/9)%9) * 1.5);
-        cubeArr[k]->translate(-8, 0, 0);
-
-        // can.add(cubeArr[k]);
-    }
+    can.enable2D();
 
 
-    // int numProcs = 9;
-    k = 0;
+    Rectangle* testRect = new Rectangle(0, 0, 100, 100, BLUE, BLUE);
+    // testRect->scale(100,100,1);
+    // Rectangle* testRect2 = new Rectangle(100, 100, 1, 1, GREEN, GREEN);
+    // can.add(testRect);
+    // can.add(testRect2);
+
+    Ellipse* eltest = new Ellipse(20, 20, 20, 40, RED, RED);
+    // can.add(eltest);
+
+    Circle* cltest = new Circle(100,100,50,GREEN,GREEN);
+    can.add(cltest);
+
+    // Triangle* tatest = new Triangle(0,0,20,20,20,10,RED, PURPLE);
+    Triangle* tatest = new Triangle(10, 10, 50, 50, .5, RED, RED);
+    can.add(tatest);
+
+    // Object3D* cubetest = new Object3D("/Users/christiaanhazlett/TSGL/assets/models/cube.dae");
+    // cubetest->scale(.5,.5,.5);
+    // cubetest->rotate(20, 0,1,0);
+    // cubetest->scale(200,200,200);
+    // cubetest->translate(20,20,0);
+    // can.add(cubetest);
+
     while (can.isOpen())
     {
-
-        int z = 0;
-        int perProc = (numCubes / numProcs);
-        for (z=0; z<numProcs; z++) {
-            int cur = perProc*z + k;
-            if (cur < numCubes) can.add(cubeArr[cur]);
-        }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-
-        k++;
-
-        // if (k<numCubes) {
-        //     can.add(cubeArr[k]);
-        //     k++;
-        // }
-
-
-
-        // for (i = 0; i<numCubes; i++) {
-
-        // }
-
-
         can.sleep();
-        // for (k = 0; k < numCubes; k++)
-        // {
-        //     cubeArr[k]->rotate(-5 * rotArr[k * 3], rotArr[k * 3], rotArr[k * 3 + 1], rotArr[k * 3 + 2]);
-        // }
     }
 }
 

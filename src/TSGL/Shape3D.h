@@ -35,7 +35,9 @@ protected:
      * \details Destructor for a Shape.
      * \details Frees up memory that was allocated to a Shape object.
      */
-    virtual ~Shape3D() { return; }
+    virtual ~Shape3D() {
+      return; // Base class takes care of all deletes and stuff
+    }
 
     /*!
      * \brief Adds another vertex to a Shape.

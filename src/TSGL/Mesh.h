@@ -53,7 +53,10 @@ class Mesh
 
     ~Mesh()
     {
-        //TODO delete the buffer objects and stuff here
+        // Delete the memory from the graphics card
+        glDeleteBuffers(1, &VBO);
+        glDeleteBuffers(1, &EBO);
+        glDeleteVertexArrays(1, &VAO);
     }
 
     void setupMesh()

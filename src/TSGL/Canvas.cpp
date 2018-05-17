@@ -126,7 +126,7 @@ void Canvas::initGl()
   // Enable and disable necessary stuff
   glEnable(GL_DEPTH_TEST); // TODO: Disable depth testing because we're not drawing in 3d
   glDisable(GL_DITHER);    // Disable dithering because pixels do not (generally) overlap
-  glDisable(GL_CULL_FACE); // Disable culling because the camera is stationary
+  glEnable(GL_CULL_FACE);  // Disable culling because the camera is stationary
   glEnable(GL_BLEND);      // Enable blending
   // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  // Set blending mode to standard alpha blending
 
@@ -515,42 +515,21 @@ void Canvas::draw()
   // Keep track of the change in X and Y coordinates of the mouse between frames
   int lastX, lastY = 0;
 
-  // Load and compile the shader program from the source files
-  GLuint programID = LoadShaders("src/shaders/shader1.vert", "src/shaders/shader1.frag");
-
-  // Create handles for the model, view, projection transformation matrices
-  // that are used to transform each vertex
-  GLuint MVPMatrixID = glGetUniformLocation(programID, "MVP");
-  GLuint ViewMatrixID = glGetUniformLocation(programID, "V");
-  GLuint ModelMatrixID = glGetUniformLocation(programID, "M");
-
-  // // Create the vertex buffer
-  // GLuint vertexbuffer;
-  // glGenBuffers(1, &vertexbuffer);
-
-  // // Create the color buffer
-  // GLuint colorbuffer;
-  // glGenBuffers(1, &colorbuffer);
-
-  // // Create the surface normal buffer
-  // GLuint normalbuffer;
-  // glGenBuffers(1, &normalbuffer);
-
-  // Use the shader program
-  glUseProgram(programID);
-
-  // Get the location of the Light object
-  GLuint LightID = glGetUniformLocation(programID, "Light_Coord");
+  // Load and compile the 2D shader program from the source files
+  GLuint shaderProgram2D = LoadShaders("src/shaders/2DShader.vert", "src/shaders/2DShader.frag");
+  // Load and compile the 3D shader program from the source files
+  GLuint shaderProgram3D = LoadShaders("src/shaders/3DShader.vert", "src/shaders/3DShader.frag");
 
   // Count number of frames
   int counter = 0;
   float lastTime = 0;
+
   // Loop for each frame
   while (!glfwWindowShouldClose(window) && !isFinished)
   {
 
     // Check for camera movement
-    if (canvas3DView && cameraMovementEnabled)
+    if (/* canvas3DView && */ cameraMovementEnabled)
     {
       // Compute the change in X and Y mouse coordinates
       int deltaX = getMouseX() - lastX;
@@ -560,11 +539,10 @@ void Canvas::draw()
       if (isMouseDown && !isShiftDown && !isCtrlDown)
       {
         glm::vec3 direction = glm::normalize(cameraLookPoint - cameraEyePosition);
-        glm::mat4 trans = glm::lookAt(direction, glm::vec3(0.f), glm::vec3(0,1,0));
+        glm::mat4 trans = glm::lookAt(direction, glm::vec3(0.f), glm::vec3(0, 1, 0));
 
         glm::vec3 diff = glm::vec3(
-          glm::vec4((float)deltaX/10.f, (float)deltaY/10.f, 0, 0) * trans
-        );
+            glm::vec4((float)deltaX / 10.f, (float)deltaY / 10.f, 0, 0) * trans);
 
         cameraEyePosition = cameraEyePosition + diff;
         cameraLookPoint = cameraLookPoint + diff;
@@ -574,11 +552,10 @@ void Canvas::draw()
       if (isMouseDown && isShiftDown)
       {
         glm::vec3 direction = glm::normalize(cameraLookPoint - cameraEyePosition);
-        glm::mat4 trans = glm::lookAt(direction, glm::vec3(0.f), glm::vec3(0,1,0));
+        glm::mat4 trans = glm::lookAt(direction, glm::vec3(0.f), glm::vec3(0, 1, 0));
 
         glm::vec3 diff = glm::vec3(
-          glm::vec4(0,0,(float)-deltaY/10.f, 0) * trans
-        );
+            glm::vec4(0, 0, (float)-deltaY / 10.f, 0) * trans);
 
         cameraEyePosition = cameraEyePosition + diff;
         cameraLookPoint = cameraLookPoint + diff;
@@ -588,11 +565,10 @@ void Canvas::draw()
       if (isMouseDown && isCtrlDown)
       {
         glm::vec3 direction = glm::normalize(cameraLookPoint - cameraEyePosition);
-        glm::mat4 trans = glm::lookAt(direction, glm::vec3(0.f), glm::vec3(0,1,0));
+        glm::mat4 trans = glm::lookAt(direction, glm::vec3(0.f), glm::vec3(0, 1, 0));
 
         glm::vec3 diff = glm::vec3(
-          glm::vec4((float)deltaX/10.f, (float)deltaY/10.f, 0, 0) * trans
-        );
+            glm::vec4((float)deltaX / 10.f, (float)deltaY / 10.f, 0, 0) * trans);
 
         cameraEyePosition = cameraEyePosition + diff;
       }
@@ -611,10 +587,6 @@ void Canvas::draw()
     glm::mat4 viewMat = getViewMatrix();
     glm::mat4 projectionMat = getProjectionMatrix();
 
-    // Send the lighting location to the shaders
-    glm::vec3 lightPos = glm::vec3(4, 4, 4); //TODO move me
-    glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
-
     // // // // // // // // // // // // // // // // // // // // // // // // //
     // Iterate through objects, render them
     objectMutex.lock();
@@ -625,11 +597,55 @@ void Canvas::draw()
     {
       try
       {
+
         // Load the model's matrix
         glm::mat4 Model = (*it)->getModelMatrix();
 
         // Multiply the Model by the Camera to get the proper MVP transform
         glm::mat4 mvp = cameraMat * Model;
+
+        GLuint MVPMatrixID;
+        GLuint ViewMatrixID;
+        GLuint ModelMatrixID;
+        GLuint LightID;
+
+        if ((*it)->getShaderType() == 0)
+        {
+          // Create handles for the model, view, projection transformation matrices
+          // that are used to transform each vertex
+          MVPMatrixID = glGetUniformLocation(shaderProgram3D, "MVP");
+          ViewMatrixID = glGetUniformLocation(shaderProgram3D, "V");
+          ModelMatrixID = glGetUniformLocation(shaderProgram3D, "M");
+
+          // Get the location of the Light object
+          LightID = glGetUniformLocation(shaderProgram3D, "Light_Coord");
+
+          // Use the shader program
+          glUseProgram(shaderProgram3D);
+
+          // Send the lighting location to the shaders
+          glm::vec3 lightPos = glm::vec3(4, 4, 4); //TODO move me
+          glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+        }
+        else {
+          // Create handles for the model, view, projection transformation matrices
+          // that are used to transform each vertex
+          MVPMatrixID = glGetUniformLocation(shaderProgram2D, "MVP");
+          ViewMatrixID = glGetUniformLocation(shaderProgram2D, "V");
+          ModelMatrixID = glGetUniformLocation(shaderProgram2D, "M");
+
+          // Get the location of the Light object
+          LightID = glGetUniformLocation(shaderProgram2D, "Light_Coord");
+
+          // Use the shader program
+          glUseProgram(shaderProgram2D);
+
+          // Send the lighting location to the shaders
+          glm::vec3 lightPos = glm::vec3(4, 4, 4); //TODO move me
+          glUniform3f(LightID, lightPos.x, lightPos.y, lightPos.z);
+        }
+
+        
 
         // Send the matrices to the shaders
         glUniformMatrix4fv(MVPMatrixID, 1, GL_FALSE, &mvp[0][0]);
@@ -1266,9 +1282,12 @@ ColorInt Canvas::getPoint(int x, int y)
 void Canvas::handleCameraButtonStateChange(int key, int action)
 {
   // Update the state variables for the keys we keep track of
-  if (key == TSGL_MOUSE_LEFT) isMouseDown = (action == TSGL_PRESS);
-  if (key == TSGL_LEFT_SHIFT || key == TSGL_RIGHT_SHIFT) isShiftDown = (action == TSGL_PRESS);
-  if (key == TSGL_LEFT_CONTROL || key == TSGL_RIGHT_CONTROL) isCtrlDown = (action == TSGL_PRESS);
+  if (key == TSGL_MOUSE_LEFT)
+    isMouseDown = (action == TSGL_PRESS);
+  if (key == TSGL_LEFT_SHIFT || key == TSGL_RIGHT_SHIFT)
+    isShiftDown = (action == TSGL_PRESS);
+  if (key == TSGL_LEFT_CONTROL || key == TSGL_RIGHT_CONTROL)
+    isCtrlDown = (action == TSGL_PRESS);
 }
 
 // Changes the camera position on the 3D canvas
@@ -1295,31 +1314,41 @@ void Canvas::setCameraPerspective(float FieldOfView, float nearClipDist, float f
 
 glm::mat4 Canvas::getViewMatrix()
 {
+  glm::mat4 View;
   // Calculate the view matrix:
-  glm::mat4 View = glm::lookAt(
-    cameraEyePosition,  // Camera position
-    cameraLookPoint,    // Lookat point
-    glm::vec3(0, 1, 0)  // Head position, for now always up
+  View = glm::lookAt(
+      cameraEyePosition, // Camera position
+      cameraLookPoint,   // Lookat point
+      glm::vec3(0, 1, 0) // Head position, for now always up
   );
   return View;
 }
 
 glm::mat4 Canvas::getProjectionMatrix()
 {
-
-  // Calculate the projection matrix:
-  glm::mat4 Projection = glm::perspective(
-      glm::radians(FOV),                                  // FOV
-      (float)getWindowHeight() / (float)getWindowWidth(), // Aspect ratio
-      nearClip,                                           // Near clipping plane
-      farClip                                             // Far clipping plane
-  );
+  glm::mat4 Projection;
+  if (canvas3DView)
+  {
+    // Calculate the projection matrix:
+    Projection = glm::perspective(
+        glm::radians(FOV),                                  // FOV
+        (float)getWindowHeight() / (float)getWindowWidth(), // Aspect ratio
+        nearClip,                                           // Near clipping plane
+        farClip                                             // Far clipping plane
+    );
+  }
+  else
+  {
+    Projection = glm::ortho(0.f, (float)winWidth, (float)winHeight, 0.f, (float)nearClip, (float)farClip);
+  }
 
   return Projection;
 }
 
 glm::mat4 Canvas::getCameraMatrix()
 {
+  // // return glm::ortho(0, winWidth, winHeight, 0);
+  // return glm::ortho(-1, 1, 1, -1);
 
   // Multiply the matricies:
   return getProjectionMatrix() * getViewMatrix(); // Matrix mults always seem the other way around
@@ -1397,27 +1426,27 @@ GLuint Canvas::LoadShaders(const char *vertex_file_path, const char *fragment_fi
 
   // Link the program
   printf("Linking program\n");
-  GLuint ProgramID = glCreateProgram();
-  glAttachShader(ProgramID, VertexShaderID);
-  glAttachShader(ProgramID, FragmentShaderID);
-  glLinkProgram(ProgramID);
+  GLuint shaderProgram3D = glCreateProgram();
+  glAttachShader(shaderProgram3D, VertexShaderID);
+  glAttachShader(shaderProgram3D, FragmentShaderID);
+  glLinkProgram(shaderProgram3D);
 
   // Check the program
-  glGetProgramiv(ProgramID, GL_LINK_STATUS, &Result);
-  glGetProgramiv(ProgramID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+  glGetProgramiv(shaderProgram3D, GL_LINK_STATUS, &Result);
+  glGetProgramiv(shaderProgram3D, GL_INFO_LOG_LENGTH, &InfoLogLength);
   if (InfoLogLength > 0)
   {
     std::vector<char> ProgramErrorMessage(InfoLogLength + 1);
-    glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
+    glGetProgramInfoLog(shaderProgram3D, InfoLogLength, NULL, &ProgramErrorMessage[0]);
     printf("%s\n", &ProgramErrorMessage[0]);
   }
 
-  glDetachShader(ProgramID, VertexShaderID);
-  glDetachShader(ProgramID, FragmentShaderID);
+  glDetachShader(shaderProgram3D, VertexShaderID);
+  glDetachShader(shaderProgram3D, FragmentShaderID);
 
   glDeleteShader(VertexShaderID);
   glDeleteShader(FragmentShaderID);
 
-  return ProgramID;
+  return shaderProgram3D;
 }
-}
+} // namespace tsgl

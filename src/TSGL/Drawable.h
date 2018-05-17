@@ -306,22 +306,6 @@ namespace tsgl {
       return retVal;
     }
 
-    // glm::quat getRotation() {
-    //   // decompose (tmat4x4< T, P > const &modelMatrix, tvec3< T, P > &scale, tquat< T, P > &orientation, tvec3< T, P > &translation, tvec3< T, P > &skew, tvec4< T, P > &perspective)
-    //
-    //   glm::vec3 scale;
-    //   glm::quat orientation;
-    //   glm::vec3 translation;
-    //   glm::vec3 skew;
-    //   glm::vec4 perspective;
-    //
-    //   attribMutex.lock();
-    //   glm::decompose(modelMatrix, scale, orientation, translation, skew, perspective);
-    //   attribMutex.unlock();
-    //
-    //   return orientation;
-    // }
-
     glm::vec3 getScale() {
       attribMutex.lock();
       glm::vec3 retVal = glm::vec3(scaleMatrix[0][0], scaleMatrix[1][1], scaleMatrix[2][2]);
@@ -329,28 +313,27 @@ namespace tsgl {
       return retVal;
     }
 
-    // /**
-    // * \brief Accessor for the rotation details of the Drawable
-    // */
-    // void getRotation(float &deg, float &x, float &y) {
-    //   // TODO Implement this thing
-    //   fprintf (stderr, "Drawable is actually using the getRotation function!\n");
-    //   // attribMutex.lock();
-    //   // deg = rotationDeg;
-    //   // x = rotationX;
-    //   // y = rotationY;
-    //   // attribMutex.unlock();
-    // }
+    /**
+    * \brief Accessor for the rotation details of the Drawable
+    */
+    void getRotation(float &deg, float &x, float &y) {
+      // TODO Implement this thing
+      fprintf (stderr, "Drawable is actually using the getRotation function!\n");
+      // attribMutex.lock();
+      // deg = rotationDeg;
+      // x = rotationX;
+      // y = rotationY;
+      // attribMutex.unlock();
+    }
+
+    virtual int getShaderType() {
+      return 0;
+    }
 
     /**
     * \brief Renders the class to the display
     */
     virtual void render() = 0;
-
-    /**
-    * \brief Renders the class to the display
-    */
-    virtual void render(GLuint &vertexbuffer, GLuint &colorbuffer, GLuint &normalbuffer) = 0;
   };
 };
 
